@@ -1,0 +1,155 @@
+.scanner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.scanner-icon {
+    width: 100px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.scanner-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.mensagem-sucesso {
+    margin-top: 10px;
+    color: #28a745;
+    background-color: #e8f5e9;
+    padding: 8px 16px;
+    border: 1px solid #28a745;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: linear-gradient(#0349A6, #012350, #011C40);
+    min-height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+.foto {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.questoes-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    max-width: 800px;
+}
+
+.questao-card {
+    background-color: #0062cc;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.lista-de {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.perfil {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.foto-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #c4c4c4;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.nome {
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+}
+
+.acessar-button {
+    background-color: #00ff00;
+    color: black;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.mensagem-sucesso {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+    opacity: 1;
+}
+
+.mensagem-sucesso-hide {
+    opacity: 0;
+}
+.alert-mensagem {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    opacity: 1;
+    animation: fadeInOut 3s forwards;
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    10%, 90% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+}
