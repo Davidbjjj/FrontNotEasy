@@ -1,0 +1,55 @@
+.registration-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #011C40;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.registration-card {
+  width: 600px;
+  height: 640px;
+  border-radius: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, #0349A6, #011C40);
+  border: 2px solid white;
+  padding: 10px;
+  margin: 0;
+}
+
+.registration-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  height: 100%;
+}
+
+.registration-form {
+  flex: 1;
+}
+
+.registration-title {
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.registration-image {
+  flex: 1;
+  text-align: center;
+}
+
+.registration-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 75px;
+}
+
+.registration-button {
+  width: 150px;
+  margin-top: 16px;
+}

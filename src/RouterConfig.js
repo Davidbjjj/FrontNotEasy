@@ -11,22 +11,29 @@ import CadastroAlunoComponent from './components/cadastros/aluno/CadastroAlunoCo
 import CadastroProfessorComponent from './components/cadastros/professor/CadastroProfessorComponent';
 import LoginComponent from './components/login/LoginComponent';
 import RedefenirSenhaComponent from './components/redefenirsenha/RedefenirSenhaComponent';
+import RegistrationComponent from './alunos/presentation/components/RegistrationComponent';
+import TeacherRegistrationComponent from './professores/presentation/components/TeacherRegistrationComponent';
+import HomePage from './home/views/pages/HomePage';
+import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
 
 
 const RouterConfig = () => {
   return (
     <Routes>
-      <Route path="/home" element={<HomeComponent />} />
+      <Route path="/" element={<HomePage />} />
       <Route path="/sobre" element={<SobreComponent />} />
       <Route path="/simulados" element={<SimuladosComponent />} />
       <Route path="/questoes" element={<QuestionsComponent />} />
-      <Route path="/minhasQuestoes" element={<MinhasQuestoesComponent />} />
+      {/* <Route path="/minhasQuestoes" element={<MinhasQuestoesComponent />} /> */}
       <Route path="/config" element={<ConfigComponent />} />
       <Route path="/cadastros" element={<CadastrosComponent />} />
-      <Route path="/formaluno" element={<CadastroAlunoComponent />} />
-      <Route path="/formprofessor" element={<CadastroProfessorComponent />} />
+      {/* <Route path="/formaluno" element={<CadastroAlunoComponent />} /> */}
+      {/* <Route path="/formprofessor" element={<CadastroProfessorComponent />} /> */}
       <Route path="/login" element={<LoginComponent/>} />
       <Route path="/redefenir" element={<RedefenirSenhaComponent/>} />
+      <Route path="/cadastro-aluno" element={<RegistrationComponent />} />
+      <Route path="/cadastro-professor" element={<TeacherRegistrationComponent />} />
+      <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} />
       
     </Routes>
   );

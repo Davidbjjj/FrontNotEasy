@@ -25,7 +25,7 @@ const App = () => {
     {
       key: 'home',
       icon: <HomeOutlined />,
-      label: <Link to="/home">Home</Link>,
+      label: <Link to="/">Home</Link>,
     },
     {
       key: 'questoes',
@@ -35,7 +35,7 @@ const App = () => {
     {
       key: 'minhasQuestoes',
       icon: <BookFilled />,
-      label: <Link to="/minhasQuestoes">Minhas questões</Link>,
+      label: <Link to="/minhas-questoes">Minhas questões</Link>,
     },
     {
       key: 'simulados',

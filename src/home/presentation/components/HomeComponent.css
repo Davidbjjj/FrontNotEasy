@@ -1,0 +1,135 @@
+.home-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: flex-end;
+  background-color: #fff;
+  padding: 20px;
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul li {
+  display: inline;
+  margin: 0 15px;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.contentin {
+  display: flex;
+  gap: 20px;
+  justify-content: space-around;
+  align-items: center;
+  margin: 40px;
+}
+
+.main-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 40px 0;
+}
+
+.text-section {
+  max-width: 400px;
+  text-align: left;
+}
+
+.text-section h1 {
+  font-size: 3em;
+}
+
+.text-section p {
+  font-size: 1.2em;
+  color: #555;
+}
+
+.card {
+  background-color: #333;
+  color: white;
+  padding: 40px;
+  border-radius: 10px;
+  width: 300px;
+  position: relative;
+}
+
+.card h2 {
+  font-size: 2em;
+}
+
+.card p {
+  margin: 20px 0;
+}
+
+.card button {
+  background-color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.toggle-switch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.toggle-switch span {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+.switch {
+  width: 60px;
+  height: 30px;
+  background-color: #ddd;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+}
+
+.toggle {
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: 0.3s;
+}
+
+.toggle.on {
+  left: 30px;
+  background-color: #007bff;
+}
+
+.profile-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  padding: 20px;
+  gap: 30px;
+}
+
+.loading, .error {
+  padding: 40px;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.error {
+  color: red;
+}

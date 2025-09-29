@@ -1,0 +1,33 @@
+.scanner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.scanner-icon {
+    width: 100px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.scanner-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.scanner-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.scanner-button:disabled,
+.scanner-button.uploading {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}

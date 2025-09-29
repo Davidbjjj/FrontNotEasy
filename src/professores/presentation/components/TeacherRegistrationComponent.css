@@ -1,0 +1,22 @@
+.teacher-registration-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.teacher-registration-card {
+  width: 400px;
+  text-align: center;
+  border: 2px solid black;
+  padding: 20px;
+}
+
+.privacy-checkbox {
+  position: relative;
+  right: -60px;
+}
+
+.submit-button {
+  margin-top: 16px;
+}

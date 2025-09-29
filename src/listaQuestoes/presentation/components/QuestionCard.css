@@ -1,0 +1,68 @@
+.questao-card {
+    background-color: #0062cc;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.questao-card:hover {
+    transform: translateY(-2px);
+}
+
+.lista-de {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.perfil {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.foto {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.foto-placeholder {
+    width: 40px;
+    height: 40px;
+    background-color: #c4c4c4;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.nome {
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+    margin: 0;
+}
+
+.acessar-button {
+    background-color: #00ff00;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.acessar-button:hover {
+    background-color: #00cc00;
+}
