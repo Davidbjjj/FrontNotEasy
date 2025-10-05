@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -8,14 +8,15 @@ import {
   BookOutlined,
   SettingOutlined,
   BookFilled,
-  LoginOutlined
-} from '@ant-design/icons';
-import { Button, Menu } from 'antd';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
-import RouterConfig from './RouterConfig';
+  LoginOutlined,
+} from "@ant-design/icons";
+import { Button, Menu } from "antd";
+import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
+import RouterConfig from "./RouterConfig";
 
-const App = () => {
+function AppLayout() {
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -23,81 +24,87 @@ const App = () => {
 
   const items = [
     {
-      key: 'home',
+      key: "home",
       icon: <HomeOutlined />,
       label: <Link to="/">Home</Link>,
     },
     {
-      key: 'questoes',
+      key: "questoes",
       icon: <BookOutlined />,
       label: <Link to="/questoes">Questões</Link>,
     },
     {
-      key: 'minhasQuestoes',
+      key: "minhasQuestoes",
       icon: <BookFilled />,
       label: <Link to="/minhas-questoes">Minhas questões</Link>,
     },
     {
-      key: 'simulados',
+      key: "simulados",
       icon: <FilterOutlined />,
       label: <Link to="/simulados">Simulados</Link>,
     },
     {
-      key: 'sobre',
+      key: "sobre",
       icon: <InfoCircleOutlined />,
       label: <Link to="/sobre">Sobre</Link>,
     },
     {
-      key: 'cadastros',
+      key: "cadastros",
       icon: <LoginOutlined />,
       label: <Link to="/cadastros">Cadastros</Link>,
     },
     {
-      key: 'config',
+      key: "config",
       icon: <SettingOutlined />,
       label: <Link to="/config">Configurações</Link>,
     },
-    {
-      key: 'login',
-      label: <Link to="/login">Login</Link>
-    }
   ];
 
+  const esconderSidebar = location.pathname === "/login";
+
   return (
-    <Router>
-      <div style={{ display: 'flex', height: '100vh' }}>
+    <div style={{ display: "flex", height: "100vh" }}>
+      {!esconderSidebar && (
         <div
           style={{
             width: collapsed ? 80 : 256,
-            backgroundColor: '#001529',
-            transition: 'width 0.2s',
+            backgroundColor: "#001529",
+            transition: "width 0.2s",
           }}
         >
           <Button
             type="primary"
             onClick={toggleCollapsed}
-            style={{
-              margin: 16,
-            }}
+            style={{ margin: 16 }}
           >
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
           <Menu
-            defaultSelectedKeys={['home']}
+            defaultSelectedKeys={["home"]}
             mode="inline"
             theme="dark"
             inlineCollapsed={collapsed}
             items={items}
           />
         </div>
+      )}
 
-        <div style={{ flex: 1, padding: '20px', backgroundColor: '#011C40' }}>
-          {/* Aqui você usa o componente de rotas que criamos */}
-          <RouterConfig />
-        </div>
+      <div
+        style={{
+          flex: 1,
+          backgroundColor: esconderSidebar ? "#fff" : "#011C40",
+        }}
+      >
+        <RouterConfig />
       </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppLayout />
     </Router>
   );
-};
-
-export default App;
+}
