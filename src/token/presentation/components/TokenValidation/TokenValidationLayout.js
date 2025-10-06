@@ -12,20 +12,26 @@ export default function TokenValidationLayout({
 }) {
   return (
     <div className="validation-container">
-      {/* Lado esquerdo - Nova abordagem */}
-      <div className="left-section">
-        <div className="log-tag">
-            <image src="/Rectangle 84.svg" alt="Logo Noteasy" className="logo-image" />
-            <div>
-                <image src="/Alunos.svg" alt="Logo GGE" className="logo-image" />
-            </div>
+       {/* Lado esquerdo */}
+  <div className="left-section">
+  <div className="imagem-letf">
+    <div className="overlay">
+      <img src="/Alunos.svg" alt="Background alunos" />
+    </div>
+    <div className="imagem-letf2">
+      <div className="content-container">
+        <img src="Rectangle 84.svg" alt="Logo Noteasy" className="logo-image" />
+        <div className="text-overlay">
+          <img src="LogoGGE.svg" alt="Icone Noteasy" className="icon-image" />
+          <div className="text-content">
+            Aqui, enquanto o(a) aluno(a) pratica,
+            o(a) professor(a) descobre onde focar. {/* Adicione o texto que desejar */}
+          </div>
         </div>
-      < div className="imagem-letf">
-        
-        <img src="/Alunos.svg" alt="Logo GGE" className="logo-image" />
       </div>
-        
-      </div>
+    </div>
+  </div>
+</div>
 
       {/* Lado direito */}
       <div className="right-section">
