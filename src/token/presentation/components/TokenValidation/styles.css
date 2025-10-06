@@ -1,0 +1,480 @@
+.validation-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  flex-direction: column;
+}
+
+.left-section {
+  flex: 1;
+  background-color: #f8f8f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  order: 2;
+  padding: 0 20px;
+  position: relative;
+}
+
+.imagem-letf {
+  flex: 1;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.imagem-letf2 {
+  position: absolute;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  min-height: 120px;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  border-radius: 15px;
+  padding: 20px 0;
+}
+
+/* Container principal que contém TUDO */
+.content-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Rectangle como fundo */
+.logo-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+/* Container para logo e texto DENTRO da Rectangle */
+.text-overlay {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 15px;
+  z-index: 11;
+  position: relative;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* Imagem do logo GGE */
+.icon-image {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+/* Texto ao lado da logo */
+.text-content {
+  color: rgb(2, 2, 2);
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  line-height: 1.3;
+}
+
+.overlay {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.overlay img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.left-content {
+  text-align: center;
+  max-width: 90%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+/* Estilos para o lado direito */
+.right-section {
+  background-color: #fff;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  order: 1;
+}
+
+.validation-card {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 25px 20px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.title {
+  color: #C40000;
+  font-size: 20px;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.instructions {
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 25px;
+  line-height: 1.4;
+}
+
+.token-input-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.token-input-box {
+  width: 40px;
+  height: 50px;
+  font-size: 20px;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.3s;
+}
+
+.token-input-box:focus {
+  border-color: #C40000;
+}
+
+.timer-text {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.resend-btn {
+  background: none;
+  border: none;
+  color: #C40000;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.support-text {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.support-text a {
+  color: #0077cc;
+  text-decoration: none;
+  display: block;
+  margin-top: 5px;
+}
+
+.submit-btn {
+  background-color: #C40000;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+  transition: background 0.3s;
+  width: 100%;
+  max-width: 200px;
+}
+
+.submit-btn:hover {
+  background-color: #A00000;
+}
+
+.slogan {
+  color: #011C40;
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.students-image {
+  width: 100%;
+  max-height: calc(50vh - 100px);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* ========== MEDIA QUERIES ========== */
+
+/* Mobile Pequeno (até 360px) */
+@media (max-width: 360px) {
+  .imagem-letf2 {
+    width: 100%;
+    top: 15px;
+    padding: 15px 0;
+  }
+  
+  .icon-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .text-content {
+    font-size: 12px;
+  }
+  
+  .text-overlay {
+    gap: 8px;
+    padding: 0 10px;
+  }
+  
+  .validation-card {
+    padding: 20px 15px;
+  }
+  
+  .token-input-box {
+    width: 35px;
+    height: 45px;
+    font-size: 18px;
+  }
+  
+  .title {
+    font-size: 18px;
+  }
+}
+
+/* Tablet (768px pra cima) */
+@media (min-width: 768px) {
+  .validation-container {
+    flex-direction: row;
+    height: 100vh;
+  }
+  
+  .left-section {
+    order: 1;
+    padding: 0;
+  }
+  
+  .right-section {
+    order: 2;
+    padding: 40px 20px;
+  }
+  
+  .imagem-letf2 {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    min-height: 150px;
+    top: 40px;
+    padding: 30px 0;
+  }
+  
+  .icon-image {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .text-content {
+    font-size: 18px;
+  }
+  
+  .text-overlay {
+    gap: 15px;
+    padding: 0 25px;
+  }
+  
+  .validation-card {
+    padding: 35px 30px;
+    max-width: 420px;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+  
+  .instructions {
+    font-size: 15px;
+  }
+  
+  .token-input-box {
+    width: 45px;
+    height: 55px;
+  }
+  
+  .support-text a {
+    display: inline;
+    margin-top: 0;
+    margin-left: 5px;
+  }
+}
+
+/* Desktop (1024px pra cima) */
+@media (min-width: 1024px) {
+  .imagem-letf2 {
+    width: 90%;
+    max-width: 800px;
+    min-height: 180px;
+    top: 50px;
+    padding: 40px 0;
+  }
+  
+  .icon-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .text-content {
+    font-size: 22px;
+  }
+  
+  .text-overlay {
+    gap: 20px;
+    padding: 0 35px;
+  }
+  
+  .validation-card {
+    padding: 40px 35px;
+    max-width: 450px;
+  }
+  
+  .title {
+    font-size: 26px;
+  }
+  
+  .instructions {
+    font-size: 16px;
+  }
+  
+  .token-input-box {
+    width: 50px;
+    height: 60px;
+    font-size: 22px;
+  }
+  
+  .timer-text {
+    font-size: 14px;
+  }
+  
+  .support-text {
+    font-size: 13px;
+  }
+}
+
+/* Desktop Grande (1200px pra cima) */
+@media (min-width: 1200px) {
+  .imagem-letf2 {
+    width: 60%;
+    max-width: 800px;
+    min-height: 200px;
+  }
+  
+  .icon-image {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .text-content {
+    font-size: 24px;
+  }
+}
+
+/* Orientação paisagem em mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .validation-container {
+    flex-direction: row;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .imagem-letf2 {
+    top: 15px;
+    padding: 15px 0;
+    min-height: 100px;
+  }
+  
+  .icon-image {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .text-content {
+    font-size: 12px;
+  }
+  
+  .right-section {
+    padding: 20px 15px;
+  }
+  
+  .validation-card {
+    padding: 20px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+}
+
+/* Telas muito altas */
+@media (min-height: 900px) and (min-width: 768px) {
+  .imagem-letf2 {
+    top: 60px;
+    min-height: 200px;
+  }
+  
+  .icon-image {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .text-content {
+    font-size: 24px;
+  }
+}
+
+/* Ajustes para telas muito largas */
+@media (min-width: 1600px) {
+  .imagem-letf2 {
+    width: 50%;
+    max-width: 900px;
+  }
+}
+
+/* Ajustes de acessibilidade para zoom */
+@media (max-width: 768px) {
+  .token-input-box {
+    min-width: 35px;
+  }
+  
+  .text-content {
+    word-wrap: break-word;
+  }
+}

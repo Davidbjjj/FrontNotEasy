@@ -7,8 +7,8 @@ import QuestionsComponent from './components/questions/QuestionsComponent';
 import ConfigComponent from './components/configuracao/ConfigComponent';
 import MinhasQuestoesComponent from './components/minhasQuestoes/MinhasQuestoesComponent';
 import CadastrosComponent from './components/ocupacao/OcupacaoComponent';
-import CadastroAlunoComponent from './components/cadastros/aluno/CadastroAlunoComponent';
-import CadastroProfessorComponent from './components/cadastros/professor/CadastroProfessorComponent';
+import ValidateTokenPage from './token/views/pages/ValidateTokenPage';
+import ResetPasswordPage from './token/views/pages/ResetPasswordPage';
 import LoginComponent from './components/login/LoginComponent';
 import RedefenirSenhaComponent from './components/redefenirsenha/RedefenirSenhaComponent';
 import RegistrationComponent from './alunos/presentation/components/RegistrationComponent';
@@ -34,7 +34,8 @@ const RouterConfig = () => {
       <Route path="/cadastro-aluno" element={<RegistrationComponent />} />
       <Route path="/cadastro-professor" element={<TeacherRegistrationComponent />} />
       <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} />
-      
+      <Route path="/validar-token" element={<ValidateTokenPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
     </Routes>
   );
 };
