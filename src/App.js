@@ -11,7 +11,7 @@ import {
   LoginOutlined,
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
-import { BrowserRouter as Router, Link, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import RouterConfig from "./RouterConfig";
 
 function AppLayout() {
@@ -88,7 +88,6 @@ function AppLayout() {
           />
         </div>
       )}
-
       <div
         style={{
           flex: 1,
@@ -101,10 +100,4 @@ function AppLayout() {
   );
 }
 
-export default function App() {
-  return (
-    <Router>
-      <AppLayout />
-    </Router>
-  );
-}
+export default AppLayout;
