@@ -58,10 +58,13 @@ function AppLayout() {
       icon: <SettingOutlined />,
       label: <Link to="/config">Configurações</Link>,
     },
+
+    
+
   ];
 
-  const esconderSidebar = location.pathname === "/login";
-
+ const esconderSidebar = ["/login", "/redefinir-senha", "/cadastro-aluno", "/cadastro-professor", "/validar-token", "/reset-password"]
+  .some((path) => location.pathname.startsWith(path));
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       {!esconderSidebar && (

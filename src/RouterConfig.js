@@ -30,7 +30,7 @@ const RouterConfig = () => {
       {/* <Route path="/formaluno" element={<CadastroAlunoComponent />} /> */}
       {/* <Route path="/formprofessor" element={<CadastroProfessorComponent />} /> */}
       <Route path="/login" element={<LoginComponent/>} />
-      <Route path="/redefenir" element={<RedefenirSenhaComponent/>} />
+      <Route path="/redefinir-senha" element={<RedefenirSenhaComponent/>} />
       <Route path="/cadastro-aluno" element={<RegistrationComponent />} />
       <Route path="/cadastro-professor" element={<TeacherRegistrationComponent />} />
       <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} />
