@@ -13,14 +13,16 @@ import LoginComponent from './components/login/LoginComponent';
 import RedefenirSenhaComponent from './components/redefenirsenha/RedefenirSenhaComponent';
 import RegistrationComponent from './alunos/presentation/components/RegistrationComponent';
 import TeacherRegistrationComponent from './professores/presentation/components/TeacherRegistrationComponent';
-import HomePage from './home/views/pages/HomePage';
 import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
+import LandingPage from './landingPage/view/pages/LandingPage';
+
+
 
 
 const RouterConfig = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/sobre" element={<SobreComponent />} />
       <Route path="/simulados" element={<SimuladosComponent />} />
       <Route path="/questoes" element={<QuestionsComponent />} />
@@ -36,6 +38,7 @@ const RouterConfig = () => {
       <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} />
       <Route path="/validar-token" element={<ValidateTokenPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      
     </Routes>
   );
 };
