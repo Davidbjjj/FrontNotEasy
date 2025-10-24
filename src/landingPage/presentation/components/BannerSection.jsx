@@ -1,6 +1,6 @@
 import React from "react";
 import "./BannerSection.css";
-const BRAND_LOGO = "/LogoGGE.svg";
+const BRAND_LOGO = "/Alunos.svg";
 const BannerSection = () => {
   return (
     <section className="banner-section">
@@ -16,7 +16,7 @@ const BannerSection = () => {
 
       <div className="banner-images">
         <img src={BRAND_LOGO} alt="Logo GGE" />
-        <img src={BRAND_LOGO} alt="Logo GGE" />
+
       </div>
     </section>
   );

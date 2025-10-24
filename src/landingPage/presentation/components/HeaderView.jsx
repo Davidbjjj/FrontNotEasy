@@ -1,107 +1,148 @@
-import React, { useState, useEffect } from 'react';
-import './Header.css';
+  import React, { useState, useEffect } from 'react';
+  import './Header.css';
 
-const logo = "/image.png";
+  const Header = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+    const toggleMenu = () => {
+      setIsMenuOpen(!isMenuOpen);
+    };
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+    const closeMenu = () => {
+      setIsMenuOpen(false);
+    };
 
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
+    // Fecha menu ao clicar em links externos
+    const handleLinkClick = () => {
+      closeMenu();
+    };
 
-  // Detecta mudanças de tamanho de tela e fecha menu ao redimensionar
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth <= 768;
-      setIsMobile(mobile);
-      
-      if (window.innerWidth > 768) {
-        setIsMenuOpen(false);
+    // Detecta tamanho da tela e gerencia scroll
+    useEffect(() => {
+      const checkScreenSize = () => {
+        const mobile = window.innerWidth <= 768;
+        setIsMobile(mobile);
+        
+        // Fecha menu ao mudar para desktop
+        if (!mobile) {
+          closeMenu();
+        }
+      };
+
+      // Verifica tamanho inicial
+      checkScreenSize();
+
+      // Gerencia scroll do body
+      if (isMenuOpen && isMobile) {
+        document.body.classList.add('no-scroll');
+      } else {
+        document.body.classList.remove('no-scroll');
       }
-    };
 
-    // Verifica tamanho inicial
-    handleResize();
+      // Event listeners
+      window.addEventListener('resize', checkScreenSize);
+      
+      // Cleanup
+      return () => {
+        window.removeEventListener('resize', checkScreenSize);
+        document.body.classList.remove('no-scroll');
+      };
+    }, [isMenuOpen, isMobile]);
 
-    window.addEventListener('resize', handleResize);
-    
-    // Previne scroll quando menu está aberto no mobile
-    if (isMenuOpen && isMobile) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    return (
+      <header className="header">
+        <div className="header-container">
+          
+          {/* Logo */}
+          <div className="logo">
+            <img 
+              src="/image.png" 
+              alt="notEasy - Transforma conteúdo em dados e dados em aprendizado" 
+              className="logo-image" 
+            />
+          </div>
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isMenuOpen, isMobile]);
+          {/* Navegação Desktop/Mobile */}
+          <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
+            
+            {/* Botões de Ação Mobile - No TOPO como prioridade UX */}
+            <div className="mobile-buttons">
+              <button className="btn btn-solid" onClick={handleLinkClick}>
+                Criar Conta
+              </button>
+              <button className="btn btn-outline" onClick={handleLinkClick}>
+                Login
+              </button>
+            </div>
 
-  return (
-    <header className="header">
-      <div className="header-container">
-        {/* Logo */}
-        <div className="logo">
-          <img 
-            src={logo} 
-            alt="Logo notBsy" 
-            className="logo-image" 
-          />
+            {/* Menu de Navegação */}
+            <ul className="nav-list">
+              <li className="nav-item">
+                <a 
+                  href="#como-funciona" 
+                  className="nav-link" 
+                  onClick={handleLinkClick}
+                >
+                  Como funciona
+                </a>
+              </li>
+              <li className="nav-item">
+                <a 
+                  href="#conheca" 
+                  className="nav-link" 
+                  onClick={handleLinkClick}
+                >
+                  Conheça o notEasy
+                </a>
+              </li>
+              <li className="nav-item">
+                <a 
+                  href="#planos" 
+                  className="nav-link" 
+                  onClick={handleLinkClick}
+                >
+                  Planos
+                </a>
+              </li>
+              <li className="nav-item">
+                <a 
+                  href="#faq" 
+                  className="nav-link" 
+                  onClick={handleLinkClick}
+                >
+                  FAQs
+                </a>
+              </li>
+            </ul>
+
+          </nav>
+
+          {/* Ações do Header (Desktop) */}
+          <div className="header-actions">
+            <button className="btn btn-outline">
+              Login
+            </button>
+            <button className="btn btn-solid">
+              Criar Conta
+            </button>
+
+            {/* Botão Hamburguer Mobile */}
+            <button 
+              className={`menu-toggle ${isMenuOpen ? 'active' : ''}`}
+              onClick={toggleMenu}
+              aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={isMenuOpen}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+
         </div>
+      </header>
+    );
+  };
 
-        {/* Menu de Navegação */}
-        <nav className={`nav ${isMenuOpen ? 'nav-open' : ''}`}>
-          <ul className="nav-list">
-            <li className="nav-item">
-              <a href="#como-funciona" className="nav-link" onClick={closeMenu}>
-                Como funciona
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="#Conheca" className="nav-link" onClick={closeMenu}>
-                Conheça o notEasy
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="#planos" className="nav-link" onClick={closeMenu}>
-                Planos
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="#faq" className="nav-link" onClick={closeMenu}>
-                FAQ
-              </a>
-            </li>
-          </ul>
-        </nav>
-
-        {/* Botões CTA e Menu Mobile */}
-        <div className="header-actions">
-          <button className="btn btn-outline">Criar Conta</button>
-          <button className="btn btn-solid">Login</button>
-
-          {/* Botão do menu mobile */}
-          <button 
-            className={`menu-toggle ${isMenuOpen ? 'active' : ''}`}
-            onClick={toggleMenu}
-            aria-label="Toggle menu"
-            aria-expanded={isMenuOpen}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        </div>
-      </div>
-    </header>
-  );
-};
-
-export default Header;
+  export default Header;

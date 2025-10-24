@@ -1,98 +1,152 @@
-/* ====== BASE ====== */
+/* ====== VARIÁVEIS CSS ====== */
+:root {
+  --primary-blue: #2563eb;
+  --primary-dark: #1d4ed8;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --background-white: #ffffff;
+  --background-light: #f8fafc;
+  --border-light: #e5e7eb;
+  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --radius-small: 8px;
+  --radius-medium: 12px;
+  --radius-large: 16px;
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+}
+
+/* ====== RESET E BASE ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .header {
-  background: #fff;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: var(--background-white);
+  box-shadow: var(--shadow-light);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  width: 100%;
 }
 
 .header-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1366px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 4vw, 2rem);
+  padding: 1rem 1.5rem;
+  gap: 1rem;
 }
 
-/* ====== LOGO ====== */
+/* ====== LOGO RESPONSIVA ====== */
+.logo {
+  flex-shrink: 0;
+  z-index: 1002;
+}
+
 .logo-image {
-  width: clamp(100px, 12vw, 150px);
+  width: 150px;
   height: auto;
   object-fit: contain;
-  transition: transform 0.3s ease;
+  transition: var(--transition-normal);
+  padding: 1rem 1.2rem;
 }
 
-.logo-image:hover {
-  transform: scale(1.05);
-}
-
-/* ====== NAV ====== */
+/* ====== NAVEGAÇÃO DESKTOP ====== */
 .nav {
-  transition: transform 0.4s ease, opacity 0.4s ease, visibility 0.4s ease;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
 }
 
 .nav-list {
   display: flex;
   list-style: none;
-  gap: clamp(1rem, 2vw, 2rem);
+  gap: 2rem;
   margin: 0;
   padding: 0;
 }
 
 .nav-link {
   text-decoration: none;
-  color: #333;
+  color: var(--text-dark);
   font-weight: 500;
-  font-size: clamp(0.9rem, 1vw, 1rem);
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover {
-  color: #007bff;
-}
-
-/* ====== BOTÕES ====== */
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: clamp(0.5rem, 1.5vw, 1rem);
-}
-
-.btn-outline,
-.btn-solid {
-  border: 2px solid #007bff;
-  border-radius: 8px;
-  font-weight: 600;
-  padding: clamp(0.4rem, 1vw, 0.6rem) clamp(1rem, 2vw, 1.8rem);
-  font-size: clamp(0.8rem, 1vw, 0.9rem);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-size: 0.95rem;
+  transition: var(--transition-normal);
+  padding: 0.5rem 0;
   white-space: nowrap;
 }
 
+.nav-link:hover {
+  color: var(--primary-blue);
+}
+
+/* ====== BOTÕES DESKTOP ====== */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.btn {
+  border: none;
+  border-radius: var(--radius-medium);
+  font-weight: 600;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
 .btn-outline {
-  background: #fff;
-  color: #007bff;
+  background: transparent;
+  color: var(--primary-blue);
+  border: 1.5px solid var(--primary-blue);
 }
 
 .btn-outline:hover {
-  background: #007bff;
-  color: #fff;
+  background: var(--primary-blue);
+  color: var(--background-white);
+  transform: translateY(-1px);
 }
 
 .btn-solid {
-  background: #007bff;
-  color: #fff;
-  box-shadow: 0 3px 10px rgba(0,123,255,0.3);
+  background: var(--primary-blue);
+  color: var(--background-white);
+  border: 1.5px solid var(--primary-blue);
 }
 
 .btn-solid:hover {
-  background: #0056b3;
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+/* ====== BOTÕES MOBILE (ESCONDIDOS POR PADRÃO) ====== */
+.mobile-buttons {
+  display: none; /* Escondido no desktop */
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.mobile-buttons .btn {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  border-radius: var(--radius-medium);
 }
 
 /* ====== MENU MOBILE ====== */
@@ -100,114 +154,192 @@
   display: none;
   flex-direction: column;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   background: none;
   border: none;
   cursor: pointer;
   z-index: 1001;
+  padding: 0.5rem;
+  border-radius: var(--radius-small);
+  transition: var(--transition-normal);
+}
+
+.menu-toggle:hover {
+  background: var(--background-light);
 }
 
 .menu-toggle span {
-  width: 26px;
-  height: 3px;
-  background: #333;
+  width: 22px;
+  height: 2px;
+  background: var(--text-dark);
   border-radius: 2px;
-  transition: all 0.3s ease;
+  transition: var(--transition-normal);
 }
 
-/* Animação do ícone */
 .menu-toggle.active span:nth-child(1) {
-  transform: rotate(45deg) translate(6px, 6px);
+  transform: rotate(45deg) translate(5px, 5px);
 }
+
 .menu-toggle.active span:nth-child(2) {
   opacity: 0;
 }
+
 .menu-toggle.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
+  transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* ====== RESPONSIVIDADE ====== */
-
-/* <= 1024px (tablets) */
-@media (max-width: 1024px) {
-  .nav-list {
-    gap: 1.2rem;
-  }
-  .btn-outline,
-  .btn-solid {
-    padding: 0.5rem 1.3rem;
-  }
-}
-
-/* <= 768px (menu mobile ativo) */
+/* ====== LAYOUT MOBILE COMPLETO ====== */
 @media (max-width: 768px) {
+  .header-container {
+    padding: 0.75rem 1rem;
+  }
+
+  .logo-image {
+    width: 130px;
+  }
+
+  /* Esconde navegação desktop */
   .nav {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: white;
+    background: var(--background-white);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 80px 1.5rem 2rem;
     transform: translateX(-100%);
-    opacity: 0;
-    visibility: hidden;
-    padding-top: 90px;
+    transition: transform 0.3s ease;
+    overflow-y: auto;
     z-index: 999;
   }
 
   .nav.nav-open {
     transform: translateX(0);
-    opacity: 1;
-    visibility: visible;
   }
 
   .nav-list {
     flex-direction: column;
-    align-items: center;
-    gap: 2rem;
+    gap: 0;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  .nav-item {
+    width: 100%;
+    border-bottom: 1px solid var(--border-light);
   }
 
   .nav-link {
+    display: block;
+    padding: 1rem 0;
     font-size: 1.1rem;
+    width: 100%;
   }
 
+  /* MOSTRA botões mobile apenas quando o menu está aberto */
+  .mobile-buttons {
+    display: flex; /* Agora visível apenas no menu mobile */
+  }
+
+  /* Mostra menu toggle no mobile */
   .menu-toggle {
     display: flex;
   }
 
-  /* Esconde botões CTA no mobile */
-  .header-actions .btn-outline,
-  .header-actions .btn-solid {
+  /* Esconde botões desktop no mobile */
+  .header-actions .btn {
     display: none;
   }
 }
 
-/* <= 480px (mobile pequeno) */
+/* ====== MOBILE PEQUENO (até 480px) ====== */
 @media (max-width: 480px) {
-  .logo-image {
-    width: clamp(90px, 25vw, 120px);
+  .header-container {
+    padding: 0.6rem 1rem;
   }
-  .nav-list {
-    gap: 1.5rem;
-  }
-  .nav-link {
-    font-size: 1rem;
-  }
-}
 
-/* <= 360px (mini devices) */
-@media (max-width: 360px) {
   .logo-image {
     width: 90px;
   }
+
+  .nav {
+    padding: 70px 1rem 1.5rem;
+  }
+
   .nav-link {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    padding: 0.9rem 0;
+  }
+
+  .mobile-buttons .btn {
+    padding: 0.9rem 1.25rem;
+    font-size: 0.95rem;
   }
 }
 
-/* Desktop ultrawide */
-@media (min-width: 1600px) {
+/* ====== MOBILE MUITO PEQUENO (até 360px) ====== */
+@media (max-width: 360px) {
   .header-container {
-    max-width: 1600px;
+    padding: 0.5rem 0.75rem;
   }
+
+  .logo-image {
+    width: 90px;
+  }
+
+  .nav {
+    padding: 65px 0.75rem 1rem;
+  }
+
+  .mobile-buttons {
+    gap: 0.75rem;
+  }
+}
+
+/* ====== TABLET (769px - 1024px) ====== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header-container {
+    padding: 1rem 2rem;
+  }
+
+  .nav-list {
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Garante que mobile-buttons fique escondido no tablet */
+  .mobile-buttons {
+    display: none;
+  }
+}
+
+/* ====== DESKTOP GRANDE ====== */
+@media (min-width: 1025px) {
+  .header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Garante que mobile-buttons fique escondido no desktop */
+  .mobile-buttons {
+    display: none;
+  }
+}
+
+/* ====== PREVENÇÃO DE SCROLL ====== */
+body.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
