@@ -13,7 +13,7 @@ import LoginComponent from './components/login/LoginComponent';
 import RedefenirSenhaComponent from './components/redefenirsenha/RedefenirSenhaComponent';
 import RegistrationComponent from './alunos/presentation/components/RegistrationComponent';
 import TeacherRegistrationComponent from './professores/presentation/components/TeacherRegistrationComponent';
-import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
+import MinhasQuestoesPage from './listaQuestoess/views/pages/MinhasQuestoesPage';
 import LandingPage from './landingPage/view/pages/LandingPage';
 
 

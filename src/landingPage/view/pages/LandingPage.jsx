@@ -7,11 +7,12 @@ import PlanCarousel from "../../presentation/components/PlanCarousel.jsx";
 import Footer from "../../presentation/components/Footer.jsx";
 import VerticalNavbar from "../../../VerticalNavbar/presentation/components/VerticalNavbar.tsx";
 import TopBarPage from "../../../TopBar/view/pages/TopBarPage.tsx";
+import ListarQuestoesPage from "../../../listaQuestoes/view/pages/QuestionListPage.tsx";
 const LandingPage = () => {
   return (
     <>
-  <TopBarPage />
-  <VerticalNavbar />
+
+<ListarQuestoesPage/>
     </>
   );
 };
