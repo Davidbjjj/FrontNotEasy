@@ -1,0 +1,198 @@
+.top-bar {
+  height: 70px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 100px;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-bar__user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.top-bar__user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #c1121f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.top-bar__user-name {
+  font-weight: 600;
+  color: #343a40;
+  font-size: 1.1rem;
+}
+
+.top-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.top-bar__action {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6c757d;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.top-bar__action:hover {
+  background-color: #f8f9fa;
+  color: #c1121f;
+}
+
+.top-bar__action--notifications {
+  position: relative;
+}
+
+.top-bar__notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #c1121f;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Dropdown de Notificações */
+.top-bar__notifications-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 350px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  margin-top: 8px;
+}
+
+.top-bar__notifications-header {
+  padding: 16px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar__notifications-title {
+  font-weight: 600;
+  color: #343a40;
+  margin: 0;
+}
+
+.top-bar__mark-all-read {
+  background: none;
+  border: none;
+  color: #c1121f;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.top-bar__mark-all-read:hover {
+  background-color: #fff5f5;
+}
+
+.top-bar__notifications-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.top-bar__notification-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.top-bar__notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.top-bar__notification-item--unread {
+  background-color: #fff5f5;
+}
+
+.top-bar__notification-title {
+  font-weight: 600;
+  color: #343a40;
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+}
+
+.top-bar__notification-message {
+  color: #6c757d;
+  margin: 0 0 4px 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.top-bar__notification-time {
+  color: #adb5bd;
+  font-size: 0.7rem;
+  margin: 0;
+}
+
+.top-bar__empty-notifications {
+  padding: 20px;
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .top-bar {
+    left: 80px;
+    padding: 0 15px;
+  }
+  
+  .top-bar__user-name {
+    font-size: 1rem;
+  }
+  
+  .top-bar__notifications-dropdown {
+    width: 300px;
+    right: -50px;
+  }
+  
+  .top-bar__action span {
+    display: none;
+  }
+}
