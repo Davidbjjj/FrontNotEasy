@@ -9,8 +9,8 @@
   position: fixed;
   top: 0;
   right: 0;
-  left: 100px;
-  z-index: 1000;
+  left: 0; /* Largura da VerticalNavbar */
+  z-index: 1000; /* Garantir que fique acima de tudo */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 

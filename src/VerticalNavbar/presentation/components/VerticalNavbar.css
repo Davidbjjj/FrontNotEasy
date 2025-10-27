@@ -84,6 +84,12 @@
   opacity: 1;
 }
 
+.vertical-navbar:hover ~ .list-main__content {
+  margin-left: 220px;
+  transition: margin-left 0.3s ease;
+}
+
+
 /* Responsivo */
 @media (max-width: 768px) {
   .vertical-navbar {

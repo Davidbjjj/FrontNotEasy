@@ -1,7 +1,8 @@
 import React from 'react';
 import { Grid, List } from 'lucide-react';
 import { useQuestionListViewModel } from '../../viewmodels/QuestionList.viewmodel';
-import { QuestionListProps } from '../../model/QuestionList.types';
+import type { QuestionList as QuestionListType, QuestionListProps } from '../../model/QuestionList.types';
+import { useNavigate } from 'react-router-dom';
 import SearchSection from './SearchSection';
 import SortSection from './SortSection';
 import ListsView from './ListsView';
@@ -12,6 +13,8 @@ export const QuestionList: React.FC<QuestionListProps> = ({
   onListClick,
   className = '',
 }) => {
+  const navigate = useNavigate();
+  
   const {
     filteredLists,
     viewMode,
@@ -23,6 +26,16 @@ export const QuestionList: React.FC<QuestionListProps> = ({
     handleListClick,
   } = useQuestionListViewModel(initialLists, onListClick);
 
+  // Função para lidar com clique na lista
+  const handleListClickWithNavigation = (list: QuestionListType) => {
+    // Chama a callback original se existir
+    if (onListClick) {
+      onListClick(list);
+    }
+    
+    // Navega para a página de questões da lista
+    navigate(`/listas/${list.id}/questoes`);
+  };
   return (
     <div className={`question-list-page ${className}`}>
       {/* Header com controles de visualização */}
@@ -66,7 +79,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
         <ListsView
           lists={filteredLists}
           viewMode={viewMode}
-          onListClick={handleListClick}
+          onListClick={handleListClickWithNavigation}
         />
       )}
     </div>

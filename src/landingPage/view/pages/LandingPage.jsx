@@ -9,11 +9,17 @@ import VerticalNavbar from "../../../VerticalNavbar/presentation/components/Vert
 import TopBarPage from "../../../TopBar/view/pages/TopBarPage.tsx";
 import ListarQuestoesPage from "../../../listaQuestoes/view/pages/QuestionListPage.tsx";
 import QuestionPage from "../../../question/view/pages/QuestionPage.tsx";
+import ListMain from "../../../listMain/view/pages/ListMain.tsx";
 const LandingPage = () => {
   return (
     <>
 
-<QuestionPage  />
+      <HeaderView />
+      <BannerSection />
+      <StudyPerformance />
+      <NotEasyDashboard/>
+      <PlanCarousel/>
+      <Footer />
     </>
   );
 };

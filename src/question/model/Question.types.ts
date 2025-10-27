@@ -29,6 +29,7 @@ export interface QuestionNavigation {
 
 export interface QuestionProps {
   question: Question;
+  questions?: Question[];
   onAnswerSelect?: (questionId: string, answerId: string) => void;
   onNavigate?: (direction: 'previous' | 'next') => void;
   onFinish?: () => void;

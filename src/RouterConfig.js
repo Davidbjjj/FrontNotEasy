@@ -13,9 +13,10 @@ import LoginComponent from './components/login/LoginComponent';
 import RedefenirSenhaComponent from './components/redefenirsenha/RedefenirSenhaComponent';
 import RegistrationComponent from './alunos/presentation/components/RegistrationComponent';
 import TeacherRegistrationComponent from './professores/presentation/components/TeacherRegistrationComponent';
-import MinhasQuestoesPage from './listaQuestoess/views/pages/MinhasQuestoesPage';
+import MinhasQuestoesPage from './listMain/view/pages/ListMain';
 import LandingPage from './landingPage/view/pages/LandingPage';
-
+import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
+import QuestionPage from './question/view/pages/QuestionPage';
 
 
 
@@ -38,7 +39,8 @@ const RouterConfig = () => {
       <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} />
       <Route path="/validar-token" element={<ValidateTokenPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
-      
+      <Route path="/listas" element={<QuestionListPage />} />
+      <Route path="/listas/:listaId/questoes" element={<QuestionPage />} />
     </Routes>
   );
 };

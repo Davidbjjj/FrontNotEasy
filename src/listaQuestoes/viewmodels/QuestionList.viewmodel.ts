@@ -1,52 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
 import { QuestionList, SearchFilters, QuestionListViewModel } from '../model/QuestionList.types';
-
-// Mock data - substituir por chamada API real
-const mockQuestionLists: QuestionList[] = [
-  {
-    id: '1',
-    title: 'Língua Portuguesa',
-    subject: { id: 'portugues', name: 'Português', color: '#3B82F6' },
-    professor: { id: '1', name: 'Carlos Lacerdá M.' },
-    questionsCompleted: 0,
-    totalQuestions: 12,
-    deadline: '15 dias',
-    tags: ['Concedência Nominal', 'Concedência Verbal'],
-    createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15'),
-  },
-  {
-    id: '2',
-    title: 'Língua Inglesa',
-    subject: { id: 'ingles', name: 'Inglês', color: '#EF4444' },
-    professor: { id: '2', name: 'Fulano da Silva' },
-    questionsCompleted: 9,
-    totalQuestions: 12,
-    deadline: '3 dias',
-    tags: ['Concedência Verbal'],
-    createdAt: new Date('2024-01-10'),
-    updatedAt: new Date('2024-01-10'),
-  },
-  {
-    id: '3',
-    title: 'Matemática',
-    subject: { id: 'matematica', name: 'Matemática', color: '#10B981' },
-    professor: { id: '3', name: 'Ada Lovelace N. S.' },
-    questionsCompleted: 10,
-    totalQuestions: 20,
-    deadline: '15 dias',
-    tags: ['Concedência Verbal'],
-    createdAt: new Date('2024-01-12'),
-    updatedAt: new Date('2024-01-12'),
-  },
-];
+import { questionListService } from '../services/api/questionList.service';
 
 export const useQuestionListViewModel = (
   initialLists?: QuestionList[],
   onListClick?: (list: QuestionList) => void
 ): QuestionListViewModel => {
-  const [lists, setLists] = useState<QuestionList[]>(initialLists || mockQuestionLists);
-  const [filteredLists, setFilteredLists] = useState<QuestionList[]>(initialLists || mockQuestionLists);
+  const [lists, setLists] = useState<QuestionList[]>(initialLists || []);
+  const [filteredLists, setFilteredLists] = useState<QuestionList[]>(initialLists || []);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     query: '',
@@ -54,30 +15,36 @@ export const useQuestionListViewModel = (
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Simular carregamento de dados
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      // Simular chamada API
-      setTimeout(() => {
-        setLists(mockQuestionLists);
-        setFilteredLists(mockQuestionLists);
-        setIsLoading(false);
-      }, 500);
-    };
-
-    if (!initialLists) {
-      loadData();
+  // Carregar dados da API
+  const loadQuestionLists = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await questionListService.getAllQuestionLists();
+      setLists(data);
+      setFilteredLists(data);
+    } catch (error) {
+      console.error('Erro ao carregar listas:', error);
+      // Você pode querer manter os dados mockados como fallback
+      setLists([]);
+      setFilteredLists([]);
+    } finally {
+      setIsLoading(false);
     }
-  }, [initialLists]);
+  }, []);
+
+  useEffect(() => {
+    if (!initialLists) {
+      loadQuestionLists();
+    }
+  }, [initialLists, loadQuestionLists]);
 
   const handleSearch = useCallback((filters: SearchFilters) => {
     setSearchFilters(filters);
     setIsLoading(true);
 
-    // Simular filtragem
+    // Usar setTimeout para simular delay de busca (opcional)
     setTimeout(() => {
-      let filtered = mockQuestionLists;
+      let filtered = lists;
 
       // Filtro por texto
       if (filters.query) {
@@ -97,7 +64,7 @@ export const useQuestionListViewModel = (
           );
           break;
         case 'deadline':
-          // Ordenar por deadline (simplificado)
+          // Ordenar por deadline (ajuste conforme seus dados reais)
           filtered = [...filtered].sort((a, b) => 
             parseInt(a.deadline || '0') - parseInt(b.deadline || '0')
           );
@@ -112,7 +79,7 @@ export const useQuestionListViewModel = (
       setFilteredLists(filtered);
       setIsLoading(false);
     }, 300);
-  }, []);
+  }, [lists]);
 
   const handleSortChange = useCallback((sortBy: SearchFilters['sortBy']) => {
     handleSearch({ ...searchFilters, sortBy });
@@ -123,10 +90,10 @@ export const useQuestionListViewModel = (
   }, []);
 
   const handleListClick = useCallback((list: QuestionList) => {
-    if (onListClick) {
-      onListClick(list);
-    }
-  }, [onListClick]);
+  if (onListClick) {
+    onListClick(list);
+  }
+}, [onListClick]);
 
   return {
     lists,
