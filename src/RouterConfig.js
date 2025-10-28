@@ -16,12 +16,16 @@ import TeacherRegistrationComponent from './professores/presentation/components/
 import HomePage from './home/views/pages/HomePage';
 import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
 import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
+import LandingPage from './landingPage/view/pages/LandingPage';
+import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
+import QuestionPage from './question/view/pages/QuestionPage';
+
 
 
 const RouterConfig = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="/sobre" element={<SobreComponent />} />
       <Route path="/simulados" element={<SimuladosComponent />} />
       <Route path="/questoes" element={<QuestionsComponent />} />
@@ -38,6 +42,8 @@ const RouterConfig = () => {
       <Route path="/validar-token" element={<ValidateTokenPage />} />
         <Route path="/disciplinas" element={<DisciplinasPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/listas" element={<QuestionListPage />} />
+      <Route path="/listas/:listaId/questoes" element={<QuestionPage />} />
     </Routes>
   );
 };
