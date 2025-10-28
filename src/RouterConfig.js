@@ -15,6 +15,7 @@ import RegistrationComponent from './alunos/presentation/components/Registration
 import TeacherRegistrationComponent from './professores/presentation/components/TeacherRegistrationComponent';
 import HomePage from './home/views/pages/HomePage';
 import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
+import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
 
 
 const RouterConfig = () => {
@@ -35,6 +36,7 @@ const RouterConfig = () => {
       <Route path="/cadastro-professor" element={<TeacherRegistrationComponent />} />
       <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} />
       <Route path="/validar-token" element={<ValidateTokenPage />} />
+        <Route path="/disciplinas" element={<DisciplinasPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
     </Routes>
   );
