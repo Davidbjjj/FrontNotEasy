@@ -13,7 +13,9 @@ import LoginComponent from './components/login/LoginComponent';
 import RedefenirSenhaComponent from './components/redefenirsenha/RedefenirSenhaComponent';
 import RegistrationComponent from './alunos/presentation/components/RegistrationComponent';
 import TeacherRegistrationComponent from './professores/presentation/components/TeacherRegistrationComponent';
-import MinhasQuestoesPage from './listMain/view/pages/ListMain';
+import HomePage from './home/views/pages/HomePage';
+import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
+import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
 import LandingPage from './landingPage/view/pages/LandingPage';
 import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPage from './question/view/pages/QuestionPage';
@@ -38,6 +40,7 @@ const RouterConfig = () => {
       <Route path="/cadastro-professor" element={<TeacherRegistrationComponent />} />
       <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} />
       <Route path="/validar-token" element={<ValidateTokenPage />} />
+        <Route path="/disciplinas" element={<DisciplinasPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/listas" element={<QuestionListPage />} />
       <Route path="/listas/:listaId/questoes" element={<QuestionPage />} />
