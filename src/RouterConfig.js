@@ -17,7 +17,7 @@ import HomePage from './home/views/pages/HomePage';
 // import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
 import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
 import LandingPage from './landingPage/view/pages/LandingPage';
-import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
+import QuestionListPage from './listMain/view/pages/ListMain';
 import QuestionPage from './question/view/pages/QuestionPage';
 
 

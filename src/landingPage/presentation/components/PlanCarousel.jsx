@@ -40,7 +40,6 @@ const PlanCarousel = () => {
         { name: "Questões", included: true },
         { name: "Listas", included: true },
         { name: "Relatório", included: true },
-        { name: "Sugestões de IA", included: true },
         { name: "Suporte Prioritário", included: true },
         { name: "Customização", included: true }
       ],

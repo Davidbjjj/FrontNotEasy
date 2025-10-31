@@ -13,6 +13,8 @@ import {
 } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
+import { authService } from "../../services/api/authService"; 
+
 
 const { Title, Text } = Typography;
 const BRAND_LOGO = "/LogoGGE.svg";
@@ -27,20 +29,17 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
     setIsButtonDisabled(hasEmpty);
   };
 
-  const handleFinish = async (values) => {
-    try {
-      if (onSubmit) {
-        await onSubmit(values);
-      } else {
-        message.success("Login realizado com sucesso!");
-        console.log("login submit:", values);
-      }
-    } catch (error) {
-      message.error(
-        "Ocorreu um erro no login. Verifique os dados e tente novamente."
-      );
-    }
-  };
+
+const handleFinish = async (values) => {
+  try {
+    await authService.login(values);
+    message.success("Login realizado com sucesso!");
+    navigate("/listas"); // redirecione para onde quiser após o login
+  } catch (error) {
+    message.error(error.message || "Erro ao fazer login. Tente novamente.");
+  }
+};
+
 
   const handleFinishFailed = ({ errorFields }) => {
     if (errorFields.length > 0) {
