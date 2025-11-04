@@ -11,6 +11,7 @@ export interface Question {
   progress: number; // 0-100
   currentQuestion: number;
   totalQuestions: number;
+  listaId?: string; // Adicione o ID da lista
 }
 
 export interface QuestionOption {
@@ -28,9 +29,11 @@ export interface QuestionNavigation {
 }
 
 export interface QuestionProps {
-  question: Question;
-  questions?: Question[];
-  onAnswerSelect?: (questionId: string, answerId: string) => void;
+  question?: Question; // Torna opcional
+  questions: Question[];
+  listaId: string; // Adicione listaId como prop obrigatória
+  estudanteId: string; // Adicione estudanteId como prop obrigatória
+  onAnswerSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   onNavigate?: (direction: 'previous' | 'next') => void;
   onFinish?: () => void;
   className?: string;

@@ -66,7 +66,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
         </div>
       </div>
       <div className="question-list__header-actions">
-          <AddListButton professorId={'83862614-784d-4ac0-a40c-d511ff8b706e'} />
+          <AddListButton professorId={'9f8053db-aec7-40c6-9d06-f25ac308d268'} />
           </div>
 
       {/* Seção de busca */}

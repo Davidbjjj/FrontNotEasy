@@ -9,6 +9,8 @@ import './Question.css';
 export const Question: React.FC<QuestionProps> = ({
   question,
   questions,
+  listaId,
+  estudanteId,
   onAnswerSelect,
   onNavigate,
   onFinish,
@@ -23,7 +25,7 @@ export const Question: React.FC<QuestionProps> = ({
     handleAnswerSelect,
     handleNavigate,
     handleFinish,
-  } = useQuestionViewModel(questionsArray, onAnswerSelect, onNavigate, onFinish);
+  } = useQuestionViewModel(questionsArray, listaId, estudanteId, onAnswerSelect, onNavigate, onFinish);
 
   return (
     <div className={`question-page ${className}`}>

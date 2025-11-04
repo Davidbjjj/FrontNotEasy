@@ -1,127 +1,101 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Question from '../../presentation/components/Question';
-import { Question as QuestionType } from '../../model/Question.types';
+import { Question } from '../../presentation/components/Question';
 import { questionService } from '../../service/api/question.service';
 
-interface RespostaQuestaoDTO {
-  questaoId: number;
-  alternativa: number;
-}
 
-interface EnviarMultiplasRespostasDTO {
-  estudanteId: string;
-  listaId: string;
-  respostas: RespostaQuestaoDTO[];
-}
-
-const QuestionPage: React.FC = () => {
+export const QuestionPage: React.FC = () => {
   const { listaId } = useParams<{ listaId: string }>();
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [respostas, setRespostas] = useState<RespostaQuestaoDTO[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const estudanteId = "9223f4f2-4b0a-46e3-91a8-9f6a767e3d1f"; // ou do localStorage / contexto
+  // Em um app real, você pegaria o estudanteId do contexto/auth
+  const estudanteId = 'efee86b1-6f12-4a10-ad33-0b0233e1a461'; // Exemplo - substitua pela forma real
 
-  // Carregar questões
   useEffect(() => {
     const loadQuestions = async () => {
-      if (!listaId) return;
+      if (!listaId) {
+        setError('ID da lista não encontrado na URL');
+        setLoading(false);
+        return;
+      }
 
-      setIsLoading(true);
-      setError(null);
       try {
-        const data = await questionService.getQuestionsByListId(listaId);
-        setQuestions(data);
-      } catch (err) {
-        setError('Erro ao carregar questões da lista.');
-        console.error('Erro:', err);
+        console.log(`Carregando questões para lista: ${listaId}`);
+        const questionsData = await questionService.getQuestionsByListId(listaId);
+        setQuestions(questionsData);
+        setError(null);
+      } catch (error) {
+        console.error('Erro ao carregar questões:', error);
+        setError('Erro ao carregar as questões. Tente novamente.');
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     loadQuestions();
   }, [listaId]);
 
-  // Quando o usuário seleciona uma resposta
-  const handleAnswerSelect = (questionId: string, answerId: string) => {
-    const questaoId = Number(questionId);
-    const alternativa = answerId.charCodeAt(0) - 65; // converte A->0, B->1, etc.
-
-    setRespostas((prev) => {
-      const existente = prev.find((r) => r.questaoId === questaoId);
-      if (existente) {
-        return prev.map((r) =>
-          r.questaoId === questaoId ? { ...r, alternativa } : r
-        );
-      } else {
-        return [...prev, { questaoId, alternativa }];
-      }
-    });
+  const handleAnswerSelect = (questionId: string, answerId: string, alternativaIndex: number) => {
+    console.log(`Resposta selecionada: questão ${questionId}, alternativa ${answerId} (índice ${alternativaIndex})`);
   };
 
-  // Navegação
   const handleNavigate = (direction: 'previous' | 'next') => {
-    if (direction === 'previous' && currentQuestionIndex > 0) {
-      setCurrentQuestionIndex((prev) => prev - 1);
-    } else if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-    }
+    console.log(`Navegando para: ${direction}`);
   };
 
-  // Envia todas as respostas no final
-  const handleFinish = async () => {
-    if (!listaId || !estudanteId) return;
-
-    const payload: EnviarMultiplasRespostasDTO = {
-      estudanteId,
-      listaId,
-      respostas,
-    };
-
-    console.log("Enviando respostas ao backend:", payload);
-
-    try {
-      const response = await fetch("http://localhost:8080/respostas/multiplas", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        const message = await response.text();
-        alert("Lista finalizada! " + message);
-
-        // opcional: buscar resultados de acertos/erros
-        // const result = await fetch(`http://localhost:8080/listas/${listaId}/respostas`);
-        // const data = await result.json();
-        // console.log("Resultados:", data);
-      } else {
-        alert("Erro ao salvar respostas!");
-      }
-    } catch (error) {
-      console.error("Erro ao enviar respostas:", error);
-      alert("Falha na comunicação com o servidor.");
-    }
+  const handleFinish = () => {
+    console.log('Questionário finalizado!');
+    // Aqui você pode navegar para uma página de resultados
+    // ou mostrar um resumo das respostas
+    alert('Questionário finalizado com sucesso!');
   };
 
-  if (isLoading) return <p>Carregando questões...</p>;
-  if (error) return <p>{error}</p>;
-  if (questions.length === 0) return <p>Nenhuma questão encontrada.</p>;
+  if (loading) {
+    return (
+      <div className="question-page-loading">
+        <div className="loading-spinner"></div>
+        <p>Carregando questões...</p>
+      </div>
+    );
+  }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  if (error) {
+    return (
+      <div className="question-page-error">
+        <h2>Erro</h2>
+        <p>{error}</p>
+        <button onClick={() => window.history.back()}>
+          Voltar
+        </button>
+      </div>
+    );
+  }
+
+  if (questions.length === 0) {
+    return (
+      <div className="question-page-empty">
+        <h2>Nenhuma questão encontrada</h2>
+        <p>Esta lista não possui questões ou ocorreu um erro ao carregar.</p>
+        <button onClick={() => window.history.back()}>
+          Voltar para listas
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <Question
-      question={currentQuestion}
-      questions={questions}
-      onAnswerSelect={handleAnswerSelect}
-      onNavigate={handleNavigate}
-      onFinish={handleFinish}
-    />
+    <div className="question-page-container">
+      <Question
+        questions={questions}
+        listaId={listaId!}
+        estudanteId={estudanteId}
+        onAnswerSelect={handleAnswerSelect}
+        onNavigate={handleNavigate}
+        onFinish={handleFinish}
+      />
+    </div>
   );
 };
 
