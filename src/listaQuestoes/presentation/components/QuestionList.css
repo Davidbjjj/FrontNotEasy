@@ -3,6 +3,11 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+.question-list__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
 
 /* Header */
 .question-list__header {

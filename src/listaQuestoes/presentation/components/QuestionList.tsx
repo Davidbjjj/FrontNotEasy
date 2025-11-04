@@ -7,6 +7,7 @@ import SearchSection from './SearchSection';
 import SortSection from './SortSection';
 import ListsView from './ListsView';
 import './QuestionList.css';
+import AddListButton from './AddListButton/AddListButton';
 
 export const QuestionList: React.FC<QuestionListProps> = ({
   initialLists,
@@ -42,7 +43,8 @@ export const QuestionList: React.FC<QuestionListProps> = ({
       <div className="question-list__header">
         <h1 className="question-list__title">Listas de Questões</h1>
         
-        <div className="question-list__view-controls">
+          <div className="question-list__view-controls">
+          
           <button
             className={`question-list__view-btn ${
               viewMode === 'list' ? 'question-list__view-btn--active' : ''
@@ -63,6 +65,9 @@ export const QuestionList: React.FC<QuestionListProps> = ({
           </button>
         </div>
       </div>
+      <div className="question-list__header-actions">
+          <AddListButton professorId={'83862614-784d-4ac0-a40c-d511ff8b706e'} />
+          </div>
 
       {/* Seção de busca */}
       <SearchSection onSearch={handleSearch} />

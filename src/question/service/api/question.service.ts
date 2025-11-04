@@ -9,7 +9,7 @@ export interface QuestaoResponseDTO {
 }
 
 class QuestionService {
-  private baseURL = 'http://localhost:8082/listas';
+  private baseURL = 'http://localhost:8080/listas';
 
   async getQuestionsByListId(listaId: string): Promise<Question[]> {
     try {
