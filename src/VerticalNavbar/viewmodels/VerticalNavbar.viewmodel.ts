@@ -13,7 +13,7 @@ export const useVerticalNavbarViewModel = (
       { id: 'questoes', label: 'Questões', isActive: false, path: '/questoes' },
       { id: 'listas', label: 'Listas', isActive: true, path: '/listas' },
       { id: 'atividades', label: 'Atividades', isActive: false, path: '/atividades' },
-      { id: 'simulados', label: 'Simulados', isActive: false, path: '/simulados' },
+
       { id: 'disciplinas', label: 'Disciplinas', isActive: false, path: '/disciplinas' },
       { id: 'config', label: 'Configuração', isActive: false, path: '/config' },
     ]

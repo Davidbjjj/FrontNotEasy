@@ -21,6 +21,7 @@ import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPage from './question/view/pages/QuestionPage';
 
 import ActivityPage from './Atividade/view/pages/ActivityPage';
+import QuestoesPage from './questoes/view/pages/QuestoesPage';
 
 
 
@@ -31,7 +32,7 @@ const RouterConfig = () => {
       <Route path="/sobre" element={<SobreComponent />} />
       <Route path="/simulados" element={<SimuladosComponent />} />
       <Route path="/atividades" element={<ActivityPage />} />
-      <Route path="/questoes" element={<QuestionsComponent />} />
+      <Route path="/questoes" element={<QuestoesPage />} />
       {/* <Route path="/minhasQuestoes" element={<MinhasQuestoesComponent />} /> */}
       <Route path="/config" element={<ConfigComponent />} />
       <Route path="/cadastros" element={<CadastrosComponent />} />

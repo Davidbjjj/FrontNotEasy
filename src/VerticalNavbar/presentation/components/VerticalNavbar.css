@@ -1,17 +1,18 @@
 .vertical-navbar {
   width: 100px;
-  height: 100vh;
+  height: calc(100vh - 60px); /* Ajusta a altura considerando o header */
   background-color: #ffffff;
   border-right: 1px solid #e9ecef;
   padding: 20px 0;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 60px; /* Posiciona abaixo do header */
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: width 0.3s ease;
   overflow: hidden;
+   /* Garante que fique acima de outros elementos */
 }
 
 .vertical-navbar:hover {
@@ -84,15 +85,25 @@
   opacity: 1;
 }
 
-.vertical-navbar:hover ~ .list-main__content {
-  margin-left: 220px;
+/* Ajuste para o conteúdo principal */
+.list-main__content {
+  margin-left: 100px;
   transition: margin-left 0.3s ease;
 }
 
+.vertical-navbar:hover ~ .list-main__content {
+  margin-left: 220px;
+}
 
 /* Responsivo */
 @media (max-width: 768px) {
   .vertical-navbar {
     width: 80px;
+    top: 50px; /* Ajuste menor para mobile se o header for menor */
+    height: calc(100vh - 50px);
+  }
+  
+  .list-main__content {
+    margin-left: 80px;
   }
 }

@@ -8,7 +8,7 @@ const App: React.FC = () => {
   const { activities, toggleActivity } = useActivityViewModel(mockActivities);
 
   return (
-    <MainLayout>
+    <MainLayout >
     <div className="App">
       <ActivityList 
         activities={activities} 

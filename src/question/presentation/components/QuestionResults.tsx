@@ -41,26 +41,7 @@ export const QuestionResults: React.FC<QuestionResultsProps> = ({
     <div className="question-results">
       <div className="results-header">
         <h2 className="results-title">Resultado do Questionário</h2>
-        <div className="results-summary">
-          <div className="score-circle">
-            <span className="score-value">{score}%</span>
-            <span className="score-label">Pontuação</span>
-          </div>
-          <div className="results-stats">
-            <div className="stat-item correct">
-              <span className="stat-number">{correctAnswers}</span>
-              <span className="stat-label">Corretas</span>
-            </div>
-            <div className="stat-item wrong">
-              <span className="stat-number">{wrongAnswers}</span>
-              <span className="stat-label">Erradas</span>
-            </div>
-            <div className="stat-item total">
-              <span className="stat-number">{totalQuestions}</span>
-              <span className="stat-label">Total</span>
-            </div>
-          </div>
-        </div>
+        
       </div>
 
       <div className="results-details">
