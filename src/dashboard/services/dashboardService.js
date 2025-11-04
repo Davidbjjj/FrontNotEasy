@@ -1,19 +1,12 @@
-import axios from "axios";
-import { createDesempenhoModel } from "../model/dashboardModels";
+import api from "./api";
 
-const API_BASE_URL = "https://noteasy-backend.onrender.com";
-
-export const DesempenhoService = {
-  async buscarDesempenho(listId, estudanteId) {
-    try {
-      const response = await axios.get(
-        `${API_BASE_URL}/listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`
-      );
-      // Aqui você colocará o retorno real da API
-      return createDesempenhoModel(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar desempenho:", error);
-      throw error;
-    }
-  },
-};
+// Recebe o id da lista e do estudante e retorna o JSON
+export async function buscarListaPorEstudante(listId, estudanteId) {
+  try {
+    const response = await api.get(`/listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`);
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao buscar dados da lista:", error);
+    return null;
+  }
+}

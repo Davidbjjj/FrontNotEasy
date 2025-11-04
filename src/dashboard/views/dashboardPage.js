@@ -1,88 +1,62 @@
-import React from "react";
-import { useDesempenhoViewModel } from "../viewmodels/dashboardViewModel";
-import  Card  from "../../components/Card"
-import  Progress  from "../../components/Progress"
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Card from '../../components/card/Card'
+import Progress from '../../components/progress/Progress'
+import './dashboardPage.css'
 
+export default function DashboardPage() {
+  const [dados, setDados] = useState(null);
+  const listId = "6ec734e9-cd9a-42f1-802c-a7ec0e218538";
+  const estudanteId = "efee86b1-6f12-4a10-ad33-0b0233e1a461";
 
-const COLORS = ["#22c55e", "#ef4444"]; // verde e vermelho
+  useEffect(() => {
+    axios.get(`http://localhost:8080/listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`)
+      .then(response => setDados(response.data))
+      .catch(err => console.error("Erro ao carregar dados:", err));
+  }, []);
 
-export const DashboardPage = () => {
-  const listId = 1; // 🔹 depois será dinâmico
-  const estudanteId = 1; // 🔹 depois será dinâmico
-  const { desempenho, loading } = useDesempenhoViewModel(listId, estudanteId);
-
-  if (loading) return <p>Carregando dados...</p>;
-  if (!desempenho) return <p>Nenhum dado encontrado.</p>;
-
-  const pieData = [
-    { name: "Acertos", value: desempenho.percentualAcertos },
-    { name: "Erros", value: 100 - desempenho.percentualAcertos },
-  ];
+  if (!dados) {
+    return <p style={{ textAlign: 'center', marginTop: '50px' }}>Carregando dados...</p>;
+  }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="grid grid-cols-4 gap-4">
-        <Card className="p-4 text-center">
-          <h2 className="text-sm text-gray-600">Nota da Lista</h2>
-          <p className="text-2xl font-semibold text-blue-600">
-            {desempenho.notaLista.toFixed(2)}
-          </p>
-        </Card>
+    <div className="dashboard-container">
+      <h1>Dashboard do Estudante</h1>
 
-        <Card className="p-4 text-center">
-          <h2 className="text-sm text-gray-600">% de acertos</h2>
-          <p className="text-2xl font-semibold text-green-600">
-            {desempenho.percentualAcertos.toFixed(2)}%
-          </p>
-        </Card>
-
-        <Card className="p-4 text-center">
-          <h2 className="text-sm text-gray-600">Total de Questões</h2>
-          <p className="text-2xl font-semibold">{desempenho.totalQuestoes}</p>
-        </Card>
-
-        <Card className="p-4 text-center">
-          <h2 className="text-sm text-gray-600">Questões Respondidas</h2>
-          <p className="text-2xl font-semibold">{desempenho.questoesRespondidas}</p>
-        </Card>
+      <div className="card-container">
+        <Card title="Nota Final" value={dados.notaLista} />
+        <Card title="Total de Questões" value={dados.totalQuestoes} />
+        <Card title="Respondidas" value={dados.questõesRespondidas} />
+        <Card title="Corretas" value={dados.questõesCorretas} />
       </div>
 
-      <div className="grid grid-cols-2 gap-6">
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Desempenho</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-          <p className="text-center text-xl font-semibold text-gray-700">
-            {desempenho.percentualAcertos.toFixed(2)}%
-          </p>
-        </Card>
+      <div className="progress-section">
+        <Progress percentage={dados.porcentagemAcertos} />
+      </div>
 
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Questões</h3>
-          {desempenho.questoes.map((q) => (
-            <div key={q.id} className="mb-3">
-              <p className="text-sm text-gray-700 mb-1">{q.titulo}</p>
-              <Progress value={q.percentualAcertos} />
-            </div>
+      <h2>Respostas</h2>
+      <table className="respostas-table">
+        <thead>
+          <tr>
+            <th>Questão ID</th>
+            <th>Estudante</th>
+            <th>Alternativa</th>
+            <th>Correta</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dados.respostas.map((r, i) => (
+            <tr key={i}>
+              <td>{r.questaoId}</td>
+              <td>{r.nomeEstudante}</td>
+              <td>{r.alternativa}</td>
+              <td style={{ color: r.correta ? 'green' : 'red' }}>
+                {r.correta ? '✔️' : '❌'}
+              </td>
+            </tr>
           ))}
-        </Card>
-      </div>
+        </tbody>
+      </table>
     </div>
   );
-};
+}

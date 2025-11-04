@@ -19,7 +19,7 @@ import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
 import LandingPage from './landingPage/view/pages/LandingPage';
 import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPage from './question/view/pages/QuestionPage';
-import { DashboardPage } from './dashboard/views/dashboardPage';
+import DashboardPage from './dashboard/views/dashboardPage';
 
 
 
