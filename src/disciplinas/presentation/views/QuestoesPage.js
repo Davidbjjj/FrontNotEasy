@@ -11,7 +11,7 @@ export default function QuestoesPage() {
         const fetchQuestoes = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:8080/listas/${id}/questoes`
+                    `https://backnoteasy-production.up.railway.app/listas/${id}/questoes`
                 );
                 setQuestoes(response.data);
             } catch (error) {

@@ -22,8 +22,8 @@ export default function DisciplinasPage() {
             try {
                 const endpoint =
                     userRole === "PROFESSOR"
-                        ? `http://localhost:8080/listas/professor/${userId}`
-                        : `http://localhost:8080/listas/estudante/${userId}`;
+                        ? `https://backnoteasy-production.up.railway.app/listas/professor/${userId}`
+                        : `https://backnoteasy-production.up.railway.app/listas/estudante/${userId}`;
 
                 const response = await axios.get(endpoint);
                 setListas(response.data);

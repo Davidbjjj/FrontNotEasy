@@ -22,7 +22,7 @@
 //     const formData = new FormData();
 //     formData.append("file", file);
 
-//     const apiUrl = "http://localhost:8080/serviceIA/processar-pdf";
+//     const apiUrl = "https://backnoteasy-production.up.railway.app/serviceIA/processar-pdf";
 
 //     axios
 //       .post(apiUrl, formData)

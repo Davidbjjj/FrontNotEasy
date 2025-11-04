@@ -12,7 +12,7 @@ export default function ValidateTokenPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/auth/validate-token", {
+      const response = await axios.post("https://backnoteasy-production.up.railway.app/auth/validate-token", {
         token: tokenInput,
       });
 
