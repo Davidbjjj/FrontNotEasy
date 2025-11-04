@@ -116,7 +116,7 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
                   <Button
                     type="link"
                     className={styles.forgotLink}
-                    onClick={onForgotPassword}
+                    onClick={()=> navigate("/redefinir-senha")}
                   >
                     Recuperar senha
                   </Button>

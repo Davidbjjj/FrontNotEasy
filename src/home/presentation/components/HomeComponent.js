@@ -1,5 +1,6 @@
 import React from 'react';
 import ProfileCard from './ProfileCard';
+import Navbar from '../../../components/navbar/NavBar';
 import './HomeComponent.css';
 
 const HomeComponent = ({ 
@@ -11,8 +12,6 @@ const HomeComponent = ({
   loading,
   error 
 }) => {
-  const navItems = ['Home', 'Explore', 'Provas'];
-
   if (loading) {
     return <div className="loading">Carregando perfis...</div>;
   }
@@ -23,13 +22,8 @@ const HomeComponent = ({
 
   return (
     <div className="home-container">
-      <nav className="navbar">
-        <ul>
-          {navItems.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      </nav>
+     
+      <Navbar />
 
       <div className="main-content">
         <div className='contentin'>
