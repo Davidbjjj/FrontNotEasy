@@ -21,6 +21,9 @@ import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPage from './question/view/pages/QuestionPage';
 
 import ActivityPage from './Atividade/view/pages/ActivityPage';
+import CadastroProfessorPage from "./cadastro/professores/views/CadastroProfessorPage";
+import CadastroEstudantePage from "./cadastro/estudantes/views/CadastroEstudantePage";
+import EscolherCadastroPage from "./cadastro/views/EscolherCadastroPage";
 
 
 
@@ -34,19 +37,19 @@ const RouterConfig = () => {
       <Route path="/questoes" element={<QuestionsComponent />} />
       {/* <Route path="/minhasQuestoes" element={<MinhasQuestoesComponent />} /> */}
       <Route path="/config" element={<ConfigComponent />} />
-      <Route path="/cadastros" element={<CadastrosComponent />} />
       {/* <Route path="/formaluno" element={<CadastroAlunoComponent />} /> */}
       {/* <Route path="/formprofessor" element={<CadastroProfessorComponent />} /> */}
       <Route path="/login" element={<LoginComponent/>} />
       <Route path="/redefinir-senha" element={<RedefenirSenhaComponent/>} />
-      <Route path="/cadastro-aluno" element={<RegistrationComponent />} />
-      <Route path="/cadastro-professor" element={<TeacherRegistrationComponent />} />
       {/* <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} /> */}
       <Route path="/validar-token" element={<ValidateTokenPage />} />
       <Route path="/disciplinas" element={<DisciplinasPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/listas" element={<QuestionListPage />} />
       <Route path="/listas/:listaId/questoes" element={<QuestionPage />} />
+        <Route path="/cadastros" element={<EscolherCadastroPage />} />
+        <Route path="/cadastro-estudante" element={<CadastroEstudantePage />} />
+        <Route path="/cadastro-professor" element={<CadastroProfessorPage />} />
     </Routes>
   );
 };

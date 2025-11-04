@@ -1,6 +1,7 @@
 export interface UserInfo {
   name: string;
   avatar?: string;
+  email?: string;
 }
 
 export interface Notification {

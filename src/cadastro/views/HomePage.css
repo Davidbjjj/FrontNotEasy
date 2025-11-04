@@ -1,0 +1,132 @@
+* {
+    margin: 0;
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.home-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+    font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.header {
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo-ggf {
+    font-weight: 900;
+    font-size: 24px;
+    color: #dc2626;
+}
+
+.logo-noteasy {
+    font-weight: 600;
+    font-size: 16px;
+    color: #f59e0b;
+}
+
+.home-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.home-title {
+    font-size: 36px;
+    color: #1f2937;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.home-subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.cards-container {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.role-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.role-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+    display: inline-block;
+}
+
+.student-icon {
+    color: #3b82f6;
+}
+
+.teacher-icon {
+    color: #10b981;
+}
+
+.card-title {
+    font-size: 22px;
+    color: #1f2937;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.card-description {
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 24px;
+}
+
+.card-button {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.card-button:hover {
+    background-color: #b91c1c;
+}
+
+.card-button:active {
+    transform: scale(0.98);
+}

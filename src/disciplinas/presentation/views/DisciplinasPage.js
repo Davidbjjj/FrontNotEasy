@@ -23,7 +23,7 @@ export default function DisciplinasPage() {
                 const endpoint =
                     userRole === "PROFESSOR"
                         ? `http://localhost:8080/listas/professor/${userId}`
-                        : `http://localhost:8080/listas/estudante/${userId}`;
+                        : `http://localhost:8080/listas/estudante/`;
 
                 const response = await axios.get(endpoint);
                 setListas(response.data);
