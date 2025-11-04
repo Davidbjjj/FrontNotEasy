@@ -1,3 +1,4 @@
+// view/pages/TS NavigationPage.ts
 import * as React from 'react';
 import VerticalNavbar from '../../presentation/components/VerticalNavbar';
 

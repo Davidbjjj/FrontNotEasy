@@ -1,0 +1,91 @@
+/* Reutiliza os estilos do modal anterior e adiciona: */
+
+.file-drop-zone {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafafa;
+}
+
+.file-drop-zone:hover {
+  border-color: #3b82f6;
+  background: #f0f9ff;
+}
+
+.file-drop-zone--has-file {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-drop-content {
+  color: #6b7280;
+}
+
+.file-drop-icon {
+  margin: 0 auto 16px;
+  color: #9ca3af;
+}
+
+.file-drop-text {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #374151;
+}
+
+.file-drop-hint {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.file-selected-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 20px;
+}
+
+.file-selected-icon {
+  color: #10b981;
+  flex-shrink: 0;
+}
+
+.file-info {
+  flex: 1;
+  text-align: left;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #374151;
+  margin: 0 0 4px 0;
+  word-break: break-all;
+}
+
+.file-size {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.file-remove-btn {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.file-remove-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}

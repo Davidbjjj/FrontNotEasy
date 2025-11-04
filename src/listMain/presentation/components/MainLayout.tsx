@@ -1,10 +1,14 @@
+// presentation/components/MainLayout.tsx
 import React from 'react';
 import VerticalNavbar from '../../../VerticalNavbar/presentation/components/VerticalNavbar';
 import TopBar from '../../../TopBar/presentation/components/TopBar';
-import QuestionList from '../../../listaQuestoes/presentation/components/QuestionList';
-import './ListMain.css';
+import './MainLayout.css';
 
-const ListMain: React.FC = () => {
+interface MainLayoutProps {
+  children: React.ReactNode;
+}
+
+const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const handleNotificationClick = (notification: any) => {
     console.log('Notificação clicada:', notification);
   };
@@ -17,12 +21,8 @@ const ListMain: React.FC = () => {
     console.log('Sair clicado');
   };
 
-  const handleListClick = (list: any) => {
-    console.log('Lista clicada:', list);
-  };
-
   return (
-    <div className="list-main">
+    <div className="main-layout">
       {/* Barra superior ocupa toda a largura */}
       <TopBar
         onNotificationClick={handleNotificationClick}
@@ -30,13 +30,13 @@ const ListMain: React.FC = () => {
         onLogoutClick={handleLogoutClick}
       />
 
-      <div className="list-main__body">
+      <div className="main-layout__body">
         {/* Navbar lateral inicia abaixo da TopBar */}
         <VerticalNavbar />
 
-        <main className="list-main__main">
-          <div className="list-main__question-container">
-            <QuestionList onListClick={handleListClick} />
+        <main className="main-layout__main">
+          <div className="main-layout__content">
+            {children}
           </div>
         </main>
       </div>
@@ -44,4 +44,4 @@ const ListMain: React.FC = () => {
   );
 };
 
-export default ListMain;
+export default MainLayout;

@@ -1,18 +1,25 @@
+// viewmodels/VerticalNavbar.viewmodel.ts
 import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { NavItem, VerticalNavbarViewModel } from '../model/VerticalNavbar.types';
 
 export const useVerticalNavbarViewModel = (
   initialItems?: NavItem[],
   onItemClick?: (item: NavItem) => void
 ): VerticalNavbarViewModel => {
+  const navigate = useNavigate();
   const [navItems, setNavItems] = useState<NavItem[]>(
     initialItems || [
-      { id: 'questoes', label: 'Questões', isActive: false },
-      { id: 'frame-110', label: 'Listas', isActive: true },
+      { id: 'questoes', label: 'Questões', isActive: false, path: '/questoes' },
+      { id: 'listas', label: 'Listas', isActive: true, path: '/listas' },
+      { id: 'atividades', label: 'Atividades', isActive: false, path: '/atividades' },
+      { id: 'simulados', label: 'Simulados', isActive: false, path: '/simulados' },
+      { id: 'disciplinas', label: 'Disciplinas', isActive: false, path: '/disciplinas' },
+      { id: 'config', label: 'Configuração', isActive: false, path: '/config' },
     ]
   );
 
-  const [activeItem, setActiveItem] = useState<string | null>('frame-110');
+  const [activeItem, setActiveItem] = useState<string | null>('listas');
 
   const handleItemClick = useCallback(
     (clickedItem: NavItem) => {
@@ -27,12 +34,17 @@ export const useVerticalNavbarViewModel = (
         }))
       );
 
+      // Navega para a rota correspondente
+      if (clickedItem.path) {
+        navigate(clickedItem.path);
+      }
+
       // Chama o callback externo se fornecido
       if (onItemClick) {
         onItemClick(clickedItem);
       }
     },
-    [onItemClick]
+    [onItemClick, navigate]
   );
 
   return {

@@ -16,6 +16,20 @@
   align-items: center;
   margin-bottom: 30px;
 }
+.list-card__actions {
+  display: flex;
+  gap: 8px;
+  z-index: 10; /* Para garantir que fique acima do card */
+}
+
+/* Ajuste no header do card para acomodar o botão */
+.list-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
 
 .question-list__title {
   font-size: 1.5rem;

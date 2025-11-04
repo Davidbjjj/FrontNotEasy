@@ -17,8 +17,10 @@ import HomePage from './home/views/pages/HomePage';
 // import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
 import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
 import LandingPage from './landingPage/view/pages/LandingPage';
-import QuestionListPage from './listMain/view/pages/ListMain';
+import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPage from './question/view/pages/QuestionPage';
+
+import ActivityPage from './Atividade/view/pages/ActivityPage';
 
 
 
@@ -28,6 +30,7 @@ const RouterConfig = () => {
       <Route path="/" element={<LandingPage />} />
       <Route path="/sobre" element={<SobreComponent />} />
       <Route path="/simulados" element={<SimuladosComponent />} />
+      <Route path="/atividades" element={<ActivityPage />} />
       <Route path="/questoes" element={<QuestionsComponent />} />
       {/* <Route path="/minhasQuestoes" element={<MinhasQuestoesComponent />} /> */}
       <Route path="/config" element={<ConfigComponent />} />

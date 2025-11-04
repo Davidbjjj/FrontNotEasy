@@ -1,0 +1,84 @@
+/* components/ActivityList.css */
+.activity-list {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.list-title {
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.activity-item {
+  padding: 15px 0;
+}
+
+.activity-title {
+  color: #333;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.activity-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+}
+
+.activity-checkbox {
+  display: none;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.activity-checkbox:checked + .checkmark {
+  background-color: #4CAF50;
+  border-color: #4CAF50;
+}
+
+.activity-checkbox:checked + .checkmark::after {
+  content: '✓';
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.deadline {
+  color: #666;
+  font-size: 14px;
+  margin-left: 28px;
+}
+
+.deadline.completed {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.divider {
+  border: none;
+  border-top: 2px solid #eee;
+  margin: 10px 0;
+}
