@@ -1,0 +1,32 @@
+.dashboard-container {
+  padding: 30px;
+  background: #f5f6fa;
+  min-height: 100vh;
+}
+
+.card-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+
+.progress-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.respostas-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.respostas-table th, .respostas-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
