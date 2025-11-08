@@ -27,6 +27,8 @@ export const QuestionList: React.FC<QuestionListProps> = ({
     handleListClick,
   } = useQuestionListViewModel(initialLists, onListClick);
 
+  const [clickedListId, setClickedListId] = React.useState<string | null>(null);
+
   // Função para lidar com clique na lista
   const handleListClickWithNavigation = (list: QuestionListType) => {
     // Chama a callback original se existir
@@ -34,8 +36,13 @@ export const QuestionList: React.FC<QuestionListProps> = ({
       onListClick(list);
     }
     
-    // Navega para a página de questões da lista
-    navigate(`/listas/${list.id}/questoes`);
+    // feedback imediato: marca o card como clicado (mostra spinner)
+    setClickedListId(list.id);
+
+    // Navega para a página de questões da lista após pequeno delay para renderizar o feedback
+    setTimeout(() => {
+      navigate(`/listas/${list.id}/questoes`);
+    }, 120);
   };
   return (
     <div className={`question-list-page ${className}`}>
@@ -65,16 +72,15 @@ export const QuestionList: React.FC<QuestionListProps> = ({
           </button>
         </div>
       </div>
-      <div className="question-list__header-actions">
-          <AddListButton professorId={'9f8053db-aec7-40c6-9d06-f25ac308d268'} />
-          </div>
 
       {/* Seção de busca */}
       <SearchSection onSearch={handleSearch} />
 
       {/* Seção de ordenação */}
       <SortSection onSortChange={handleSortChange} />
-
+<div className="question-list__header-actions">
+          <AddListButton professorId={'9f8053db-aec7-40c6-9d06-f25ac308d268'} />
+          </div>
       {/* Lista de questões */}
       {isLoading ? (
         <div className="question-list__loading">
@@ -85,6 +91,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
           lists={filteredLists}
           viewMode={viewMode}
           onListClick={handleListClickWithNavigation}
+          loadingListId={clickedListId}
         />
       )}
     </div>

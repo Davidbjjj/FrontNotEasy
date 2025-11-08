@@ -1,7 +1,8 @@
 import React from 'react';
 import { ListsViewProps, QuestionList } from '../../model/QuestionList.types';
 import AddQuestionsButton from './AddQuestionsButton/AddQuestionsButton';
-import { ArrowRight, Clock, Book } from 'lucide-react';
+import AddListButton from './AddListButton/AddListButton';
+import { ArrowRight, Clock, Book, FileText } from 'lucide-react';
 import './QuestionList.css';
 
 interface ListCardProps {
@@ -9,9 +10,10 @@ interface ListCardProps {
   onClick: (list: QuestionList) => void;
   viewMode: 'grid' | 'list';
   onQuestionsAdded?: () => void;
+  isLoading?: boolean;
 }
 
-const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestionsAdded }) => {
+const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestionsAdded, isLoading }) => {
   const progress = list.totalQuestions ? Math.round((list.questionsCompleted / list.totalQuestions) * 100) : 0;
 
   const handleAddQuestionsClick = (e: React.MouseEvent) => {
@@ -22,6 +24,11 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
 
   return (
     <div className="list-card" onClick={() => onClick(list)}>
+      {isLoading && (
+        <div className="list-card__loading-overlay" aria-hidden>
+          <div className="list-card__spinner" />
+        </div>
+      )}
       <div className="list-card__inner">
         <div className="list-card__thumb">
           {/* Se houver subject color, mostrar um bloco com ícone */}
@@ -76,17 +83,27 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
   );
 };
 
-export const ListsView: React.FC<ListsViewProps & { onQuestionsAdded?: () => void }> = ({
+export const ListsView: React.FC<
+  ListsViewProps & { onQuestionsAdded?: () => void; loadingListId?: string | null }
+> = ({
   lists,
   viewMode,
   onListClick,
   onQuestionsAdded,
+  loadingListId = null,
   className = '',
 }) => {
+
   if (lists.length === 0) {
     return (
       <div className="question-list__empty">
-        Nenhuma lista de questões encontrada.
+        <FileText size={64} className="question-list__empty-icon" />
+        <h3 className="question-list__empty-title">Nenhuma lista encontrada</h3>
+        <p className="question-list__empty-desc">Parece que ainda não há listas de questões. Crie sua primeira lista para começar a organizar as avaliações.</p>
+        <div className="question-list__empty-actions">
+          {/* Usamos o AddListButton para abrir o modal de criação de lista */}
+          <AddListButton className="add-list-button--empty" professorId={'9f8053db-aec7-40c6-9d06-f25ac308d268'} />
+        </div>
       </div>
     );
   }
@@ -101,6 +118,7 @@ export const ListsView: React.FC<ListsViewProps & { onQuestionsAdded?: () => voi
             onClick={onListClick}
             viewMode={viewMode}
             onQuestionsAdded={onQuestionsAdded}
+            isLoading={Boolean(loadingListId && loadingListId === list.id)}
           />
         ))}
       </div>

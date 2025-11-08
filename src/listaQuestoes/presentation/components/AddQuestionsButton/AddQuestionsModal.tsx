@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Upload, X, FileText } from 'lucide-react';
 import type { ProcessarPDFResponse } from '../../../model/AddQuestionsButton.types';
 import './AddQuestionsModal.css';
@@ -25,6 +26,18 @@ const AddQuestionsModal: React.FC<AddQuestionsModalProps> = ({
   onFileSelect,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    if (contentRef.current) {
+      try {
+        contentRef.current.focus();
+      } catch (err) {
+        // ignore
+      }
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -60,12 +73,18 @@ const AddQuestionsModal: React.FC<AddQuestionsModalProps> = ({
     }
   };
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+  const modalContent = (
+    <div className="modal-overlay" onClick={() => { if (!isLoading) onClose(); }}>
+      <div
+        className="modal-content"
+        onClick={(e) => e.stopPropagation()}
+        aria-busy={isLoading}
+        ref={contentRef}
+        tabIndex={-1}
+      >
         <div className="modal-header">
           <h2 className="modal-title">Adicionar Questões via PDF</h2>
-          <button className="modal-close" onClick={onClose} type="button">
+          <button className="modal-close" onClick={() => { if (!isLoading) onClose(); }} type="button" disabled={isLoading}>
             <X size={20} />
           </button>
         </div>
@@ -77,7 +96,7 @@ const AddQuestionsModal: React.FC<AddQuestionsModalProps> = ({
             </label>
             
             <div
-              className={`file-drop-zone ${selectedFile ? 'file-drop-zone--has-file' : ''}`}
+              className={`file-drop-zone ${selectedFile ? 'file-drop-zone--has-file' : ''} ${isLoading ? 'file-drop-zone--processing' : ''}`}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               onClick={() => fileInputRef.current?.click()}
@@ -148,6 +167,12 @@ const AddQuestionsModal: React.FC<AddQuestionsModalProps> = ({
       </div>
     </div>
   );
+
+  if (typeof document !== 'undefined') {
+    return createPortal(modalContent, document.body);
+  }
+
+  return modalContent;
 };
 
 export default AddQuestionsModal;

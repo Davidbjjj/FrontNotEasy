@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Question } from '../../presentation/components/Question';
 import { questionService } from '../../service/api/question.service';
+import AddQuestionsButton from '../../../listaQuestoes/presentation/components/AddQuestionsButton/AddQuestionsButton';
+import { FileText } from 'lucide-react';
+import './QuestionPage.css';
 
 
 export const QuestionPage: React.FC = () => {
   const { listaId } = useParams<{ listaId: string }>();
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,8 +59,13 @@ export const QuestionPage: React.FC = () => {
   if (loading) {
     return (
       <div className="question-page-loading">
-        <div className="loading-spinner"></div>
+        <div className="loading-spinner" aria-hidden />
         <p>Carregando questões...</p>
+        <div className="question-skeletons" aria-hidden>
+          <div className="question-skeleton" />
+          <div className="question-skeleton" />
+          <div className="question-skeleton" />
+        </div>
       </div>
     );
   }
@@ -73,14 +82,21 @@ export const QuestionPage: React.FC = () => {
     );
   }
 
+
   if (questions.length === 0) {
     return (
-      <div className="question-page-empty">
-        <h2>Nenhuma questão encontrada</h2>
-        <p>Esta lista não possui questões ou ocorreu um erro ao carregar.</p>
-        <button onClick={() => window.history.back()}>
-          Voltar para listas
-        </button>
+      <div className="question-page-empty-wrap">
+        <div className="question-page-empty-card">
+          <div className="question-page-empty-illustration">
+            <FileText size={48} />
+          </div>
+          <h2 className="question-page-empty-title">Nenhuma questão encontrada</h2>
+          <p className="question-page-empty-text">Esta lista ainda não possui questões. Você pode adicionar questões via PDF ou criar manualmente.</p>
+          <div className="question-page-empty-actions">
+            <AddQuestionsButton listaId={listaId ?? ''} />
+            <button className="btn btn-secondary" onClick={() => navigate('/listas')}>Voltar para listas</button>
+          </div>
+        </div>
       </div>
     );
   }

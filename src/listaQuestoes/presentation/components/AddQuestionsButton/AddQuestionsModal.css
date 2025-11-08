@@ -13,6 +13,7 @@
   align-items: center !important;
 
   padding: 20px !important;
+  z-index: 2147483000 !important; /* muito alto para ficar acima de qualquer stacking-context */
 }
 
 .modal-content {
@@ -26,6 +27,7 @@
   position: relative !important;
   margin: 0 !important;
   /* garantir que fique acima de tudo */
+  z-index: 2147483001 !important;
 
 }
 
