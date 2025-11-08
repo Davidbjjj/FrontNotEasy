@@ -9,7 +9,25 @@ export const useAddQuestionsButtonViewModel = (listaId: string) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const openModal = () => {
+    // Não abrir se já houver outro modal ativo na página (evita conflitos de hover/overlay)
+    try {
+      const existingOverlays = document.querySelectorAll('.modal-overlay');
+      if (existingOverlays && existingOverlays.length > 0) {
+        // Já existe um modal aberto; não abrir outro para evitar conflitos visuais
+        console.warn('Outro modal já está aberto — não será aberto o modal de adicionar questões.');
+        return;
+      }
+    } catch (err) {
+      // Em ambiente sem DOM (testes) continuar normalmente
+    }
+
     setIsModalOpen(true);
+    // marca no body que um modal está aberto para desativar hover/interações na lista
+    try {
+      document.body.classList.add('modal-open');
+    } catch (err) {
+      // ignore
+    }
     setError(null);
     setSelectedFile(null);
   };
@@ -18,6 +36,11 @@ export const useAddQuestionsButtonViewModel = (listaId: string) => {
     setIsModalOpen(false);
     setSelectedFile(null);
     setError(null);
+    try {
+      document.body.classList.remove('modal-open');
+    } catch (err) {
+      // ignore
+    }
   };
 
   const handleFileSelect = (file: File | null) => {

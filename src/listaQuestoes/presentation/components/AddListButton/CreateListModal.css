@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+
   padding: 20px;
 }
 
@@ -20,6 +20,18 @@
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Quando qualquer modal estiver aberto, bloqueia interações/hover no restante da página
+   exceto o overlay e seu conteúdo. Garante que nada "suba" sobre o modal. */
+body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):not(.modal-content *) {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+.modal-overlay, .modal-overlay *, .modal-content, .modal-content * {
+  pointer-events: auto !important;
 }
 
 .modal-header {

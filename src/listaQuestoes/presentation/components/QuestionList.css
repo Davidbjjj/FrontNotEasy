@@ -7,6 +7,8 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  justify-content: center; /* centraliza o botão */
+  margin-bottom: 20px;
 }
 
 /* Header */
@@ -19,7 +21,8 @@
 .list-card__actions {
   display: flex;
   gap: 8px;
-  z-index: 10; /* Para garantir que fique acima do card */
+  /* manter z-index baixo para não competir com modais (modais tem z-index muito maior) */
+
 }
 
 /* Ajuste no header do card para acomodar o botão */
@@ -158,6 +161,9 @@
 /* Lists View */
 .lists-view {
   min-height: 400px;
+  /* Garantir que o container de listas não crie um stacking context que possa sobrepor modais */
+  position: static;
+  z-index: 0;
 }
 
 .lists-view__grid {
@@ -181,6 +187,8 @@
   transition: all 0.2s ease;
   cursor: pointer;
   border: 1px solid #e5e7eb;
+  position: relative;
+  /* garantir que cards fiquem abaixo de modais com z-index alto */
 }
 
 .list-card:hover {
@@ -193,6 +201,39 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 12px;
+}
+
+/* New layout for card inner */
+.list-card__inner {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.list-card__thumb {
+  width: 72px;
+  flex: 0 0 72px;
+}
+
+.list-card__thumb-image {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-card__main {
+  flex: 1 1 auto;
+}
+
+.list-card__nav {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
 }
 
 .list-card__subject {
@@ -209,7 +250,10 @@
 }
 
 .list-card__progress {
-  margin: 16px 0;
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .list-card__progress-text {
@@ -228,9 +272,12 @@
 
 .list-card__progress-fill {
   height: 100%;
-  background: #10b981;
   border-radius: 3px;
   transition: width 0.3s ease;
+}
+
+.list-card__progress-percent {
+  font-weight: 600;
 }
 
 .list-card__deadline {
@@ -253,6 +300,33 @@
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 0.8rem;
+}
+
+.list-card__bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.list-card__deadline {
+  font-size: 0.9rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Quando um modal estiver aberto, desativa hover e interações nos cards para evitar conflito com o modal */
+.modal-open .lists-view .list-card {
+  pointer-events: none;
+  transform: none !important;
+  box-shadow: none !important;
+  opacity: 0.98;
+}
+
+.modal-open .lists-view .list-card * {
+  pointer-events: none !important;
 }
 
 /* Loading State */
@@ -285,5 +359,9 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+  .list-card__inner {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

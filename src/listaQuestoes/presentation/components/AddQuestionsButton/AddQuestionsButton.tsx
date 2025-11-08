@@ -25,6 +25,7 @@ export const AddQuestionsButton: React.FC<AddQuestionsButtonProps> = ({
     if (onQuestionsAdded) {
       onQuestionsAdded();
     }
+    closeModal(); // Fechar modal após sucesso
   };
 
   return (
@@ -39,16 +40,18 @@ export const AddQuestionsButton: React.FC<AddQuestionsButtonProps> = ({
         Adicionar Questões
       </button>
 
-      <AddQuestionsModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={handleProcessPDF}
-        onSuccess={handleSuccess}
-        isLoading={isLoading}
-        error={error}
-        selectedFile={selectedFile}
-        onFileSelect={handleFileSelect}
-      />
+      {isModalOpen && (
+        <AddQuestionsModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSubmit={handleProcessPDF}
+          onSuccess={handleSuccess}
+          isLoading={isLoading}
+          error={error}
+          selectedFile={selectedFile}
+          onFileSelect={handleFileSelect}
+        />
+      )}
     </>
   );
 };

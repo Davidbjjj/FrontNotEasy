@@ -19,8 +19,6 @@ import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
 import LandingPage from './landingPage/view/pages/LandingPage';
 import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPage from './question/view/pages/QuestionPage';
-import DashboardPage from './dashboard/views/dashboardPage';
-
 
 import ActivityPage from './Atividade/view/pages/ActivityPage';
 import QuestoesPage from './questoes/view/pages/QuestoesPage';
@@ -50,7 +48,6 @@ const RouterConfig = () => {
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/listas" element={<QuestionListPage />} />
       <Route path="/listas/:listaId/questoes" element={<QuestionPage />} />
-      <Route path="/dashboard" element={<DashboardPage />} />
     </Routes>
   );
 };

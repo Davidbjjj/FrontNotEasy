@@ -10,7 +10,7 @@ export default function DashboardPage() {
   const estudanteId = "efee86b1-6f12-4a10-ad33-0b0233e1a461";
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`)
+    axios.get(`https://backnoteasy-production.up.railway.app//listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`)
       .then(response => setDados(response.data))
       .catch(err => console.error("Erro ao carregar dados:", err));
   }, []);

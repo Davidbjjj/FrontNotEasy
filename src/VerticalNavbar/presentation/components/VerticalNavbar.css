@@ -13,6 +13,8 @@
   transition: width 0.3s ease;
   overflow: hidden;
    /* Garante que fique acima de outros elementos */
+  z-index: 1000;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .vertical-navbar:hover {
@@ -54,6 +56,14 @@
   transform: translateY(-2px);
 }
 
+/* Mantém o mesmo visual do hover quando o botão recebe foco/active (por clique ou navegação) */
+.vertical-navbar__button:focus,
+.vertical-navbar__button:active {
+  background-color: #fddede;
+  transform: translateY(-2px);
+  outline: none;
+}
+
 .vertical-navbar__button--active {
   background-color: #c1121f;
   color: #fff;
@@ -64,6 +74,11 @@
 
 .vertical-navbar__button--active:hover {
   background-color: #a40f1b;
+}
+
+/* Evita que o foco padrão do navegador quebre o visual ao clicar */
+.vertical-navbar__button:focus-visible {
+  outline: none;
 }
 
 .vertical-navbar__icon {

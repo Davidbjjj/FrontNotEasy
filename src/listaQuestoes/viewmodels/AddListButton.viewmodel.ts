@@ -19,12 +19,22 @@ export const useAddListButtonViewModel = (props: AddListButtonProps) => {
 
   const openModal = async () => {
     setIsModalOpen(true);
+    try {
+      document.body.classList.add('modal-open');
+    } catch (err) {
+      // ignore
+    }
     setError(null);
     await loadDisciplinas();
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    try {
+      document.body.classList.remove('modal-open');
+    } catch (err) {
+      // ignore
+    }
     setTitulo('');
     setSelectedDisciplinaId('');
     setError(null);
