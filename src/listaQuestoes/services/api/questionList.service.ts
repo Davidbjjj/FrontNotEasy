@@ -7,7 +7,7 @@ export interface ListaResponseDTO {
 }
 
 class QuestionListService {
-  private baseURL = 'http://localhost:8080/listas'; 
+  private baseURL = 'https://backnoteasy-production.up.railway.app/listas'; 
 
   async getAllQuestionLists(): Promise<QuestionList[]> {
     try {
