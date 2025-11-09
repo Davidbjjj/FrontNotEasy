@@ -1,84 +1,117 @@
-/* components/ActivityList.css */
-.activity-list {
-  max-width: 600px;
+/* Activity page layout */
+.activity-list-outer{
+  padding: 28px 24px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 
-.list-title {
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 20px;
-  text-align: center;
+.activities-page-title{
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 8px 0 20px 0;
 }
 
-.activity-item {
-  padding: 15px 0;
+.activities-header{ display:flex; align-items:center; justify-content:space-between; gap:12px }
+.activities-add-btn{ background:#111827; color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600 }
+.activities-add-btn:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(2,6,23,0.08) }
+
+.activity-group{
+  margin-bottom: 28px;
 }
 
-.activity-title {
-  color: #333;
-  font-size: 18px;
-  margin-bottom: 10px;
-  font-weight: bold;
+.activity-group-date{
+  font-weight: 600;
+  color: #374151;
+  margin: 8px 0 12px 8px;
 }
 
-.activity-details {
+.activity-group-panel{
+  background: transparent;
+  padding: 10px 12px 18px 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 18px;
 }
 
-.checkbox-container {
+.activity-card-row{
+  position: relative;
+}
+
+.activity-card{
   display: flex;
   align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  color: #333;
+  gap: 16px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 20px rgba(15,23,42,0.06);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-.activity-checkbox {
-  display: none;
+.activity-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15,23,42,0.08);
 }
 
-.checkmark {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ccc;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
+.activity-thumb{
+  width:56px;
+  height:56px;
+  background:#eef2ff;
+  border-radius:8px;
+  flex-shrink:0;
 }
 
-.activity-checkbox:checked + .checkmark {
-  background-color: #4CAF50;
-  border-color: #4CAF50;
+.activity-thumb img{ width:100%; height:100%; object-fit:cover; border-radius:8px }
+
+.activity-body{
+  flex:1;
 }
 
-.activity-checkbox:checked + .checkmark::after {
-  content: '✓';
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
+.activity-card-title{
+  margin:0;
+  font-size:1.05rem;
+  color:#0f172a;
+  font-weight:700;
 }
 
-.deadline {
-  color: #666;
-  font-size: 14px;
-  margin-left: 28px;
+.activity-card-sub{
+  margin:6px 0 0 0;
+  color:#6b7280;
+  font-size:0.95rem;
 }
 
-.deadline.completed {
-  color: #4CAF50;
-  font-weight: bold;
+.activity-card-action{
+  color:#9ca3af;
+  font-size:22px;
+  margin-left:12px;
 }
 
-.divider {
-  border: none;
-  border-top: 2px solid #eee;
-  margin: 10px 0;
+.activity-meta{
+  display:flex; flex-direction:column; align-items:flex-end; gap:6px; margin-left:8px; min-width:120px
+}
+.activity-meta .deadline{ color:#64748b; font-size:0.9rem }
+
+.activity-card .activity-body{ display:flex; justify-content:space-between; gap:16px }
+
+/* subtle hover highlight for the entire row */
+.activity-card:hover{ box-shadow: 0 18px 40px rgba(15,23,42,0.08) }
+
+/* small offset panel shadow like the design (subtle secondary card behind) */
+.activity-card-row::after{
+  content: '';
+  position: absolute;
+  right: 8px;
+  left: 8px;
+  bottom: -8px;
+  height: 8px;
+  border-radius: 10px;
+  background: rgba(15,23,42,0.03);
+}
+
+@media (max-width: 640px){
+  .activity-card{ flex-direction: row; padding:12px }
+  .activity-thumb{ width:48px; height:48px }
+  .activities-page-title{ font-size:22px }
 }

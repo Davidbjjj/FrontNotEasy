@@ -1,0 +1,15 @@
+.activity-detail-page{ padding:28px 20px; display:flex; gap:16px; align-items:flex-start }
+.activity-detail-card{ background:#fff; border-radius:8px; padding:18px; width:360px; box-shadow:0 6px 18px rgba(2,6,23,0.08); border:1px solid rgba(15,23,42,0.04) }
+.ad-title{ margin:0 0 8px 0; font-size:20px; text-align:center }
+.ad-desc{ color:#475569; font-size:14px; margin:0 0 12px 0 }
+.ad-deadline{ color:#475569; font-size:14px; margin:0 0 12px 0 }
+.ad-status{ display:inline-block; background:#fef3e8; color:#c2410c; padding:6px 10px; border-radius:8px; font-weight:700; margin-bottom:12px }
+.ad-section{ margin-top:12px }
+.ad-section-title{ font-size:13px; color:#475569; margin:0 0 8px 0 }
+.ad-list-item{ display:flex; align-items:center; justify-content:space-between; border:1px solid #e6eef6; padding:10px; border-radius:8px; background:#fbfdff }
+.ad-list-left{ color:#0f172a }
+.ad-list-right{ background:#fff; padding:6px 10px; border-radius:8px; border:1px solid #e6eef6 }
+.ad-textarea{ width:100%; min-height:80px; border:1px solid #e6eef6; border-radius:8px; padding:10px; resize:vertical; margin-top:8px }
+.ad-submit{ width:100%; background:#0f172a; color:#fff; padding:12px; border-radius:8px; border:none; margin-top:12px; font-weight:700; cursor:pointer }
+.ad-back{ background:transparent; border:none; color:#374151; margin-left:8px; cursor:pointer }
+@media (max-width:600px){ .activity-detail-card{ width:100% } .activity-detail-page{ padding:12px } }

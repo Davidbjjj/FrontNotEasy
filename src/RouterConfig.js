@@ -21,6 +21,7 @@ import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPage from './question/view/pages/QuestionPage';
 
 import ActivityPage from './Atividade/view/pages/ActivityPage';
+import ActivityDetailPage from './Atividade/view/pages/ActivityDetailPage';
 import QuestoesPage from './questoes/view/pages/QuestoesPage';
 
 
@@ -32,6 +33,9 @@ const RouterConfig = () => {
       <Route path="/sobre" element={<SobreComponent />} />
       <Route path="/simulados" element={<SimuladosComponent />} />
       <Route path="/atividades" element={<ActivityPage />} />
+  <Route path="/atividades/:id" element={<ActivityDetailPage />} />
+  {/* Sample route with fictitious id for design preview */}
+  <Route path="/atividades/exemplo-123" element={<ActivityDetailPage />} />
       <Route path="/questoes" element={<QuestoesPage />} />
       {/* <Route path="/minhasQuestoes" element={<MinhasQuestoesComponent />} /> */}
       <Route path="/config" element={<ConfigComponent />} />
