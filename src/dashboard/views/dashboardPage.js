@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../services/apiClient';
 import Card from '../../components/card/Card'
 import Progress from '../../components/progress/Progress'
 import './dashboardPage.css'
@@ -10,9 +10,10 @@ export default function DashboardPage() {
   const estudanteId = "efee86b1-6f12-4a10-ad33-0b0233e1a461";
 
   useEffect(() => {
-    axios.get(`https://backnoteasy-production.up.railway.app//listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`)
-      .then(response => setDados(response.data))
-      .catch(err => console.error("Erro ao carregar dados:", err));
+    api
+      .get(`/listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`)
+      .then((response) => setDados(response.data))
+      .catch((err) => console.error('Erro ao carregar dados:', err));
   }, []);
 
   if (!dados) {

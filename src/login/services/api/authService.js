@@ -1,35 +1,32 @@
-import axios from "axios";
+import api from '../../../services/apiClient';
+import { loginFromResponse, logout as authLogout } from '../../../auth/auth';
 
-const API_URL = "https://backnoteasy-production.up.railway.app"
+const API_URL = 'https://backnoteasy-production.up.railway.app';
 
 export const authService = {
   async login(credentials) {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
+      const response = await api.post('/auth/login', {
         email: credentials.email,
-        senha: credentials.password, 
+        senha: credentials.password,
       });
 
-      const { token, email, id } = response.data;
-
-      
-      localStorage.setItem("token", token);
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userId", id);
+      // IMPORTANT: populate localStorage ONLY from decoded token (role and userId)
+      // loginFromResponse will decode the token and store token, role and userId
+      loginFromResponse(response.data);
 
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        throw new Error("E-mail ou senha incorretos");
+        throw new Error('E-mail ou senha incorretos');
       } else {
-        throw new Error("Erro ao tentar realizar login");
+        throw new Error('Erro ao tentar realizar login');
       }
     }
   },
 
   logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("userEmail");
-    localStorage.removeItem("userId");
+    // delegate clearing to centralized auth util
+    authLogout();
   },
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import axios from "axios";
+import api from '../../../services/apiClient';
 
 export default function QuestoesPage() {
     const { id } = useParams();
@@ -10,9 +10,7 @@ export default function QuestoesPage() {
     useEffect(() => {
         const fetchQuestoes = async () => {
             try {
-                const response = await axios.get(
-                    `https://backnoteasy-production.up.railway.app/listas/${id}/questoes`
-                );
+                const response = await api.get(`/listas/${id}/questoes`);
                 setQuestoes(response.data);
             } catch (error) {
                 console.error("Erro ao buscar questões:", error);

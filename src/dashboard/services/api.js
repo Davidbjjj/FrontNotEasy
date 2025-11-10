@@ -1,7 +1,3 @@
-import axios from "axios";
+import apiClient from '../../services/apiClient';
 
-const api = axios.create({
-  baseURL: "https://backnoteasy-production.up.railway.app/",
-});
-
-export default api;
+export default apiClient;

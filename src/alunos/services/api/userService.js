@@ -1,15 +1,11 @@
-import axios from 'axios';
+import api from '../../../services/apiClient';
 
-const API_BASE_URL = 'https://backnoteasy-production.up.railway.app/usuarios';
+const API_BASE_PATH = '/usuarios';
 
 export const userService = {
   async register(userData) {
     try {
-      const response = await axios.post(`${API_BASE_URL}/cadastro`, userData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await api.post(`${API_BASE_PATH}/cadastro`, userData);
 
       if (response.status === 200) {
         return response.data;

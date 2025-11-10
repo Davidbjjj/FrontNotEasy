@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import styles from "../components/Disciplinas.module.css";
-import axios from "axios";
+import api from '../../../services/apiClient';
 
 export default function DisciplinasPage() {
     const [listas, setListas] = useState([]);
@@ -25,7 +25,11 @@ export default function DisciplinasPage() {
                         ? `https://backnoteasy-production.up.railway.app/listas/professor/${userId}`
                         : `https://backnoteasy-production.up.railway.app/listas/estudante/${userId}`;
 
-                const response = await axios.get(endpoint);
+                // endpoint is now a relative path handled by apiClient baseURL
+                const path = userRole === 'PROFESSOR'
+                    ? `/listas/professor/${userId}`
+                    : `/listas/estudante/${userId}`;
+                const response = await api.get(path);
                 setListas(response.data);
             } catch (error) {
                 console.error("Erro ao buscar listas:", error);

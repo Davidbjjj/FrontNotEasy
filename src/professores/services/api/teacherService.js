@@ -1,18 +1,13 @@
-import axios from 'axios';
+import api from '../../../services/apiClient';
 
-const API_BASE_URL = 'https://backnoteasy-production.up.railway.app/professores';
+const API_BASE_PATH = '/professores';
 
 export const teacherService = {
   async register(teacherData) {
     try {
-      const response = await axios.post(`${API_BASE_URL}/cadastro`, teacherData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await api.post(`${API_BASE_PATH}/cadastro`, teacherData);
 
       if (response.status === 200 || response.status === 201) {
-        console.log('Professor cadastrado com sucesso:', response.data);
         return response.data;
       } else {
         throw new Error('Erro ao cadastrar professor');
