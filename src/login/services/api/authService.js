@@ -1,7 +1,7 @@
 import api from '../../../services/apiClient';
 import { loginFromResponse, logout as authLogout } from '../../../auth/auth';
 
-const API_URL = 'https://backnoteasy-production.up.railway.app';
+const API_URL = 'http://localhost:8080';
 
 export const authService = {
   async login(credentials) {

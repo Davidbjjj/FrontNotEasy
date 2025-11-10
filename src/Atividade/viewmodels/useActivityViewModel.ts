@@ -16,6 +16,9 @@ export const useActivityViewModel = (initialActivities: Activity[] = []) => {
   return {
     activities,
     toggleActivity,
+    addActivity: (activity: Activity) => setActivities(prev => [activity, ...prev]),
+    // Replace the current activities list with a fetched/loaded list
+    loadActivities: (items: Activity[]) => setActivities(items),
   };
 };
 

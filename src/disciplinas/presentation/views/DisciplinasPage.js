@@ -26,8 +26,8 @@ export default function DisciplinasPage() {
             try {
                 const endpoint =
                     userRole === "PROFESSOR"
-                        ? `https://backnoteasy-production.up.railway.app/listas/professor/${userId}`
-                        : `https://backnoteasy-production.up.railway.app/listas/estudante/${userId}`;
+                        ? `http://localhost:8080/listas/professor/${userId}`
+                        : `http://localhost:8080/listas/estudante/${userId}`;
 
                 // endpoint is now a relative path handled by apiClient baseURL
                 const path = userRole === 'PROFESSOR'

@@ -1,10 +1,11 @@
 // components/ActivityList.tsx
-import React from 'react';
-import { ActivityListProps } from '../../model/Activity';
+import React, { useState } from 'react';
+import { ActivityListProps, Activity } from '../../model/Activity';
 import './ActivityList.css';
 import CreateActivityModal from './CreateActivityModal';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { eventoService } from '../../services/api/eventoService';
+import { listaService } from '../../../listaQuestoes/services/api/listaService';
 
 function formatGroupDate(index: number) {
   const d = new Date();
@@ -12,7 +13,7 @@ function formatGroupDate(index: number) {
   return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(d);
 }
 
-export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggleActivity }) => {
+export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggleActivity, onCreateActivity }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const navigate = useNavigate();
   // group activities by a computed display date (for demo/mock data)
@@ -64,7 +65,62 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
           </section>
         ))}
       </div>
-      <CreateActivityModal isOpen={isCreateOpen} onClose={() => setIsCreateOpen(false)} onCreate={(data) => { console.log('create', data); }} />
+      <CreateActivityModal
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        onCreate={async (data) => {
+          try {
+            const role = localStorage.getItem('role') || '';
+            if (role === 'PROFESSOR') {
+              const professorId = localStorage.getItem('userId') || '';
+              const payload = {
+                titulo: data.name,
+                descricao: data.description,
+                notaMaxima: typeof data.maxGrade === 'number' ? data.maxGrade : (Number(data.maxGrade) || 10),
+                data: data.dueDate ? new Date(data.dueDate).toISOString() : new Date().toISOString(),
+                disciplinaId: data.discipline,
+                arquivos: [],
+              };
+
+              const evento = await eventoService.criarEvento(payload);
+              const eventoId = evento?.idEvento || (evento as any)?.id;
+              if (eventoId && data.associatedList) {
+                try {
+                  await eventoService.associarLista(eventoId, data.associatedList);
+                } catch (err) {
+                  console.warn('Falha ao associar lista ao evento:', err);
+                }
+              }
+
+              const newActivity: Activity = {
+                id: String(eventoId || Date.now()),
+                title: payload.titulo,
+                subject: data.discipline || '',
+                class: '',
+                completed: false,
+                deadline: data.dueDate || ''
+              };
+
+              if (onCreateActivity) onCreateActivity(newActivity);
+            } else {
+              // non-professor: create local activity
+              const newActivity: Activity = {
+                id: String(Date.now()),
+                title: data.name,
+                subject: data.discipline || '',
+                class: '',
+                completed: false,
+                deadline: data.dueDate || ''
+              };
+              if (onCreateActivity) onCreateActivity(newActivity);
+            }
+          } catch (err) {
+            console.error('Erro ao criar atividade:', err);
+          } finally {
+            setIsCreateOpen(false);
+          }
+        }}
+      />
     </div>
   );
 };

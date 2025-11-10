@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import './CreateActivityModal.css';
+import { professorService } from '../../../listaQuestoes/services/api/professorService';
+import { listaService } from '../../../listaQuestoes/services/api/listaService';
 
 interface CreateActivityModalProps {
   isOpen: boolean;
@@ -15,6 +17,9 @@ const CreateActivityModal: React.FC<CreateActivityModalProps> = ({ isOpen, onClo
   const [maxGrade, setMaxGrade] = useState<number | ''>('');
   const [discipline, setDiscipline] = useState('');
   const [associatedList, setAssociatedList] = useState('');
+  const [disciplinasOptions, setDisciplinasOptions] = useState<any[] | null>(null);
+  const [listasOptions, setListasOptions] = useState<any[] | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const nameRef = useRef<HTMLInputElement | null>(null);
 
@@ -26,6 +31,33 @@ const CreateActivityModal: React.FC<CreateActivityModalProps> = ({ isOpen, onClo
           nameRef.current?.focus();
         } catch (err) {}
       }, 50);
+      // when opening modal, if user is professor, fetch disciplinas and listas
+      (async () => {
+        setLoadError(null);
+        setDisciplinasOptions(null);
+        setListasOptions(null);
+        try {
+          const role = localStorage.getItem('role') || '';
+          if (role === 'PROFESSOR') {
+            const professorId = localStorage.getItem('userId') || '';
+            if (professorId) {
+              // fetch disciplinas and listas in parallel
+              const [disc, lists] = await Promise.all([
+                professorService.getDisciplinasByProfessor(professorId),
+                listaService.getListsByProfessor(professorId),
+              ]);
+              setDisciplinasOptions(disc || []);
+              setListasOptions(lists || []);
+              // set defaults if available
+              if (disc && disc.length > 0) setDiscipline(disc[0].id || disc[0].nome || '');
+              if (lists && lists.length > 0) setAssociatedList(lists[0].id || '');
+            }
+          }
+        } catch (err: any) {
+          console.error('Erro ao carregar disciplinas/listas:', err);
+          setLoadError('Erro ao carregar disciplinas ou listas. Você pode inserir manualmente.');
+        }
+      })();
     }
   }, [isOpen]);
 
@@ -136,10 +168,27 @@ const CreateActivityModal: React.FC<CreateActivityModalProps> = ({ isOpen, onClo
           </div>
 
           <label className="camodal-label">Disciplina</label>
-          <input className="camodal-input" value={discipline} onChange={(e) => setDiscipline(e.target.value)} />
+          {disciplinasOptions && disciplinasOptions.length > 0 ? (
+            <select className="camodal-input" value={discipline} onChange={(e) => setDiscipline(e.target.value)}>
+              {disciplinasOptions.map((d: any) => (
+                <option key={d.id || d.nome} value={d.id || d.nome}>{d.nome || d.nome}</option>
+              ))}
+            </select>
+          ) : (
+            <input className="camodal-input" value={discipline} onChange={(e) => setDiscipline(e.target.value)} placeholder={loadError ? 'Insira a disciplina manualmente' : 'Carregando...'} />
+          )}
 
           <label className="camodal-label">Associar a uma lista de exercícios (opcional)</label>
-          <input className="camodal-input" value={associatedList} onChange={(e) => setAssociatedList(e.target.value)} />
+          {listasOptions && listasOptions.length > 0 ? (
+            <select className="camodal-input" value={associatedList} onChange={(e) => setAssociatedList(e.target.value)}>
+              <option value="">-- Nenhuma --</option>
+              {listasOptions.map((l: any) => (
+                <option key={l.id} value={l.id}>{l.titulo || l.title || `Lista ${l.id}`}</option>
+              ))}
+            </select>
+          ) : (
+            <input className="camodal-input" value={associatedList} onChange={(e) => setAssociatedList(e.target.value)} placeholder={loadError ? 'Insira o id da lista manualmente' : 'Carregando...'} />
+          )}
 
           <label className="camodal-label">Anexação de documento</label>
           <div className="camodal-filewrap">

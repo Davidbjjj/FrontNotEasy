@@ -8,7 +8,7 @@ export interface ListaResponseDTO {
 
 class QuestionListService {
   // Base da rota de listas; estudante será concatenado dinamicamente
-  private baseURL = 'https://backnoteasy-production.up.railway.app/listas';
+  private baseURL = 'http://localhost:8080/listas';
 
   async getAllQuestionLists(): Promise<QuestionList[]> {
     try {

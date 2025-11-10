@@ -11,4 +11,5 @@ export interface Activity {
 export interface ActivityListProps {
   activities: Activity[];
   onToggleActivity?: (id: string, completed: boolean) => void;
+  onCreateActivity?: (activity: Activity) => void;
 }
