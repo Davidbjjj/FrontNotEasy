@@ -79,7 +79,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
       {/* Seção de ordenação */}
       <SortSection onSortChange={handleSortChange} />
 <div className="question-list__header-actions">
-          <AddListButton professorId={'9f8053db-aec7-40c6-9d06-f25ac308d268'} />
+          <AddListButton professorId={localStorage.getItem('userId') || ''} />
           </div>
       {/* Lista de questões */}
       {isLoading ? (

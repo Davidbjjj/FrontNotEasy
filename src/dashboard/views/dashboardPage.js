@@ -7,7 +7,8 @@ import './dashboardPage.css'
 export default function DashboardPage() {
   const [dados, setDados] = useState(null);
   const listId = "6ec734e9-cd9a-42f1-802c-a7ec0e218538";
-  const estudanteId = "efee86b1-6f12-4a10-ad33-0b0233e1a461";
+  // Usar userId salvo no localStorage em vez de id mocado
+  const estudanteId = localStorage.getItem('userId') || '';
 
   useEffect(() => {
     api

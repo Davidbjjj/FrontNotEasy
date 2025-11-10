@@ -9,13 +9,17 @@ export default function DisciplinasPage() {
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
 
-    // mock por agora, mas isso vai ser trocado pela captura dos IDS dos usuários logados, pra fazer isso aqui rodar local é só pegar o ID de um usuário lá do banco, e passar a role também
-    const userRole = "PROFESSOR"; // ou "ESTUDANTE"
+    // Tentar utilizar dados do usuário armazenados (localStorage). Se não houver, manter mocks como fallback.
     const mockIds = {
         PROFESSOR: "78ce4ef4-3a75-4975-9d38-2524b4402345",
         ESTUDANTE: "a77cb20e-3210-4f09-bb85-c1fda1245981",
     };
-    const userId = mockIds[userRole];
+
+    const storedUserId = localStorage.getItem('userId');
+    const storedUserRole = localStorage.getItem('role');
+
+    const userRole = storedUserRole || "PROFESSOR"; // ou 'ESTUDANTE'
+    const userId = storedUserId || mockIds[userRole];
 
     useEffect(() => {
         const fetchListas = async () => {

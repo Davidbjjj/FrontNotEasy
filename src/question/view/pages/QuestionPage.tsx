@@ -14,8 +14,9 @@ export const QuestionPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Em um app real, você pegaria o estudanteId do contexto/auth
-  const estudanteId = 'efee86b1-6f12-4a10-ad33-0b0233e1a461'; // Exemplo - substitua pela forma real
+  // Em um app real, você pegaria o estudanteId do contexto/auth.
+  // Usar userId salvo no localStorage em vez de id mocado
+  const estudanteId = localStorage.getItem('userId') || '';
 
   useEffect(() => {
     const loadQuestions = async () => {

@@ -8,8 +8,9 @@ import MainLayout from '../../../listMain/presentation/components/MainLayout';
 const QuestoesPage: React.FC = () => {
   const navigate = useNavigate();
   
-  // Em produção, isso viria do contexto de autenticação
-  const estudanteId = 'efee86b1-6f12-4a10-ad33-0b0233e1a461';
+  // Em produção, isso viria do contexto de autenticação / token.
+  // Usar userId salvo no localStorage em vez de id mocado
+  const estudanteId = localStorage.getItem('userId') || '';
 
   const handleQuestaoSelect = (questaoId: number) => {
     // Navega para uma página específica da questão ou mostra modal
