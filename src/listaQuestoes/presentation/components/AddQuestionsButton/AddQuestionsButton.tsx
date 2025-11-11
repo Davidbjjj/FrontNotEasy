@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileText, Plus } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { useAddQuestionsButtonViewModel } from '../../../viewmodels/AddQuestionsButton.viewmodel';
 import type { AddQuestionsButtonProps } from '../../../model/AddQuestionsButton.types';
 import AddQuestionsModal from './AddQuestionsModal';

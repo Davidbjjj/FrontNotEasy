@@ -19,12 +19,10 @@ export const QuestionList: React.FC<QuestionListProps> = ({
   const {
     filteredLists,
     viewMode,
-    searchFilters,
     isLoading,
     handleSearch,
     handleSortChange,
     handleViewModeChange,
-    handleListClick,
   } = useQuestionListViewModel(initialLists, onListClick);
 
   const [clickedListId, setClickedListId] = React.useState<string | null>(null);

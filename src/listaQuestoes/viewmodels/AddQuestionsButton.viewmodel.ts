@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { message } from 'antd';
 import { serviceIAService } from './../services/api/serviceIAService';
-import type { ProcessarPDFResponse } from './../model/AddQuestionsButton.types';
 
 export const useAddQuestionsButtonViewModel = (listaId: string) => {
   const [isModalOpen, setIsModalOpen] = useState(false);

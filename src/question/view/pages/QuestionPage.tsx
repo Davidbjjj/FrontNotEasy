@@ -7,7 +7,7 @@ import { FileText } from 'lucide-react';
 import './QuestionPage.css';
 
 
-export const QuestionPage: React.FC = () => {
+const QuestionPage: React.FC = () => {
   const { listaId } = useParams<{ listaId: string }>();
   const navigate = useNavigate();
   const [questions, setQuestions] = useState<any[]>([]);
