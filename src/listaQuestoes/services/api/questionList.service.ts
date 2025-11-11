@@ -12,8 +12,18 @@ class QuestionListService {
 
   async getAllQuestionLists(): Promise<QuestionList[]> {
     try {
-      const estudanteId = localStorage.getItem('userId') || '';
-      const url = estudanteId ? `${this.baseURL}/estudante/${estudanteId}` : this.baseURL;
+      const role = (localStorage.getItem('role') || '').toUpperCase();
+      const userId = localStorage.getItem('userId') || '';
+
+      let url = this.baseURL;
+      if (role === 'PROFESSOR' && userId) {
+        // Quando for professor, buscamos as listas do professor
+        url = `${this.baseURL}/professor/${userId}`;
+      } else if (userId) {
+        // Por padrão, se existir userId, assumimos estudante
+        url = `${this.baseURL}/estudante/${userId}`;
+      }
+
       const response = await fetch(url);
 
       if (!response.ok) {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { message } from 'antd';
 import { serviceIAService } from './../services/api/serviceIAService';
 import type { ProcessarPDFResponse } from './../model/AddQuestionsButton.types';
 
@@ -37,7 +38,7 @@ export const useAddQuestionsButtonViewModel = (listaId: string) => {
     setError(null);
   };
 
-  const handleProcessPDF = async (): Promise<ProcessarPDFResponse | null> => {
+  const handleProcessPDF = async (): Promise<boolean | null> => {
     if (!selectedFile) {
       setError('Selecione um arquivo PDF');
       return null;
@@ -60,13 +61,21 @@ export const useAddQuestionsButtonViewModel = (listaId: string) => {
       setError(null);
 
       const response = await serviceIAService.processarPDF(listaId, selectedFile);
-      closeModal();
-      return response;
+      // Se chegou aqui, é sucesso (200)
+      const success = !!response && (response.questoesAdicionadas !== undefined ? response.questoesAdicionadas >= 0 : true);
+      
+      if (success) {
+        message.success('Questões adicionadas com sucesso!');
+        closeModal();
+      }
+      
+      return success;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erro ao processar PDF';
+      const errorMessage = err instanceof Error ? err.message : 'Ocorreu um erro ao processar as questões';
       setError(errorMessage);
+      message.error(errorMessage);
       console.error('Erro ao processar PDF:', err);
-      return null;
+      return false;
     } finally {
       setIsLoading(false);
     }

@@ -18,6 +18,22 @@ export const serviceIAService = {
       throw new Error(errorText || 'Erro ao processar PDF');
     }
 
-    return response.json();
+    // Tentar parsear JSON quando o backend retornar JSON. Alguns endpoints
+    // retornam texto simples mesmo com status 200 (por exemplo: "Questões processadas").
+    // Para evitar erro de parse que vazaria para a UI, fazemos fallback para texto.
+    const contentType = (response.headers.get('content-type') || '').toLowerCase();
+    if (contentType.includes('application/json')) {
+      try {
+        return await response.json();
+      } catch (err) {
+        // Se parsing falhar, leia como texto e normalize
+        const txt = await response.text();
+        return { message: txt } as any;
+      }
+    }
+
+    // Se não for JSON, lê como texto e retorna um objeto simples indicando sucesso
+    const text = await response.text();
+    return { message: text } as any;
   },
 };

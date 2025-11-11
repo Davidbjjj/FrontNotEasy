@@ -1,13 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Upload, X, FileText } from 'lucide-react';
-import type { ProcessarPDFResponse } from '../../../model/AddQuestionsButton.types';
 import './AddQuestionsModal.css';
 
 interface AddQuestionsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => Promise<ProcessarPDFResponse | null>;
+  onSubmit: () => Promise<boolean | null>;
   onSuccess: () => void;
   isLoading: boolean;
   error: string | null;
