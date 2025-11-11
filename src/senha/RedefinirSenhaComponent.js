@@ -24,9 +24,8 @@ export default function RedefinirSenha() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Valida a senha e guarda os erros encontrados
+    // Valida a senha de acordo com os critérios de segurança
     const errosSenha = validarSenha(novaSenha);
-    setErros(errosSenha);
 
     // Só prossegue se não houver erros e as senhas coincidirem
     if (errosSenha.length === 0 && novaSenha === confirmarSenha) {
