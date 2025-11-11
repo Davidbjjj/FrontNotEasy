@@ -7,18 +7,21 @@ export interface ListaResponseDTO {
 }
 
 class QuestionListService {
-  private baseURL = 'https://backnoteasy-production.up.railway.app/listas'; 
+  // Base da rota de listas; estudante será concatenado dinamicamente
+  private baseURL = 'http://localhost:8080/listas';
 
   async getAllQuestionLists(): Promise<QuestionList[]> {
     try {
-      const response = await fetch(this.baseURL);
-      
+      const estudanteId = localStorage.getItem('userId') || '';
+      const url = estudanteId ? `${this.baseURL}/estudante/${estudanteId}` : this.baseURL;
+      const response = await fetch(url);
+
       if (!response.ok) {
         throw new Error(`Erro ao buscar listas: ${response.status}`);
       }
-      
+
       const listaDTOs: ListaResponseDTO[] = await response.json();
-      
+
       // Transformar DTO do backend para o formato do frontend
       return listaDTOs.map(dto => this.transformDTOToQuestionList(dto));
     } catch (error) {

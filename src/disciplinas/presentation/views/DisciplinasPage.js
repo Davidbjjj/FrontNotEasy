@@ -2,20 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import styles from "../components/Disciplinas.module.css";
-import axios from "axios";
+import api from '../../../services/apiClient';
 
 export default function DisciplinasPage() {
     const [listas, setListas] = useState([]);
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
 
-    // mock por agora, mas isso vai ser trocado pela captura dos IDS dos usuários logados, pra fazer isso aqui rodar local é só pegar o ID de um usuário lá do banco, e passar a role também
-    const userRole = "PROFESSOR"; // ou "ESTUDANTE"
+    // Tentar utilizar dados do usuário armazenados (localStorage). Se não houver, manter mocks como fallback.
     const mockIds = {
         PROFESSOR: "78ce4ef4-3a75-4975-9d38-2524b4402345",
         ESTUDANTE: "a77cb20e-3210-4f09-bb85-c1fda1245981",
     };
-    const userId = mockIds[userRole];
+
+    const storedUserId = localStorage.getItem('userId');
+    const storedUserRole = localStorage.getItem('role');
+
+    const userRole = storedUserRole || "PROFESSOR"; // ou 'ESTUDANTE'
+    const userId = storedUserId || mockIds[userRole];
 
     useEffect(() => {
         const fetchListas = async () => {
@@ -25,7 +29,11 @@ export default function DisciplinasPage() {
                         ? `http://localhost:8080/listas/professor/${userId}`
                         : `http://localhost:8080/listas/estudante/${userId}`;
 
-                const response = await axios.get(endpoint);
+                // endpoint is now a relative path handled by apiClient baseURL
+                const path = userRole === 'PROFESSOR'
+                    ? `/listas/professor/${userId}`
+                    : `/listas/estudante/${userId}`;
+                const response = await api.get(path);
                 setListas(response.data);
             } catch (error) {
                 console.error("Erro ao buscar listas:", error);

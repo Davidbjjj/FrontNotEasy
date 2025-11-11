@@ -1,5 +1,7 @@
 import React from 'react';
 import QuestionList from '../../presentation/components/QuestionList';
+import MainLayout from '../../../listMain/presentation/components/MainLayout';
+
 
 const QuestionListPage: React.FC = () => {
   const handleListClick = (list: any) => {
@@ -8,7 +10,10 @@ const QuestionListPage: React.FC = () => {
   };
 
   return (
-    <QuestionList onListClick={handleListClick} />
+    
+<MainLayout>
+      <QuestionList onListClick={handleListClick} />
+</MainLayout>
   );
 };
 

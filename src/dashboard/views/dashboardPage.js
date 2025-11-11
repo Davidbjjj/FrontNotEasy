@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../../services/apiClient';
 import Card from '../../components/card/Card'
 import Progress from '../../components/progress/Progress'
 import './dashboardPage.css'
@@ -7,12 +7,14 @@ import './dashboardPage.css'
 export default function DashboardPage() {
   const [dados, setDados] = useState(null);
   const listId = "6ec734e9-cd9a-42f1-802c-a7ec0e218538";
-  const estudanteId = "efee86b1-6f12-4a10-ad33-0b0233e1a461";
+  // Usar userId salvo no localStorage em vez de id mocado
+  const estudanteId = localStorage.getItem('userId') || '';
 
   useEffect(() => {
-    axios.get(`http://localhost:8080/listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`)
-      .then(response => setDados(response.data))
-      .catch(err => console.error("Erro ao carregar dados:", err));
+    api
+      .get(`/listas/${listId}/estudantes/${estudanteId}/respostas-com-nota`)
+      .then((response) => setDados(response.data))
+      .catch((err) => console.error('Erro ao carregar dados:', err));
   }, []);
 
   if (!dados) {

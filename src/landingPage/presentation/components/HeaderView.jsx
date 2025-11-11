@@ -1,9 +1,33 @@
   import React, { useState, useEffect } from 'react';
   import './Header.css';
+  import { useNavigate } from "react-router-dom";
+  import {message} from "antd";
+
 
   const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+
+    const navigate = useNavigate();
+
+    const buttonRegister = async () => {
+      try{
+        navigate ("/cadastros");
+      }
+      catch (error){
+        message.error(error.message || "Erro ao redirecionar para cadastro.");
+      }
+    };
+
+    const buttonLogin = async () => {
+    try {
+      navigate("/login");
+      console.log ("hello");
+
+    } catch (error) {
+      message.error(error.message || "Erro ao redirecionar para login.");
+    }
+  };
 
     const toggleMenu = () => {
       setIsMenuOpen(!isMenuOpen);
@@ -71,7 +95,7 @@
               <button className="btn btn-solid" onClick={handleLinkClick}>
                 Criar Conta
               </button>
-              <button className="btn btn-outline" onClick={handleLinkClick}>
+              <button className="btn btn-outline" onClick={buttonLogin}  >
                 Login
               </button>
             </div>
@@ -120,10 +144,10 @@
 
           {/* Ações do Header (Desktop) */}
           <div className="header-actions">
-            <button className="btn btn-outline">
+            <button className="btn btn-outline" onClick={buttonLogin}>
               Login
             </button>
-            <button className="btn btn-solid">
+            <button className="btn btn-solid" onClick={buttonRegister}>
               Criar Conta
             </button>
 

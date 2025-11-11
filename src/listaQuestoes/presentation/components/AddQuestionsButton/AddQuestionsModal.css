@@ -1,0 +1,290 @@
+/* AddQuestionsModal.css */
+
+/* Garantir que o modal sempre fique centralizado e acima de tudo */
+.modal-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+
+  padding: 20px !important;
+  z-index: 2147483000 !important; /* muito alto para ficar acima de qualquer stacking-context */
+}
+
+.modal-content {
+  background: white !important;
+  border-radius: 12px !important;
+  width: 100% !important;
+  max-width: 720px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2) !important;
+  position: relative !important;
+  margin: 0 !important;
+  /* garantir que fique acima de tudo */
+  z-index: 2147483001 !important;
+
+}
+
+/* Enquanto modal estiver aberto, desativa hover/transform e pointer-events em todo o resto da página
+   exceto no próprio overlay/conteúdo do modal. Isso evita que cards ou outros elementos 'subam' acima do modal. */
+body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):not(.modal-content *) {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+/* Assegura que a overlay e o conteúdo do modal fiquem interativos */
+.modal-overlay, .modal-overlay *, .modal-content, .modal-content * {
+  pointer-events: auto !important;
+}
+/* Header do modal */
+.modal-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 24px 24px 0 24px !important;
+  margin-bottom: 20px !important;
+}
+
+.modal-title {
+  /* posicionamento relativo com z-index maior que overlay para conteúdo interno quando necessário */
+  position: relative;
+
+  margin: 0 !important;
+  color: #1f2937 !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.modal-close {
+  background: none !important;
+  border: none !important;
+  padding: 4px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  color: #6b7280 !important;
+  transition: all 0.2s ease !important;
+}
+
+
+
+.modal-close:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Formulário */
+.modal-form {
+  padding: 0 24px 24px 24px !important;
+}
+
+.form-group {
+  margin-bottom: 20px !important;
+}
+
+.form-label {
+  display: block !important;
+  margin-bottom: 8px !important;
+  font-weight: 500 !important;
+  color: #374151 !important;
+}
+
+/* Área de drop de arquivos */
+.file-drop-zone {
+  border: 2px dashed #d1d5db !important;
+  border-radius: 8px !important;
+  padding: 40px 20px !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  background: #fafafa !important;
+}
+
+
+
+.file-drop-zone--has-file {
+  border-color: #10b981 !important;
+  background: #f0fdf4 !important;
+  cursor: default !important;
+}
+
+.file-drop-zone--processing {
+  border-color: #3b82f6 !important;
+  background: #f0f9ff !important;
+  pointer-events: none !important;
+  opacity: 0.95 !important;
+}
+
+.file-input {
+  display: none !important;
+}
+
+.file-drop-content {
+  color: #6b7280 !important;
+}
+
+.file-drop-icon {
+  margin: 0 auto 16px !important;
+  color: #9ca3af !important;
+}
+
+.file-drop-text {
+  font-weight: 500 !important;
+  margin-bottom: 8px !important;
+  color: #374151 !important;
+}
+
+.file-drop-hint {
+  font-size: 0.8rem !important;
+  color: #9ca3af !important;
+}
+
+/* Conteúdo quando arquivo está selecionado */
+.file-selected-content {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 0 20px !important;
+}
+
+.file-selected-icon {
+  color: #10b981 !important;
+  flex-shrink: 0 !important;
+}
+
+.file-info {
+  flex: 1 !important;
+  text-align: left !important;
+}
+
+.file-name {
+  font-weight: 500 !important;
+  color: #374151 !important;
+  margin: 0 0 4px 0 !important;
+  word-break: break-all !important;
+}
+
+.file-size {
+  font-size: 0.8rem !important;
+  color: #6b7280 !important;
+  margin: 0 !important;
+}
+
+.file-remove-btn {
+  background: none !important;
+  border: none !important;
+  padding: 6px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  color: #6b7280 !important;
+  transition: all 0.2s ease !important;
+  flex-shrink: 0 !important;
+}
+
+
+/* Mensagem de erro */
+.form-error {
+  padding: 12px !important;
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  border-radius: 6px !important;
+  color: #dc2626 !important;
+  margin-bottom: 16px !important;
+  font-size: 0.9rem !important;
+}
+
+/* Ações do modal */
+.modal-actions {
+  display: flex !important;
+  gap: 12px !important;
+  justify-content: flex-end !important;
+  margin-top: 24px !important;
+}
+
+.btn-secondary {
+  padding: 10px 20px !important;
+  border: 1px solid #d1d5db !important;
+  background: white !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+
+.btn-secondary:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+.btn-primary {
+  padding: 10px 20px !important;
+  background: #10b981 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+
+.btn-primary:disabled {
+  background: #9ca3af !important;
+  cursor: not-allowed !important;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 95% !important;
+    margin: 0 !important;
+  }
+  
+  .modal-header {
+    padding: 20px 20px 0 20px !important;
+  }
+  
+  .modal-form {
+    padding: 0 20px 20px 20px !important;
+  }
+  
+  .file-drop-zone {
+    padding: 30px 15px !important;
+  }
+  
+  .file-selected-content {
+    padding: 0 15px !important;
+  }
+  
+  .modal-actions {
+    flex-direction: column-reverse !important;
+  }
+  
+  .modal-actions button {
+    width: 100% !important;
+  }
+}
+
+/* Animações suaves */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-content {
+  animation: modalFadeIn 0.2s ease-out !important;
+}

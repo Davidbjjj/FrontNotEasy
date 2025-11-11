@@ -1,94 +1,118 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Question from '../../presentation/components/Question';
-import { Question as QuestionType } from '../../model/Question.types';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Question } from '../../presentation/components/Question';
 import { questionService } from '../../service/api/question.service';
+import AddQuestionsButton from '../../../listaQuestoes/presentation/components/AddQuestionsButton/AddQuestionsButton';
+import { FileText } from 'lucide-react';
+import './QuestionPage.css';
 
-const QuestionPage: React.FC = () => {
+
+export const QuestionPage: React.FC = () => {
   const { listaId } = useParams<{ listaId: string }>();
-  const [questions, setQuestions] = useState<QuestionType[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Carregar questões da lista
+  // Em um app real, você pegaria o estudanteId do contexto/auth.
+  // Usar userId salvo no localStorage em vez de id mocado
+  const estudanteId = localStorage.getItem('userId') || '';
+
   useEffect(() => {
     const loadQuestions = async () => {
-      if (!listaId) return;
-      
-      setIsLoading(true);
-      setError(null);
-      
+      if (!listaId) {
+        setError('ID da lista não encontrado na URL');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const data = await questionService.getQuestionsByListId(listaId);
-        setQuestions(data);
-      } catch (err) {
-        setError('Erro ao carregar questões da lista.');
-        console.error('Erro:', err);
+        console.log(`Carregando questões para lista: ${listaId}`);
+        const questionsData = await questionService.getQuestionsByListId(listaId);
+        setQuestions(questionsData);
+        setError(null);
+      } catch (error) {
+        console.error('Erro ao carregar questões:', error);
+        setError('Erro ao carregar as questões. Tente novamente.');
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     loadQuestions();
   }, [listaId]);
 
-  const handleAnswerSelect = (questionId: string, answerId: string) => {
-    console.log(`Questão ${questionId}: resposta ${answerId}`);
-    // Aqui você pode salvar a resposta no estado ou enviar para o backend
+  const handleAnswerSelect = (questionId: string, answerId: string, alternativaIndex: number) => {
+    console.log(`Resposta selecionada: questão ${questionId}, alternativa ${answerId} (índice ${alternativaIndex})`);
   };
 
   const handleNavigate = (direction: 'previous' | 'next') => {
-    if (direction === 'previous' && currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
-    } else if (direction === 'next' && currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-    }
+    console.log(`Navegando para: ${direction}`);
   };
 
   const handleFinish = () => {
-    console.log('Finalizar lista de questões');
-    // Navegar para página de resultados ou voltar para listas
-    // history.push('/listas'); // se estiver usando history
+    console.log('Questionário finalizado!');
+    // Aqui você pode navegar para uma página de resultados
+    // ou mostrar um resumo das respostas
+    alert('Questionário finalizado com sucesso!');
   };
 
-  if (isLoading) {
+  if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
+      <div className="question-page-loading">
+        <div className="loading-spinner" aria-hidden />
         <p>Carregando questões...</p>
+        <div className="question-skeletons" aria-hidden>
+          <div className="question-skeleton" />
+          <div className="question-skeleton" />
+          <div className="question-skeleton" />
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="error-container">
+      <div className="question-page-error">
         <h2>Erro</h2>
         <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Tentar novamente</button>
+        <button onClick={() => window.history.back()}>
+          Voltar
+        </button>
       </div>
     );
   }
+
 
   if (questions.length === 0) {
     return (
-      <div className="empty-container">
-        <h2>Nenhuma questão encontrada</h2>
-        <p>Esta lista não contém questões disponíveis.</p>
+      <div className="question-page-empty-wrap">
+        <div className="question-page-empty-card">
+          <div className="question-page-empty-illustration">
+            <FileText size={48} />
+          </div>
+          <h2 className="question-page-empty-title">Nenhuma questão encontrada</h2>
+          <p className="question-page-empty-text">Esta lista ainda não possui questões. Você pode adicionar questões via PDF ou criar manualmente.</p>
+          <div className="question-page-empty-actions">
+            <AddQuestionsButton listaId={listaId ?? ''} />
+            <button className="btn btn-secondary" onClick={() => navigate('/listas')}>Voltar para listas</button>
+          </div>
+        </div>
       </div>
     );
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
-
   return (
-    <Question
-      question={currentQuestion}
-      onAnswerSelect={handleAnswerSelect}
-      onNavigate={handleNavigate}
-      onFinish={handleFinish}
-    />
+    <div className="question-page-container">
+      <Question
+        questions={questions}
+        listaId={listaId!}
+        estudanteId={estudanteId}
+        onAnswerSelect={handleAnswerSelect}
+        onNavigate={handleNavigate}
+        onFinish={handleFinish}
+      />
+    </div>
   );
 };
 

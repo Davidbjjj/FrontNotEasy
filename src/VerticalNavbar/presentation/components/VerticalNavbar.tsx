@@ -1,5 +1,14 @@
+// presentation/components/VerticalNavbar.tsx
 import React from "react";
-import { BookOpen, FileText } from "lucide-react";
+import { 
+  BookOpen, 
+  FileText, 
+  List, 
+  ClipboardList, 
+  Settings,
+  Book,
+  Calendar // Ícone para atividades
+} from "lucide-react";
 import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.viewmodel";
 import { VerticalNavbarProps } from "../../model/VerticalNavbar.types";
 import "./VerticalNavbar.css";
@@ -13,6 +22,11 @@ export const VerticalNavbar: React.FC<VerticalNavbarProps> = ({
 
   const icons: Record<string, JSX.Element> = {
     "questoes": <FileText className="vertical-navbar__icon" />,
+    "listas": <List className="vertical-navbar__icon" />,
+    "atividades": <Calendar className="vertical-navbar__icon" />,
+    "simulados": <ClipboardList className="vertical-navbar__icon" />,
+    "disciplinas": <Book className="vertical-navbar__icon" />,
+    "config": <Settings className="vertical-navbar__icon" />,
   };
 
   return (

@@ -1,15 +1,34 @@
 import { useState, useCallback } from 'react';
-import { Question, QuestionNavigation, QuestionViewModel } from '../model/Question.types';
+import { Question, QuestionNavigation, QuizResult, RespostaEstudanteQuestaoDTO } from '../model/Question.types';
+import { respostaService } from '../service/api/respostaService'; // Importação correta
+
+interface UseQuestionViewModelReturn {
+  currentQuestion: Question;
+  selectedAnswer: string | null;
+  isAnswered: boolean;
+  navigation: QuestionNavigation;
+  showResults: boolean;
+  quizResult: QuizResult | null;
+  handleAnswerSelect: (answerId: string) => void;
+  handleNavigate: (direction: 'previous' | 'next') => void;
+  handleFinish: () => void;
+  handleShowResults: () => void;
+}
 
 export const useQuestionViewModel = (
   questions: Question[],
-  onAnswerSelect?: (questionId: string, answerId: string) => void,
+  listaId: string,
+  estudanteId: string,
+  onAnswerSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void,
   onNavigate?: (direction: 'previous' | 'next') => void,
-  onFinish?: () => void
-): QuestionViewModel => {
+  onFinish?: (respostas: RespostaEstudanteQuestaoDTO[]) => void
+): UseQuestionViewModelReturn => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const [respostasEnviadas, setRespostasEnviadas] = useState<Set<string>>(new Set());
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -20,14 +39,34 @@ export const useQuestionViewModel = (
     hasNext: currentQuestionIndex < questions.length - 1,
   };
 
-  const handleAnswerSelect = useCallback((answerId: string) => {
-    setSelectedAnswer(answerId);
-    setIsAnswered(true);
-    
-    if (onAnswerSelect) {
-      onAnswerSelect(currentQuestion.id, answerId);
+  const handleAnswerSelect = useCallback(async (answerId: string) => {
+    try {
+      setSelectedAnswer(answerId);
+      setIsAnswered(true);
+      
+      const alternativaIndex = respostaService.converterLetraParaIndice(answerId);
+      
+      await respostaService.enviarResposta({
+        estudanteId: estudanteId,
+        questaoId: parseInt(currentQuestion.id),
+        alternativa: alternativaIndex,
+        listaId: listaId
+      });
+
+      setRespostasEnviadas(prev => new Set(prev).add(currentQuestion.id));
+
+      if (onAnswerSelect) {
+        onAnswerSelect(currentQuestion.id, answerId, alternativaIndex);
+      }
+
+      console.log(`Resposta ${answerId} enviada para questão ${currentQuestion.id}`);
+      
+    } catch (error) {
+      console.error('Erro ao enviar resposta:', error);
+      setSelectedAnswer(null);
+      setIsAnswered(false);
     }
-  }, [currentQuestion.id, onAnswerSelect]);
+  }, [currentQuestion.id, estudanteId, listaId, onAnswerSelect]);
 
   const handleNavigate = useCallback((direction: 'previous' | 'next') => {
     if (direction === 'previous' && navigation.hasPrevious) {
@@ -45,19 +84,47 @@ export const useQuestionViewModel = (
     }
   }, [navigation.hasPrevious, navigation.hasNext, onNavigate]);
 
-  const handleFinish = useCallback(() => {
-    if (onFinish) {
-      onFinish();
+  const handleFinish = useCallback(async () => {
+    try {
+      console.log('Finalizando questionário...');
+      
+      // Buscar o resultado final
+      const resultado = await respostaService.calcularResultadoFinal(listaId, estudanteId);
+      setQuizResult(resultado);
+      setShowResults(true);
+      
+      if (onFinish) {
+        onFinish(resultado.respostas);
+      }
+      
+      console.log('Resultado calculado:', resultado);
+    } catch (error) {
+      console.error('Erro ao calcular resultado:', error);
+      // Mesmo com erro, mostra que finalizou
+      setShowResults(true);
     }
-  }, [onFinish]);
+  }, [onFinish, listaId, estudanteId]);
+
+  const handleShowResults = useCallback(async () => {
+    try {
+      const resultado = await respostaService.calcularResultadoFinal(listaId, estudanteId);
+      setQuizResult(resultado);
+      setShowResults(true);
+    } catch (error) {
+      console.error('Erro ao mostrar resultados:', error);
+    }
+  }, [listaId, estudanteId]);
 
   return {
     currentQuestion,
     selectedAnswer,
     isAnswered,
     navigation,
+    showResults,
+    quizResult,
     handleAnswerSelect,
     handleNavigate,
     handleFinish,
+    handleShowResults,
   };
 };

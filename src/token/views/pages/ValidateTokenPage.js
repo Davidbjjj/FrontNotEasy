@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from '../../../services/apiClient';
 import { useNavigate } from "react-router-dom";
 import TokenValidationLayout from "../../presentation/components/TokenValidation/TokenValidationLayout";
 import { useTokenState } from "../../../token/states/TokenState";
@@ -12,9 +12,7 @@ export default function ValidateTokenPage() {
 
   const handleSubmit = async () => {
     try {
-      const response = await axios.post("http://localhost:8080/auth/validate-token", {
-        token: tokenInput,
-      });
+      const response = await api.post('/auth/validate-token', { token: tokenInput });
 
       if (response.data.valid) {
         setToken(tokenInput);
