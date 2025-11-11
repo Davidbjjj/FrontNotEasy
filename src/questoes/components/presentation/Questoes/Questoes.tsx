@@ -17,7 +17,6 @@ export const Questoes: React.FC<QuestoesLandingProps> = ({
   // Calcular estatísticas
   const totalQuestoes = viewModel.questoes.length;
   const questoesRespondidas = viewModel.questoes.filter(q => q.respondida).length;
-  const questoesCorretas = viewModel.questoes.filter(q => q.correta).length;
 
   if (viewModel.loading && viewModel.questoes.length === 0) {
     return (

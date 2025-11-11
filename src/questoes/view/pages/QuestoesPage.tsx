@@ -5,8 +5,6 @@ import { Questoes } from '../../components/presentation/Questoes/Questoes';
 import { useNavigate } from 'react-router-dom';
 
 const QuestoesPage: React.FC = () => {
-  const navigate = useNavigate();
-  
   // Em produção, isso viria do contexto de autenticação / token.
   // Usar userId salvo no localStorage em vez de id mocado
   const estudanteId = localStorage.getItem('userId') || '';

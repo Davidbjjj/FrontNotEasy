@@ -5,10 +5,8 @@ export default function RedefinirSenha() {
   // Estados para armazenar as senhas digitadas
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [erros, setErros] = useState([]); // Lista de erros de validação
   const navigate = useNavigate(); // Usado para redirecionar para outra rota
   const [params] = useSearchParams();
-  const token = params.get("token");  // ← pega o token se existir na URL
   
   // Função para validar a senha de acordo com os critérios de segurança
 

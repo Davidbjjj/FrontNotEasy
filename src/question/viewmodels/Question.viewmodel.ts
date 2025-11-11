@@ -28,7 +28,6 @@ export const useQuestionViewModel = (
   const [isAnswered, setIsAnswered] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
-  const [respostasEnviadas, setRespostasEnviadas] = useState<Set<string>>(new Set());
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -52,8 +51,6 @@ export const useQuestionViewModel = (
         alternativa: alternativaIndex,
         listaId: listaId
       });
-
-      setRespostasEnviadas(prev => new Set(prev).add(currentQuestion.id));
 
       if (onAnswerSelect) {
         onAnswerSelect(currentQuestion.id, answerId, alternativaIndex);

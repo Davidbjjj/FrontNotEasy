@@ -15,7 +15,7 @@ export const QuestionResults: React.FC<QuestionResultsProps> = ({
   onRetry,
   onClose,
 }) => {
-  const { totalQuestions, correctAnswers, wrongAnswers, score, respostas } = result;
+  const { totalQuestions, correctAnswers, wrongAnswers, respostas } = result;
 
   // Encontrar a questão correspondente para cada resposta
   const getQuestionDetails = (questaoId: number): Question | undefined => {
