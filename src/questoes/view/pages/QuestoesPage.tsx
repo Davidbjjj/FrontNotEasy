@@ -3,7 +3,6 @@
 import React from 'react';
 import { Questoes } from '../../components/presentation/Questoes/Questoes';
 import { useNavigate } from 'react-router-dom';
-import MainLayout from '../../../listMain/presentation/components/MainLayout';
 
 const QuestoesPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,14 +18,12 @@ const QuestoesPage: React.FC = () => {
   };
 
   return (
-    <MainLayout>
-      <div className="questoes-landing-page">
-        <Questoes 
-          estudanteId={estudanteId}
-          onQuestaoSelect={handleQuestaoSelect}
-        />
-      </div>
-    </MainLayout>
+    <div className="questoes-landing-page">
+      <Questoes 
+        estudanteId={estudanteId}
+        onQuestaoSelect={handleQuestaoSelect}
+      />
+    </div>
   );
 };
 

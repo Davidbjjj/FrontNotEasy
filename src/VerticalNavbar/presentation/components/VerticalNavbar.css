@@ -12,8 +12,8 @@
   align-items: center;
   transition: width 0.3s ease;
   overflow: hidden;
-   /* Garante que fique acima de outros elementos */
-  z-index: 1000;
+  /* Z-index menor que o header (TopBar tem 1000), então navbar fica por baixo */
+  z-index: 999;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -39,6 +39,7 @@
   background: none;
   text-align: center;
   cursor: pointer;
+  text-decoration: none;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -52,14 +53,15 @@
 }
 
 .vertical-navbar__button:hover {
-  background-color: #fddede;
+  background-color: #c1121f;
+  color: #fff;
   transform: translateY(-2px);
 }
 
 /* Mantém o mesmo visual do hover quando o botão recebe foco/active (por clique ou navegação) */
 .vertical-navbar__button:focus,
 .vertical-navbar__button:active {
-  background-color: #fddede;
+  background-color: #c1121f;
   transform: translateY(-2px);
   outline: none;
 }

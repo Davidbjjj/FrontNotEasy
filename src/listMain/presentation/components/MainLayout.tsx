@@ -8,7 +8,7 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayoutComponent: React.FC<MainLayoutProps> = ({ children }) => {
   const handleNotificationClick = (notification: any) => {
     console.log('Notificação clicada:', notification);
   };
@@ -43,5 +43,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     </div>
   );
 };
+
+// Memoizar para evitar re-renderizações quando as páginas filhas mudam
+const MainLayout = React.memo(MainLayoutComponent);
 
 export default MainLayout;

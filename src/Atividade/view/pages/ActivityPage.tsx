@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { ActivityList } from '../../presentation/components/ActivityList';
 import { useActivityViewModel } from '../../viewmodels/useActivityViewModel';
-import MainLayout from '../../../listMain/presentation/components/MainLayout';
 import { listaService, EventoDTO } from '../../../listaQuestoes/services/api/listaService';
 import { Activity } from '../../model/Activity';
 
@@ -37,15 +36,13 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <MainLayout >
-      <div className="App">
-        <ActivityList 
-          activities={activities} 
-          onToggleActivity={toggleActivity}
-          onCreateActivity={addActivity}
-        />
-      </div>
-    </MainLayout>
+    <div className="App">
+      <ActivityList 
+        activities={activities} 
+        onToggleActivity={toggleActivity}
+        onCreateActivity={addActivity}
+      />
+    </div>
   );
 };
 

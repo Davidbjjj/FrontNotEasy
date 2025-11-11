@@ -1,13 +1,12 @@
 // viewmodels/VerticalNavbar.viewmodel.ts
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { NavItem, VerticalNavbarViewModel } from '../model/VerticalNavbar.types';
 
 export const useVerticalNavbarViewModel = (
   initialItems?: NavItem[],
   onItemClick?: (item: NavItem) => void
 ): VerticalNavbarViewModel => {
-  const navigate = useNavigate();
   const location = useLocation();
 
   const defaultItems: NavItem[] = [
@@ -22,6 +21,7 @@ export const useVerticalNavbarViewModel = (
   const [activeItem, setActiveItem] = useState<string | null>(null);
 
   // Sincroniza o item ativo com a rota atual
+  // Esta é a ÚNICA fonte da verdade para qual item está ativo
   useEffect(() => {
     const currentPath = location.pathname;
     let matchedId: string | null = null;
@@ -40,28 +40,13 @@ export const useVerticalNavbarViewModel = (
 
   const handleItemClick = useCallback(
     (clickedItem: NavItem) => {
-      // Atualiza o estado ativo
-      setActiveItem(clickedItem.id);
-
-      // Atualiza os items marcando o ativo (navegação controlada)
-      setNavItems(prevItems =>
-        prevItems.map(item => ({
-          ...item,
-          isActive: item.id === clickedItem.id,
-        }))
-      );
-
-      // Navega para a rota correspondente
-      if (clickedItem.path) {
-        navigate(clickedItem.path);
-      }
-
       // Chama o callback externo se fornecido
+      // O componente will use Link para navegar (não usar navigate aqui)
       if (onItemClick) {
         onItemClick(clickedItem);
       }
     },
-    [onItemClick, navigate]
+    [onItemClick]
   );
 
   return {

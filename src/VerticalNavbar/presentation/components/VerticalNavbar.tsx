@@ -1,5 +1,6 @@
 // presentation/components/VerticalNavbar.tsx
 import React from "react";
+import { Link } from "react-router-dom";
 import { 
   BookOpen, 
   FileText, 
@@ -13,7 +14,7 @@ import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.view
 import { VerticalNavbarProps } from "../../model/VerticalNavbar.types";
 import "./VerticalNavbar.css";
 
-export const VerticalNavbar: React.FC<VerticalNavbarProps> = ({
+const VerticalNavbarComponent: React.FC<VerticalNavbarProps> = ({
   items,
   onItemClick,
   className = "",
@@ -34,21 +35,25 @@ export const VerticalNavbar: React.FC<VerticalNavbarProps> = ({
       <ul className="vertical-navbar__list">
         {navItems.map((item) => (
           <li key={item.id} className="vertical-navbar__item">
-            <button
+            <Link
+              to={item.path || "#"}
               className={`vertical-navbar__button ${
                 item.isActive ? "vertical-navbar__button--active" : ""
               }`}
               onClick={() => handleItemClick(item)}
-              type="button"
+              aria-current={item.isActive ? "page" : undefined}
             >
               {icons[item.id] || <BookOpen className="vertical-navbar__icon" />}
               <span className="vertical-navbar__label">{item.label}</span>
-            </button>
+            </Link>
           </li>
         ))}
       </ul>
     </nav>
   );
 };
+
+// Memoizar o componente para evitar re-renderizações desnecessárias
+export const VerticalNavbar = React.memo(VerticalNavbarComponent);
 
 export default VerticalNavbar;
