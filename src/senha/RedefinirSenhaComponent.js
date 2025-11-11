@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function RedefinirSenha() {
   // Estados para armazenar as senhas digitadas
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
   const navigate = useNavigate(); // Usado para redirecionar para outra rota
-  const [params] = useSearchParams();
   
   // Função para validar a senha de acordo com os critérios de segurança
 

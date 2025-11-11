@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Questoes } from '../../components/presentation/Questoes/Questoes';
-import { useNavigate } from 'react-router-dom';
 
 const QuestoesPage: React.FC = () => {
   // Em produção, isso viria do contexto de autenticação / token.

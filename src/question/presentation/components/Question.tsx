@@ -19,7 +19,6 @@ export const Question: React.FC<QuestionProps> = ({
   const {
     currentQuestion,
     selectedAnswer,
-    isAnswered,
     navigation,
     showResults,
     quizResult,

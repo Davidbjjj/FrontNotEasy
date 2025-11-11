@@ -1,5 +1,5 @@
 import React from 'react';
-import { QuizResult, RespostaEstudanteQuestaoDTO, Question, QuestionOption } from '../../model/Question.types';
+import { QuizResult, Question, QuestionOption } from '../../model/Question.types';
 import './QuestionResults.css';
 
 interface QuestionResultsProps {
@@ -15,7 +15,7 @@ export const QuestionResults: React.FC<QuestionResultsProps> = ({
   onRetry,
   onClose,
 }) => {
-  const { totalQuestions, correctAnswers, wrongAnswers, respostas } = result;
+  const { respostas } = result;
 
   // Encontrar a questão correspondente para cada resposta
   const getQuestionDetails = (questaoId: number): Question | undefined => {
