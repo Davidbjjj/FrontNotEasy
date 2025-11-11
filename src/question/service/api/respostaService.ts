@@ -6,7 +6,7 @@ export class RespostaService {
   private baseURL: string;
 
   constructor(baseURL?: string) {
-    this.baseURL = baseURL || 'http://localhost:8080';
+    this.baseURL = baseURL || 'https://backnoteasy-production.up.railway.app';
   }
 
   /**
