@@ -5,7 +5,6 @@ import './ActivityList.css';
 import CreateActivityModal from './CreateActivityModal';
 import { useNavigate } from 'react-router-dom';
 import { eventoService } from '../../services/api/eventoService';
-import { listaService } from '../../../listaQuestoes/services/api/listaService';
 
 function formatGroupDate(index: number) {
   const d = new Date();
@@ -72,7 +71,7 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
           try {
             const role = localStorage.getItem('role') || '';
             if (role === 'PROFESSOR') {
-              const professorId = localStorage.getItem('userId') || '';
+              localStorage.getItem('userId');
               const payload = {
                 titulo: data.name,
                 descricao: data.description,

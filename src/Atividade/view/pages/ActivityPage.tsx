@@ -33,7 +33,7 @@ const App: React.FC = () => {
     })();
 
     return () => { mounted = false; };
-  }, []);
+  }, [loadActivities]);
 
   return (
     <div className="App">

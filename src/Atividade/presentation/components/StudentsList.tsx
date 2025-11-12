@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { RespostasModal } from './RespostasModal';
 import { LoadingState, ErrorState, EmptyState } from './StateComponents';
 import { useStudentClick, useStudentNotas } from '../../viewmodels/useActivityNotasViewModel';
-import { Student, Activity, StudentResponses, StudentGrade } from '../../model/Activity';
+import { Student, Activity, StudentGrade } from '../../model/Activity';
 import './styles/StudentsList.css';
 
 interface StudentCardProps {

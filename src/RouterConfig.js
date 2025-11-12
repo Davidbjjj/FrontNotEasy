@@ -1,8 +1,6 @@
 import { Route, Routes } from 'react-router-dom'; // Removido Router e Link
 import ValidateTokenPage from './token/views/pages/ValidateTokenPage';
 import ResetPasswordPage from './token/views/pages/ResetPasswordPage';
-import RegistrationComponent from './alunos/presentation/components/RegistrationComponent';
-import TeacherRegistrationComponent from './professores/presentation/components/TeacherRegistrationComponent';
 // import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
 import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
 import LandingPage from './landingPage/view/pages/LandingPage';

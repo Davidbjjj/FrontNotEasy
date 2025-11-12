@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { StudentNotasList } from './StudentsList';
 import { LoadingState, ErrorState, EmptyState } from './StateComponents';
 import { useEvento } from '../../viewmodels/useActivityNotasViewModel';
-import { Activity, Student } from '../../model/Activity';
+import { Activity } from '../../model/Activity';
 import './styles/EventComponents.css';
 
 interface StudentViewProps {

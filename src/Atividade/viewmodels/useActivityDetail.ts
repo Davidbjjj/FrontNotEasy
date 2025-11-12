@@ -34,16 +34,16 @@ export const useActivity = () => {
   const { id } = useParams();
   const location = useLocation();
   
-  const mockActivity: Activity = {
-    id: id || 'exemplo-123',
-    title: 'Atividade: Matemática',
-    description: 'A descrição da atividade vai aqui',
-    deadline: '20 de abril',
-    status: 'Pendentes',
-    list: { title: 'Lista de exercícios 1', grade: '8,5' }
-  };
-
   const getActivityFromState = useCallback((): Activity => {
+    const mockActivity: Activity = {
+      id: id || 'exemplo-123',
+      title: 'Atividade: Matemática',
+      description: 'A descrição da atividade vai aqui',
+      deadline: '20 de abril',
+      status: 'Pendentes',
+      list: { title: 'Lista de exercícios 1', grade: '8,5' }
+    };
+
     try {
       const state = (location as any)?.state;
       if (!state || typeof state !== 'object') return mockActivity;
@@ -58,7 +58,7 @@ export const useActivity = () => {
     }
     
     return mockActivity;
-  }, [location, mockActivity]);
+  }, [location, id]);
 
   return getActivityFromState();
 };

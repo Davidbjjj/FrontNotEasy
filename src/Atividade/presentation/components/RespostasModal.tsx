@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { LoadingState, ErrorState, EmptyState } from './StateComponents';
+import { LoadingState, ErrorState } from './StateComponents';
 import {
   RespostaHeader,
   RespostaDivider,
