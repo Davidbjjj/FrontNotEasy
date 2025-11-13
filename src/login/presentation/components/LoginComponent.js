@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Row,
@@ -13,7 +13,9 @@ import {
 } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
-import { authService } from "../../services/api/authService"; 
+import { authService } from "../../services/api/authService";
+import RecaptchaComponent from "./RecaptchaComponent";
+import SocialLoginButtons from "./SocialLoginButtons"; 
 
 
 const { Title, Text } = Typography;
@@ -23,23 +25,48 @@ const HERO_IMAGE = "/Alunos.svg";
 export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
   const [form] = Form.useForm();
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const recaptchaRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleValuesChange = (_, allValues) => {
     const hasEmpty = !allValues.email || !allValues.password;
     setIsButtonDisabled(hasEmpty);
   };
 
+  const handleFinish = async (values) => {
+    try {
+      setIsSubmitting(true);
+      
+      // Executa ReCAPTCHA
+      let recaptchaToken = null;
+      if (recaptchaRef.current?.executeRecaptcha) {
+        recaptchaToken = await recaptchaRef.current.executeRecaptcha();
+        if (!recaptchaToken) {
+          message.error("Validação ReCAPTCHA falhou. Tente novamente.");
+          return;
+        }
+      }
 
-const handleFinish = async (values) => {
-  try {
-    await authService.login(values);
-    message.success("Login realizado com sucesso!");
-    navigate("/listas"); // redirecione para onde quiser após o login
-  } catch (error) {
-    message.error(error.message || "Erro ao fazer login. Tente novamente.");
-  }
-};
+      // Envia credenciais + token ReCAPTCHA para o backend
+      const loginData = {
+        ...values,
+        recaptchaToken,
+      };
+      
+      // DEBUG: log do token para verificar envio (remover em produção)
+      // eslint-disable-next-line no-console
+      console.log('DEBUG loginData (will be sent to backend):', loginData);
 
+      await authService.login(loginData);
+      message.success("Login realizado com sucesso!");
+      navigate("/listas");
+    } catch (error) {
+      message.error(error.message || "Erro ao fazer login. Tente novamente.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const handleFinishFailed = ({ errorFields }) => {
     if (errorFields.length > 0) {
@@ -47,7 +74,25 @@ const handleFinish = async (values) => {
     }
   };
 
-  const navigate = useNavigate();
+  const handleGoogleSuccess = (token) => {
+    // Enviar token do Google para o backend
+    message.loading({ content: 'Autenticando com Google...', key: 'social-login' });
+    authService.loginWithGoogle(token)
+      .then(() => {
+        message.success({ content: 'Login com Google realizado!', key: 'social-login' });
+        navigate("/listas");
+      })
+      .catch(error => {
+        message.error({ 
+          content: error.message || 'Erro ao fazer login com Google', 
+          key: 'social-login' 
+        });
+      });
+  };
+
+  const handleGitHubSuccess = () => {
+    message.loading({ content: 'Autenticando com GitHub...', key: 'social-login' });
+  };
 
   return (
     <div className={styles.page}>
@@ -129,7 +174,8 @@ const handleFinish = async (values) => {
                       size="large"
                       block
                       className={styles.primaryBtn}
-                      disabled={isButtonDisabled}
+                      disabled={isButtonDisabled || isSubmitting}
+                      loading={isSubmitting}
                     >
                       ENTRAR
                     </Button>
@@ -148,7 +194,16 @@ const handleFinish = async (values) => {
                     </Button>
                   </Space>
                 </Form.Item>
+
+                {/* Social Login Buttons */}
+                <SocialLoginButtons
+                  onGoogleSuccess={handleGoogleSuccess}
+                  onGitHubClick={handleGitHubSuccess}
+                />
               </Form>
+
+              {/* ReCAPTCHA (invisível) */}
+              <RecaptchaComponent ref={recaptchaRef} />
             </Card>
           </div>
         </Col>

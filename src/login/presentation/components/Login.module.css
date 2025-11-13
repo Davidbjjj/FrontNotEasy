@@ -133,6 +133,30 @@
   color: #cf2d25 !important;
 }
 
+/* Social Login Styles */
+.socialLoginContainer {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e8e8e8;
+}
+
+.githubBtn {
+  background-color: #333 !important;
+  color: #fff !important;
+  border: 1px solid #333 !important;
+  font-weight: 600;
+}
+
+.githubBtn:hover {
+  background-color: #1a1a1a !important;
+  border-color: #1a1a1a !important;
+}
+
+/* ReCAPTCHA Badge */
+:global(.grecaptcha-badge) {
+  visibility: hidden !important;
+}
+
 @media (max-width: 1200px) {
   .cardTitle {
     font-size: 26px;
