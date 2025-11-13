@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, List } from 'lucide-react';
 import { useQuestionListViewModel } from '../../viewmodels/QuestionList.viewmodel';
 import type { QuestionList as QuestionListType, QuestionListProps } from '../../model/QuestionList.types';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import SearchSection from './SearchSection';
 import SortSection from './SortSection';
 import ListsView from './ListsView';
@@ -14,7 +14,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
   onListClick,
   className = '',
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   
   const {
     filteredLists,
@@ -39,7 +39,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
 
     // Navega para a página de questões da lista após pequeno delay para renderizar o feedback
     setTimeout(() => {
-      history.push(`/listas/${list.id}/questoes`);
+      navigate(`/listas/${list.id}/questoes`);
     }, 120);
   };
   return (

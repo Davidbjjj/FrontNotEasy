@@ -13,6 +13,7 @@ import {
 import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.viewmodel";
 import { VerticalNavbarProps } from "../../model/VerticalNavbar.types";
 import "./VerticalNavbar.css";
+import { JSX } from "react/jsx-runtime";
 
 const VerticalNavbarComponent: React.FC<VerticalNavbarProps> = ({
   items,

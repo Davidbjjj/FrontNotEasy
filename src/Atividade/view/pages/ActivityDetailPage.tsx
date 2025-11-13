@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../../presentation/components/ActivityDetail.css';
 import { useActivity } from '../../viewmodels/useActivityDetail';
 import { EventDetailCard, StudentView, EventNotasContainer } from '../../presentation/components/EventComponents';
@@ -16,7 +16,7 @@ interface ActivityDetailPageProps {
  * - Delegação de lógica para componentes especializados
  */
 const ActivityDetailPage: React.FC<ActivityDetailPageProps> = ({ isProfessor }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const activity = useActivity();
   
   // Detecta role se não for passado via prop
@@ -32,7 +32,7 @@ const ActivityDetailPage: React.FC<ActivityDetailPageProps> = ({ isProfessor }) 
 
       <button
         className="ad-back"
-        onClick={() => history.goBack()}
+        onClick={() => navigate(-1)}
         aria-label="Voltar para página anterior"
       >
         Voltar

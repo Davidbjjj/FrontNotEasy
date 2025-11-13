@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Question } from '../../presentation/components/Question';
 import { questionService } from '../../service/api/question.service';
 import AddQuestionsButton from '../../../listaQuestoes/presentation/components/AddQuestionsButton/AddQuestionsButton';
@@ -9,7 +9,7 @@ import './QuestionPage.css';
 
 const QuestionPage: React.FC = () => {
   const { listaId } = useParams<{ listaId: string }>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -76,7 +76,7 @@ const QuestionPage: React.FC = () => {
       <div className="question-page-error">
         <h2>Erro</h2>
         <p>{error}</p>
-        <button onClick={() => window.history.back()}>
+        <button onClick={() => navigate(-1)}>
           Voltar
         </button>
       </div>
@@ -95,7 +95,7 @@ const QuestionPage: React.FC = () => {
           <p className="question-page-empty-text">Esta lista ainda não possui questões. Você pode adicionar questões via PDF ou criar manualmente.</p>
           <div className="question-page-empty-actions">
             <AddQuestionsButton listaId={listaId ?? ''} />
-            <button className="btn btn-secondary" onClick={() => history.push('/listas')}>Voltar para listas</button>
+            <button className="btn btn-secondary" onClick={() => navigate('/listas')}>Voltar para listas</button>
           </div>
         </div>
       </div>
