@@ -7,6 +7,7 @@ export const authService = {
       const response = await api.post('/auth/login', {
         email: credentials.email,
         senha: credentials.password,
+        recaptchaToken: credentials.recaptchaToken, // Enviar token ReCAPTCHA
       });
 
       // IMPORTANT: populate localStorage ONLY from decoded token (role and userId)
@@ -20,6 +21,40 @@ export const authService = {
       } else {
         throw new Error('Erro ao tentar realizar login');
       }
+    }
+  },
+
+  /**
+   * Login com Google OAuth
+   * @param {string} googleToken - Token JWT do Google
+   */
+  async loginWithGoogle(googleToken) {
+    try {
+      const response = await api.post('/auth/login/google', {
+        token: googleToken,
+      });
+
+      loginFromResponse(response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error('Erro ao fazer login com Google');
+    }
+  },
+
+  /**
+   * Login com GitHub OAuth
+   * @param {string} githubCode - Código de autorização do GitHub
+   */
+  async loginWithGithub(githubCode) {
+    try {
+      const response = await api.post('/auth/login/github', {
+        code: githubCode,
+      });
+
+      loginFromResponse(response.data);
+      return response.data;
+    } catch (error) {
+      throw new Error('Erro ao fazer login com GitHub');
     }
   },
 
