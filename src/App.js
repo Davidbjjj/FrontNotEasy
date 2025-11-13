@@ -19,7 +19,7 @@ const App = () => {
   const hideLayout = noLayoutPaths.includes(location.pathname);
 
   // Inicializa Google OAuth Provider
-  const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
+  const googleClientId = '197044467131-mmc55c92o7o61sgmenfc9u0c6h3gfco0.apps.googleusercontent.com';
 
   const content = hideLayout ? <RouterConfig /> : <MainLayout><RouterConfig /></MainLayout>;
 
