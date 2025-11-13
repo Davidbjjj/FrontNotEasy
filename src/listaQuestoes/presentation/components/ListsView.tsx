@@ -5,6 +5,19 @@ import AddListButton from './AddListButton/AddListButton';
 import { ArrowRight, Clock, Book, FileText } from 'lucide-react';
 import './QuestionList.css';
 
+const getPreferredTeacherName = (fallbackName?: string) => {
+  try {
+    const raw = localStorage.getItem('teacher');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.name) return parsed.name;
+    }
+  } catch (err) {
+    // ignore
+  }
+  return fallbackName || '';
+};
+
 interface ListCardProps {
   list: QuestionList;
   onClick: (list: QuestionList) => void;
@@ -41,7 +54,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
           <div className="list-card__top-row">
             <div>
               <h3 className="list-card__subject">{list.title}</h3>
-              <p className="list-card__professor">{list.subject?.name} · {list.professor.name}</p>
+              <p className="list-card__professor">{list.subject?.name} · {getPreferredTeacherName(list.professor.name)}</p>
             </div>
             <div className="list-card__actions" onClick={handleAddQuestionsClick}>
               <AddQuestionsButton 

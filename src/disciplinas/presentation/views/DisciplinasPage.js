@@ -57,7 +57,18 @@ export default function DisciplinasPage() {
                             />
                             <h2 className={styles.cardTitle}>{disciplina.nome}</h2>
                             <p className={styles.cardSubtitle}>
-                                Professor(a): {disciplina.nomeProfessor}
+                                Professor(a): {(() => {
+                                    try {
+                                        const raw = localStorage.getItem('teacher');
+                                        if (raw) {
+                                            const parsed = JSON.parse(raw);
+                                            if (parsed && parsed.name) return parsed.name;
+                                        }
+                                    } catch (err) {
+                                        // ignore
+                                    }
+                                    return disciplina.nomeProfessor;
+                                })()}
                             </p>
                             <p className={styles.cardSubtitle}>
                                 Escola: {disciplina.nomeEscola}
