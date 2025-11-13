@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import ReCAPTCHA from "react-google-recaptcha";
-import styles from "./Login.module.css";
 
 /**
  * Componente reutilizável para ReCAPTCHA v3

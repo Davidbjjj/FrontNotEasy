@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Space, Divider, message } from 'antd';
-import { GoogleOutlined, GithubOutlined } from '@ant-design/icons';
+import { GithubOutlined } from '@ant-design/icons';
 import { GoogleLogin } from '@react-oauth/google';
 import styles from "./Login.module.css";
 
