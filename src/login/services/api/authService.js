@@ -42,8 +42,7 @@ export const authService = {
 
   /**
    * Login com Google OAuth
-   * Armazena token JWT padrão no localStorage e redireciona (sem chamar backend)
-   * @param {string} googleToken - Token JWT do Google (recebido do frontend, não enviado ao backend)
+   * @param {string} googleToken - Token JWT do Google
    */
   async loginWithGoogle(googleToken) {
     try {
@@ -71,8 +70,7 @@ export const authService = {
       
       return responseData;
     } catch (error) {
-      console.error('Erro ao processar login com Google:', error);
-      throw new Error('Erro ao processar login com Google');
+      throw new Error('Erro ao fazer login com Google');
     }
   },
 

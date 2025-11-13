@@ -9,7 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 
 async function verifyRecaptcha(token) {
-  const secret = process.env.RECAPTCHA_SECRET_KEY;
+  const secret = '6LeNSQssAAAAAPHPJbhOhm8bswtd7nOr0FkADQaj';
   if (!secret) throw new Error('RECAPTCHA_SECRET_KEY not configured on server');
 
   const resp = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
