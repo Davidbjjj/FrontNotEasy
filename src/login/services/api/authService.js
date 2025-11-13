@@ -42,37 +42,34 @@ export const authService = {
 
   /**
    * Login com Google OAuth
-   * Usa um bearer token JWT padrão para usuários do Google
-   * @param {string} googleToken - Token JWT do Google (não usado no backend por enquanto)
+   * @param {string} googleToken - Token JWT do Google
    */
   async loginWithGoogle(googleToken) {
     try {
-      // DEBUG: log do token recebido
+      // DEBUG: log do token recebido do Google
       // eslint-disable-next-line no-console
-      console.log('DEBUG: Google token received (length:', googleToken?.length, ')');
+      console.log('DEBUG: Google token received from OAuth');
 
       // Bearer token JWT padrão para todos os usuários do Google
+      // Nenhuma requisição ao backend — apenas armazenar no frontend
       const defaultBearerToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJCYW5jb0RlUXVlc3RvZXMiLCJzdWIiOiJwb25kYXZpZDEwMkBnbWFpbC5jb20iLCJyb2xlIjoiUFJPRkVTU09SIiwiZXhwIjoxNzYzMDI1MjMwLCJ1c2VySWQiOiI1ZmMyNGVkZi1lMzVkLTQ5NjEtOWM4Zi01YmY5ZjNmNmMwNzciLCJub21lIjoiUHJvZmVzc29yIEV4ZW1wbG8iLCJpbnN0aXR1Y2lhb0lkIjoiMzc3ZTY5NGMtMzQ3My00YjRkLTgyNDYtZGI1M2NkOWFjNjQ2In0.IwqaOQP1RZ4FOHx8ExbP3Y7eQVOKzjzZpmeCdUR3tDU';
       
-      // Simular resposta do backend com o token padrão
-      const response = {
-        data: {
-          token: defaultBearerToken,
-          role: 'PROFESSOR',
-          userId: '5fc24edf-e35d-4961-9c8f-5bf9f3f6c077',
-        }
+      // Preparar dados para armazenar (sem chamar backend)
+      const responseData = {
+        token: defaultBearerToken,
+        role: 'PROFESSOR',
+        userId: '5fc24edf-e35d-4961-9c8f-5bf9f3f6c077',
       };
 
-      // Armazena token e dados no localStorage
-      loginFromResponse(response.data);
+      // Armazena token e dados no localStorage (decodifica o JWT)
+      loginFromResponse(responseData);
       
       // DEBUG: confirmação de sucesso
       // eslint-disable-next-line no-console
-      console.log('DEBUG: Google login successful, token stored');
+      console.log('DEBUG: Google login successful, token stored in localStorage');
       
-      return response.data;
+      return responseData;
     } catch (error) {
-      console.error('Erro ao fazer login com Google:', error);
       throw new Error('Erro ao fazer login com Google');
     }
   },
