@@ -26,7 +26,7 @@ export const RecaptchaComponent = React.forwardRef(({ onToken }, ref) => {
   return (
     <ReCAPTCHA
       ref={recaptchaRef}
-      sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY || "YOUR_SITE_KEY"}
+      sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY || "6Lc9CgssAAAAALjo7B0IGXCEerDc0p_tl6RpvVDb"}
       size="invisible"
     />
   );

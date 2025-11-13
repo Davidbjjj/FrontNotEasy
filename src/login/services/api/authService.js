@@ -4,11 +4,27 @@ import { loginFromResponse, logout as authLogout } from '../../../auth/auth';
 export const authService = {
   async login(credentials) {
     try {
-      const response = await api.post('/auth/login', {
+      const payload = {
         email: credentials.email,
         senha: credentials.password,
         recaptchaToken: credentials.recaptchaToken, // Enviar token ReCAPTCHA
+      };
+
+      // Remove any accidental secret fields before sending (safety net)
+      const sanitizedPayload = { ...payload };
+      const removedKeys = [];
+      Object.keys(sanitizedPayload).forEach((k) => {
+        if (k.toLowerCase().includes('secret')) {
+          removedKeys.push(k);
+          delete sanitizedPayload[k];
+        }
       });
+
+      // DEBUG: log payload being sent to backend (remove in production)
+      // eslint-disable-next-line no-console
+      console.log('DEBUG authService.login payload (sanitized):', sanitizedPayload, 'removedKeys:', removedKeys);
+
+      const response = await api.post('/auth/login', sanitizedPayload);
 
       // IMPORTANT: populate localStorage ONLY from decoded token (role and userId)
       // loginFromResponse will decode the token and store token, role and userId

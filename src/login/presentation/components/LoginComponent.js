@@ -54,6 +54,10 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
         recaptchaToken,
       };
       
+      // DEBUG: log do token para verificar envio (remover em produção)
+      // eslint-disable-next-line no-console
+      console.log('DEBUG loginData (will be sent to backend):', loginData);
+
       await authService.login(loginData);
       message.success("Login realizado com sucesso!");
       navigate("/listas");
