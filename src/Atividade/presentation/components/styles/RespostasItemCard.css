@@ -1,0 +1,217 @@
+/* ===== RESPOSTA ITEM CARD ===== */
+.respostas-list-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.respostas-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.respostas-empty {
+  text-align: center;
+  padding: var(--spacing-xxl);
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+}
+
+/* Resposta Item Card */
+.resposta-item-card {
+  background: var(--surface-white);
+  border: 2px solid var(--border-light);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-lg);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-standard);
+  display: flex;
+  flex-direction: column;
+}
+
+.resposta-item-card:hover {
+  border-color: var(--primary-blue);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+.resposta-item-card.resposta-correct {
+  border-left: 4px solid #10b981;
+}
+
+.resposta-item-card.resposta-incorrect {
+  border-left: 4px solid #ef4444;
+}
+
+/* Header */
+.resposta-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.resposta-item-number {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.question-number {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.question-id {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Status */
+.resposta-item-status {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-lg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.resposta-item-status.resposta-correct {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.resposta-item-status.resposta-incorrect {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.status-icon {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.status-text {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Enunciado */
+.resposta-item-enunciado {
+  margin-bottom: var(--spacing-md);
+}
+
+.enunciado-label {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.enunciado-text {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Answer Section */
+.resposta-item-answer {
+  padding: var(--spacing-md);
+  background: var(--background-light);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.answer-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.answer-indicator {
+  display: inline-block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-md);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.answer-indicator.resposta-correct {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.answer-indicator.resposta-incorrect {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Indicator bar */
+.resposta-item-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-left: 3px solid transparent;
+}
+
+/* Responsivo */
+@media (max-width: 1024px) {
+  .respostas-list-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .respostas-list-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .resposta-item-card {
+    padding: var(--spacing-md);
+  }
+
+  .resposta-item-header {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .resposta-item-status {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .respostas-empty {
+    padding: var(--spacing-lg);
+  }
+
+  .resposta-item-card {
+    padding: var(--spacing-md);
+  }
+
+  .enunciado-text {
+    font-size: 0.875rem;
+  }
+}

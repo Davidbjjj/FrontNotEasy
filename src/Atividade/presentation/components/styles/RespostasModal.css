@@ -1,0 +1,83 @@
+/* ===== MODAL RESPOSTAS - PREMIUM DESIGN ===== */
+.respostas-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md);
+  backdrop-filter: blur(4px);
+}
+
+.respostas-modal {
+  background: var(--surface-white);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-xl);
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: var(--shadow-modal);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+.respostas-modal--premium {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  padding: 0;
+}
+
+.respostas-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-xxl);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Scrollbar customizado */
+.respostas-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.respostas-modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.respostas-modal-content::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 4px;
+}
+
+.respostas-modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--border-light);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .respostas-modal-content {
+    padding: var(--spacing-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .respostas-modal {
+    border-radius: var(--border-radius-lg);
+  }
+
+  .respostas-modal--premium {
+    max-height: 100vh;
+  }
+}

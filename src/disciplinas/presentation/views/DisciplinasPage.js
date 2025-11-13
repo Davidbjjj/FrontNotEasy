@@ -1,90 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDisciplinaViewModel } from "../../viewmodels/useDisciplinaViewModel";
 import styles from "../components/Disciplinas.module.css";
-import axios from "axios";
 
 export default function DisciplinasPage() {
-    const [listas, setListas] = useState([]);
-    const [search, setSearch] = useState("");
     const navigate = useNavigate();
+    const {
+        disciplinas,
+        isLoading,
+        error,
+        searchTerm,
+        handleSearch,
+        userRole,
+    } = useDisciplinaViewModel();
 
-    // mock por agora, mas isso vai ser trocado pela captura dos IDS dos usuários logados, pra fazer isso aqui rodar local é só pegar o ID de um usuário lá do banco, e passar a role também
-    const userRole = "PROFESSOR"; // ou "ESTUDANTE"
-    const mockIds = {
-        PROFESSOR: "78ce4ef4-3a75-4975-9d38-2524b4402345",
-        ESTUDANTE: "a77cb20e-3210-4f09-bb85-c1fda1245981",
+    const handleSearchChange = (e) => {
+        handleSearch(e.target.value);
     };
-    const userId = mockIds[userRole];
-
-    useEffect(() => {
-        const fetchListas = async () => {
-            try {
-                const endpoint =
-                    userRole === "PROFESSOR"
-                        ? `http://localhost:8080/listas/professor/${userId}`
-                        : `http://localhost:8080/listas/estudante/${userId}`;
-
-                const response = await axios.get(endpoint);
-                setListas(response.data);
-            } catch (error) {
-                console.error("Erro ao buscar listas:", error);
-            }
-        };
-
-        fetchListas();
-    }, [userRole, userId]);
-
-    const listasFiltradas = listas.filter(
-        (lista) =>
-            lista.titulo.toLowerCase().includes(search.toLowerCase()) ||
-            (lista.professorNome &&
-                lista.professorNome.toLowerCase().includes(search.toLowerCase()))
-    );
 
     return (
         <div className={styles.container}>
-
             <div className={styles.header}>
                 <h1 className={styles.title}>
-                    {userRole === "PROFESSOR" ? "Minhas Listas" : "Minhas Atividades"}
+                    {userRole === "PROFESSOR" ? "Minhas Disciplinas" : "Minhas Disciplinas"}
                 </h1>
 
                 <div className={styles.searchBar}>
                     <input
                         type="text"
-                        placeholder="Buscar lista por título ou professor..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Buscar disciplina por nome, professor ou escola..."
+                        value={searchTerm}
+                        onChange={handleSearchChange}
                         className={styles.searchInput}
                     />
                     <Search size={18} color="#636e72" />
                 </div>
             </div>
 
-
             <div className={styles.grid}>
-                {listasFiltradas.length > 0 ? (
-                    listasFiltradas.map((lista) => (
+                {isLoading ? (
+                    <p className={styles.emptyText}>Carregando disciplinas...</p>
+                ) : error ? (
+                    <p className={styles.emptyText}>Erro: {error}</p>
+                ) : disciplinas.length > 0 ? (
+                    disciplinas.map((disciplina) => (
                         <div
-                            key={lista.id}
+                            key={disciplina.id}
                             className={styles.card}
-                            onClick={() => navigate(`/listas/${lista.id}`)}
+                            onClick={() => navigate(`/disciplinas/${disciplina.id}`)}
                         >
                             <img
                                 src="https://img.icons8.com/color/240/books.png"
-                                alt={lista.titulo}
+                                alt={disciplina.nome}
                                 className={styles.cardImage}
                             />
-                            <h2 className={styles.cardTitle}>{lista.titulo}</h2>
+                            <h2 className={styles.cardTitle}>{disciplina.nome}</h2>
                             <p className={styles.cardSubtitle}>
-                                Professor(a):{" "}
-                                {lista.professorNome ? lista.professorNome : "Desconhecido"}
+                                Professor(a): {disciplina.nomeProfessor}
+                            </p>
+                            <p className={styles.cardSubtitle}>
+                                Escola: {disciplina.nomeEscola}
+                            </p>
+                            <p className={styles.cardSubtitle}>
+                                Alunos: {disciplina.alunos.length}
                             </p>
                         </div>
                     ))
                 ) : (
-                    <p className={styles.emptyText}>Nenhuma lista encontrada.</p>
+                    <p className={styles.emptyText}>Nenhuma disciplina encontrada.</p>
                 )}
             </div>
         </div>

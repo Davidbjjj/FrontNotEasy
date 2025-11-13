@@ -4,45 +4,56 @@ import { QuestionProps } from '../../model/Question.types';
 import QuestionHeader from './QuestionHeader';
 import QuestionContent from './QuestionContent';
 import QuestionNavigation from './QuestionNavigation';
+import QuestionResults from './QuestionResults';
 import './Question.css';
 
 export const Question: React.FC<QuestionProps> = ({
-  question,
   questions,
+  listaId,
+  estudanteId,
   onAnswerSelect,
   onNavigate,
   onFinish,
   className = '',
 }) => {
-  const questionsArray = questions || [question];
   const {
     currentQuestion,
     selectedAnswer,
-    isAnswered,
     navigation,
+    showResults,
+    quizResult,
     handleAnswerSelect,
     handleNavigate,
     handleFinish,
-  } = useQuestionViewModel(questionsArray, onAnswerSelect, onNavigate, onFinish);
+    handleShowResults,
+  } = useQuestionViewModel(questions, listaId, estudanteId, onAnswerSelect, onNavigate, onFinish);
 
+  // Se estiver mostrando resultados, exibe o componente de resultados
+  if (showResults && quizResult) {
+    return (
+      <QuestionResults
+        result={quizResult}
+        questions={questions}
+        onClose={() => window.history.back()} // Voltar para a página anterior
+      />
+    );
+  }
+
+  // Componente normal das questões
   return (
     <div className={`question-page ${className}`}>
-      {/* Header com título e progresso */}
       <QuestionHeader
         title={currentQuestion.title}
         subject={currentQuestion.subject}
         progress={currentQuestion.progress}
       />
 
-      {/* Separador */}
       <hr style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '20px 0' }} />
 
-      {/* Número da questão */}
       <div className="question-content__number">
         QUESTÃO {currentQuestion.currentQuestion}
       </div>
 
-      {/* Conteúdo da questão e opções */}
       <QuestionContent
         content={currentQuestion.content}
         options={currentQuestion.options}
@@ -50,7 +61,6 @@ export const Question: React.FC<QuestionProps> = ({
         onAnswerSelect={handleAnswerSelect}
       />
 
-      {/* Tags */}
       <div className="question-tags">
         {currentQuestion.tags.map((tag, index) => (
           <span key={index} className="question-tag">
@@ -59,20 +69,22 @@ export const Question: React.FC<QuestionProps> = ({
         ))}
       </div>
 
-      {/* Explicação (aparece após responder) */}
-      {isAnswered && (
-        <div className="question-explanation">
-          <h4 className="question-explanation__title">Explicação:</h4>
-          <p className="question-explanation__text">{currentQuestion.explanation}</p>
-        </div>
-      )}
+      {/* NÃO MOSTRA EXPLICAÇÃO DURANTE A RESPOSTA - só no final */}
 
-      {/* Navegação */}
       <QuestionNavigation
         navigation={navigation}
         onNavigate={handleNavigate}
         onFinish={handleFinish}
       />
+
+      {/* Botão para ver resultados (opcional - pode remover) */}
+      {navigation.current === navigation.total && (
+        <div className="quick-results-button">
+          <button onClick={handleShowResults} className="btn-show-results">
+            Ver Resultados
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React from 'react';
 import QuestionList from '../../presentation/components/QuestionList';
 
+
 const QuestionListPage: React.FC = () => {
   const handleListClick = (list: any) => {
     console.log('Lista clicada:', list);

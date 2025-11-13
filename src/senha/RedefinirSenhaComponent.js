@@ -1,14 +1,11 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function RedefinirSenha() {
   // Estados para armazenar as senhas digitadas
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [erros, setErros] = useState([]); // Lista de erros de validação
   const navigate = useNavigate(); // Usado para redirecionar para outra rota
-  const [params] = useSearchParams();
-  const token = params.get("token");  // ← pega o token se existir na URL
   
   // Função para validar a senha de acordo com os critérios de segurança
 
@@ -26,9 +23,8 @@ export default function RedefinirSenha() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Valida a senha e guarda os erros encontrados
+    // Valida a senha de acordo com os critérios de segurança
     const errosSenha = validarSenha(novaSenha);
-    setErros(errosSenha);
 
     // Só prossegue se não houver erros e as senhas coincidirem
     if (errosSenha.length === 0 && novaSenha === confirmarSenha) {

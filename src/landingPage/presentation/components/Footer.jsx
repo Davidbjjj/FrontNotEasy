@@ -17,16 +17,16 @@ const Footer = () => {
               de todos os portes.
             </p>
             <div className="social-links">
-              <a href="#" className="social-link" aria-label="LinkedIn">
+              <a href="#!" className="social-link" aria-label="LinkedIn">
                 <LinkedInIcon />
               </a>
-              <a href="#" className="social-link" aria-label="Facebook">
+              <a href="#!" className="social-link" aria-label="Facebook">
                 <FacebookIcon />
               </a>
-              <a href="#" className="social-link" aria-label="Instagram">
+              <a href="#!" className="social-link" aria-label="Instagram">
                 <InstagramIcon />
               </a>
-              <a href="#" className="social-link" aria-label="Twitter">
+              <a href="#!" className="social-link" aria-label="Twitter">
                 <TwitterIcon />
               </a>
             </div>
@@ -37,11 +37,11 @@ const Footer = () => {
             <div className="link-group">
               <h4 className="link-group-title">Produto</h4>
               <ul className="link-list">
-                <li><a href="#">Recursos</a></li>
-                <li><a href="#">Planos e Preços</a></li>
-                <li><a href="#">Casos de Sucesso</a></li>
-                <li><a href="#">Demonstração</a></li>
-                <li><a href="#">API</a></li>
+                <li><a href="#!">Recursos</a></li>
+                <li><a href="#!">Planos e Preços</a></li>
+                <li><a href="#!">Casos de Sucesso</a></li>
+                <li><a href="#!">Demonstração</a></li>
+                <li><a href="#!">API</a></li>
               </ul>
             </div>
 
@@ -49,11 +49,11 @@ const Footer = () => {
             <div className="link-group">
               <h4 className="link-group-title">Soluções</h4>
               <ul className="link-list">
-                <li><a href="#">Ensino Básico</a></li>
-                <li><a href="#">Ensino Médio</a></li>
-                <li><a href="#">Ensino Superior</a></li>
-                <li><a href="#">Cursos Técnicos</a></li>
-                <li><a href="#">Educação Corporativa</a></li>
+                <li><a href="#!">Ensino Básico</a></li>
+                <li><a href="#!">Ensino Médio</a></li>
+                <li><a href="#!">Ensino Superior</a></li>
+                <li><a href="#!">Cursos Técnicos</a></li>
+                <li><a href="#!">Educação Corporativa</a></li>
               </ul>
             </div>
 
@@ -61,11 +61,11 @@ const Footer = () => {
             <div className="link-group">
               <h4 className="link-group-title">Suporte</h4>
               <ul className="link-list">
-                <li><a href="#">Central de Ajuda</a></li>
-                <li><a href="#">Documentação</a></li>
-                <li><a href="#">Tutoriais</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Status do Sistema</a></li>
+                <li><a href="#!">Central de Ajuda</a></li>
+                <li><a href="#!">Documentação</a></li>
+                <li><a href="#!">Tutoriais</a></li>
+                <li><a href="#!">Blog</a></li>
+                <li><a href="#!">Status do Sistema</a></li>
               </ul>
             </div>
 
@@ -73,11 +73,11 @@ const Footer = () => {
             <div className="link-group">
               <h4 className="link-group-title">Empresa</h4>
               <ul className="link-list">
-                <li><a href="#">Sobre Nós</a></li>
-                <li><a href="#">Carreiras</a></li>
-                <li><a href="#">Parceiros</a></li>
-                <li><a href="#">Imprensa</a></li>
-                <li><a href="#">Contato</a></li>
+                <li><a href="#!">Sobre Nós</a></li>
+                <li><a href="#!">Carreiras</a></li>
+                <li><a href="#!">Parceiros</a></li>
+                <li><a href="#!">Imprensa</a></li>
+                <li><a href="#!">Contato</a></li>
               </ul>
             </div>
           </div>
@@ -113,9 +113,9 @@ const Footer = () => {
               © 2024 EduPlataforma. Todos os direitos reservados.
             </p>
             <div className="legal-links">
-              <a href="#">Política de Privacidade</a>
-              <a href="#">Termos de Serviço</a>
-              <a href="#">Cookies</a>
+              <a href="#!">Política de Privacidade</a>
+              <a href="#!">Termos de Serviço</a>
+              <a href="#!">Cookies</a>
             </div>
           </div>
         

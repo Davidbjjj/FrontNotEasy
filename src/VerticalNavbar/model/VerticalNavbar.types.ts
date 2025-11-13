@@ -1,7 +1,9 @@
+// TS VerticalNavbar.types.ts
 export interface NavItem {
   id: string;
   label: string;
   isActive?: boolean;
+  path?: string; // Adicione esta propriedade
 }
 
 export interface VerticalNavbarProps {

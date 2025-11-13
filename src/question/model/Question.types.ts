@@ -1,3 +1,5 @@
+// src/model/Question.types.ts
+
 export interface Question {
   id: string;
   title: string;
@@ -8,9 +10,10 @@ export interface Question {
   subject: string;
   tags: string[];
   difficulty: 'easy' | 'medium' | 'hard';
-  progress: number; // 0-100
+  progress: number;
   currentQuestion: number;
   totalQuestions: number;
+  listaId?: string;
 }
 
 export interface QuestionOption {
@@ -27,13 +30,50 @@ export interface QuestionNavigation {
   hasNext: boolean;
 }
 
+export interface QuestionViewModel {
+  currentQuestion: Question;
+  selectedAnswer: string | null;
+  isAnswered: boolean;
+  navigation: QuestionNavigation;
+  handleAnswerSelect: (answerId: string) => void;
+  handleNavigate: (direction: 'previous' | 'next') => void;
+  handleFinish: () => void;
+}
+
 export interface QuestionProps {
-  question: Question;
-  questions?: Question[];
-  onAnswerSelect?: (questionId: string, answerId: string) => void;
+  question?: Question;
+  questions: Question[];
+  listaId: string;
+  estudanteId: string;
+  onAnswerSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   onNavigate?: (direction: 'previous' | 'next') => void;
-  onFinish?: () => void;
+  onFinish?: (respostas: RespostaEstudanteQuestaoDTO[]) => void;
   className?: string;
+}
+
+// Tipos para as respostas do backend
+export interface RespostaEstudanteQuestaoDTO {
+  respostaId: number;
+  questaoId: number;
+  estudanteId: string;
+  nomeEstudante: string;
+  alternativa: number;
+  correta: boolean;
+}
+
+export interface RespostasListaDTO {
+  listaId: string;
+  tituloLista: string;
+  respostas: RespostaEstudanteQuestaoDTO[];
+}
+
+// Resultado final
+export interface QuizResult {
+  totalQuestions: number;
+  correctAnswers: number;
+  wrongAnswers: number;
+  score: number;
+  respostas: RespostaEstudanteQuestaoDTO[];
 }
 
 export interface QuestionHeaderProps {
@@ -48,6 +88,7 @@ export interface QuestionContentProps {
   options: QuestionOption[];
   selectedAnswer?: string;
   onAnswerSelect: (answerId: string) => void;
+  disabled?: boolean;
   className?: string;
 }
 
@@ -55,15 +96,6 @@ export interface QuestionNavigationProps {
   navigation: QuestionNavigation;
   onNavigate: (direction: 'previous' | 'next') => void;
   onFinish: () => void;
+  disabled?: boolean;
   className?: string;
-}
-
-export interface QuestionViewModel {
-  currentQuestion: Question;
-  selectedAnswer: string | null;
-  isAnswered: boolean;
-  navigation: QuestionNavigation;
-  handleAnswerSelect: (answerId: string) => void;
-  handleNavigate: (direction: 'previous' | 'next') => void;
-  handleFinish: () => void;
 }
