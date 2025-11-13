@@ -1,4 +1,4 @@
-import React, { useState, useImperativeHandle, forwardRef, useEffect } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
 
 /**
  * Componente de CAPTCHA para testes locais (substitui reCAPTCHA real durante desenvolvimento)

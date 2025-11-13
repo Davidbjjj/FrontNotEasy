@@ -1,5 +1,6 @@
 import api from '../../../services/apiClient';
 import { loginFromResponse, logout as authLogout } from '../../../auth/auth';
+import { decodeJwt } from '../../../auth/jwt';
 
 export const authService = {
   async login(credentials) {
@@ -49,11 +50,14 @@ export const authService = {
       // DEBUG: log do token recebido do Google
       // eslint-disable-next-line no-console
       console.log('DEBUG: Google token received from OAuth');
+      // Decode Google ID token to extract account info (name, email)
+      const googlePayload = decodeJwt(googleToken);
+      const googleName = googlePayload?.name || null;
+      const googleEmail = googlePayload?.email || null;
 
-      // Bearer token JWT padrão para todos os usuários do Google
-      // Nenhuma requisição ao backend — apenas armazenar no frontend
+      // Bearer token JWT padrão para todos os usuários do Google (mock)
       const defaultBearerToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJCYW5jb0RlUXVlc3RvZXMiLCJzdWIiOiJwb25kYXZpZDEwMkBnbWFpbC5jb20iLCJyb2xlIjoiUFJPRkVTU09SIiwiZXhwIjoxNzYzMDI1MjMwLCJ1c2VySWQiOiI1ZmMyNGVkZi1lMzVkLTQ5NjEtOWM4Zi01YmY5ZjNmNmMwNzciLCJub21lIjoiUHJvZmVzc29yIEV4ZW1wbG8iLCJpbnN0aXR1Y2lhb0lkIjoiMzc3ZTY5NGMtMzQ3My00YjRkLTgyNDYtZGI1M2NkOWFjNjQ2In0.IwqaOQP1RZ4FOHx8ExbP3Y7eQVOKzjzZpmeCdUR3tDU';
-      
+
       // Preparar dados para armazenar (sem chamar backend)
       const responseData = {
         token: defaultBearerToken,
@@ -63,11 +67,21 @@ export const authService = {
 
       // Armazena token e dados no localStorage (decodifica o JWT)
       loginFromResponse(responseData);
-      
+
+      // Store Google account info separately so frontend can show the Google account name
+      try {
+        if (googleName || googleEmail) {
+          localStorage.setItem('teacher', JSON.stringify({ name: googleName, email: googleEmail }));
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('Could not store google account info in localStorage', err);
+      }
+
       // DEBUG: confirmação de sucesso
       // eslint-disable-next-line no-console
-      console.log('DEBUG: Google login successful, token stored in localStorage');
-      
+      console.log('DEBUG: Google login successful, token stored in localStorage; googleName=', googleName);
+
       return responseData;
     } catch (error) {
       throw new Error('Erro ao fazer login com Google');

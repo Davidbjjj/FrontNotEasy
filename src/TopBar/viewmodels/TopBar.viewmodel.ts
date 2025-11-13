@@ -8,8 +8,22 @@ export const useTopBarViewModel = (
   onSupportClick?: () => void,
   onLogoutClick?: () => void
 ): TopBarViewModel => {
+  // Prefer Google account name (stored under 'teacher') when available
+  let initialName = 'David Pontes';
+  try {
+    const teacherRaw = localStorage.getItem('teacher');
+    if (teacherRaw) {
+      const teacher = JSON.parse(teacherRaw);
+      if (teacher && teacher.name) {
+        initialName = teacher.name;
+      }
+    }
+  } catch (err) {
+    // ignore parsing errors
+  }
+
   const [userInfo] = useState<UserInfo>(
-    initialUserInfo || { name: 'David Pontes' }
+    initialUserInfo || { name: initialName }
   );
 
   const [notifications, setNotifications] = useState<Notification[]>(
