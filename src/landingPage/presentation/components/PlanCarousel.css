@@ -23,6 +23,32 @@
   margin: 0;
 }
 
+/* Billing toggle */
+.billing-toggle {
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  margin-top: 14px;
+}
+.billing-option {
+  border: none;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+}
+.billing-option.active {
+  background: white;
+  color: var(--primary-blue);
+  border: 1px solid var(--primary-blue);
+}
+.save-badge { margin-left: 6px; font-size: .85rem; color: #059669; font-weight: 700; }
+
 .carousel-container {
   position: relative;
   display: flex;
@@ -66,7 +92,7 @@
 }
 
 .plan-card.popular {
-  border-color: #007bff;
+  border-color: var(--primary-blue);
   background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
 }
 
@@ -75,19 +101,20 @@
   top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  background: #007bff;
+  background: var(--primary-blue);
   color: white;
   padding: 8px 20px;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 600;
-  box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 }
 
 .plan-header {
   text-align: center;
   margin-bottom: 30px;
 }
+.tier { font-size: .85rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; }
 
 .plan-title {
   font-size: 1.5rem;
@@ -95,6 +122,7 @@
   color: #1a1a1a;
   margin-bottom: 12px;
 }
+.plan-subtitle { font-size: .95rem; color: #6b7280; }
 
 .student-range {
   display: flex;
@@ -169,7 +197,7 @@
 .price-amount {
   font-size: 3rem;
   font-weight: 800;
-  color: #007bff;
+  color: var(--primary-blue);
   line-height: 1;
   margin-bottom: 8px;
 }
@@ -179,10 +207,11 @@
   color: #666;
   font-weight: 500;
 }
+.price-note { font-size: .85rem; color: #059669; font-weight: 700; margin-top: 4px; }
 
 .subscribe-btn {
   width: 100%;
-  background: #007bff;
+  background: var(--primary-blue);
   color: white;
   border: none;
   padding: 16px 24px;
@@ -194,10 +223,16 @@
 }
 
 .subscribe-btn:hover {
-  background: #0056b3;
+  background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
 }
+.subscribe-btn.outline {
+  background: white;
+  color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+}
+.subscribe-btn.outline:hover { background: #f8fafc; }
 
 .carousel-btn {
   background: white;
@@ -216,9 +251,9 @@
 }
 
 .carousel-btn:hover {
-  background: #007bff;
+  background: var(--primary-blue);
   color: white;
-  border-color: #007bff;
+  border-color: var(--primary-blue);
   transform: scale(1.1);
 }
 
@@ -240,9 +275,15 @@
 }
 
 .indicator.active {
-  background: #007bff;
+  background: var(--primary-blue);
   transform: scale(1.2);
 }
+
+/* Card accents */
+.plan-card.accent-blue { border-top: 4px solid #3b82f6; }
+.plan-card.accent-indigo { border-top: 4px solid #6366f1; }
+.plan-card.accent-teal { border-top: 4px solid #14b8a6; }
+.plan-card.accent-slate { border-top: 4px solid #64748b; }
 
 /* Responsividade */
 @media (max-width: 768px) {

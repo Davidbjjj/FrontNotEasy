@@ -130,8 +130,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 40px;
+  gap: 24px;
   margin-bottom: 40px;
+  box-sizing: border-box;
+  overflow: hidden; /* evita conteúdo escapar do contêiner */
 }
 
 .newsletter-content {
@@ -154,13 +156,15 @@
 .newsletter-form {
   display: flex;
   gap: 12px;
-  flex: 1;
-  padding-right: 5rem;
-  max-width: 400px;
+  flex: 0 1 520px; /* largura máxima confortável, permite encolher */
+  padding-right: 0;
+  max-width: 100%;
+  align-items: center;
 }
 
 .newsletter-input {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0; /* permite encolher dentro do flex sem vazar */
   padding: 16px 20px;
   border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
@@ -191,6 +195,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   white-space: nowrap;
+  flex-shrink: 0; /* impede o botão de colapsar e empurrar input para fora */
 }
 
 .newsletter-button:hover {
@@ -303,10 +308,8 @@
     padding: 30px;
   }
   
-  .newsletter-form {
-    flex-direction: column;
-    max-width: 100%;
-  }
+  .newsletter-form { flex-direction: column; width: 100%; }
+  .newsletter-input, .newsletter-button { width: 100%; }
   
   .footer-bottom {
     flex-direction: column;
