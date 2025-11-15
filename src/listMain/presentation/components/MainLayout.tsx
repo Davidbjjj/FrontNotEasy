@@ -2,6 +2,7 @@
 import React from 'react';
 import VerticalNavbar from '../../../VerticalNavbar/presentation/components/VerticalNavbar';
 import TopBar from '../../../TopBar/presentation/components/TopBar';
+import { useAuth } from '../../../auth/AuthProvider';
 import './MainLayout.css';
 
 interface MainLayoutProps {
@@ -17,8 +18,20 @@ const MainLayoutComponent: React.FC<MainLayoutProps> = ({ children }) => {
     console.log('Suporte clicado');
   };
 
+  const { logout } = useAuth();
+
   const handleLogoutClick = () => {
-    console.log('Sair clicado');
+    // call auth provider logout which will call server and clear storage
+    try {
+      logout();
+    } catch (e) {
+      console.error('Erro ao fazer logout', e);
+      // fallback: clear local storage and redirect
+      try {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      } catch (err) {}
+    }
   };
 
   return (

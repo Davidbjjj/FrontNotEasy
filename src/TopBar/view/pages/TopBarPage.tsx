@@ -11,7 +11,15 @@ const TopBarPage: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   const handleLogoutClick = () => {
-    console.log('Sair clicado');
+    // If running inside app with AuthProvider, call logout via custom event
+    // This demo page may not have the provider mounted; just attempt graceful fallback
+    try {
+      // Try to get a global hook first
+      const event = new CustomEvent('app-logout');
+      window.dispatchEvent(event);
+    } catch (e) {
+      console.log('Sair clicado');
+    }
   };
 
   return (
