@@ -1,4 +1,5 @@
 import { Question, QuestionOption } from '../../model/Question.types';
+import api from '../../../services/apiClient';
 
 export interface QuestaoResponseDTO {
   id: number;
@@ -14,13 +15,13 @@ class QuestionService {
   async getQuestionsByListId(listaId: string): Promise<Question[]> {
     try {
       const response = await fetch(`${this.baseURL}/${listaId}/questoes`);
-      
+
       if (!response.ok) {
         throw new Error(`Erro ao buscar questões: ${response.status}`);
       }
-      
+
       const questoesDTO: QuestaoResponseDTO[] = await response.json();
-      
+
       // Transformar DTO do backend para o formato do frontend
       return questoesDTO.map((dto, index) => this.transformDTOToQuestion(dto, index, questoesDTO.length));
     } catch (error) {
@@ -52,6 +53,51 @@ class QuestionService {
       currentQuestion: index + 1,
       totalQuestions: total
     };
+  }
+
+  // Atualiza uma questão inteira (cabeçalho, enunciado, alternativas, gabarito)
+  async updateQuestion(listaId: string, questaoId: string | number, body: { cabecalho: string; enunciado: string; alternativas: string[]; gabarito: number; }): Promise<QuestaoResponseDTO> {
+    // Validações locais antes de enviar para a API
+    if (!body.alternativas || body.alternativas.length === 0) {
+      const err: any = new Error('Campo "alternativas" não pode ser vazio.');
+      err.status = 400;
+      throw err;
+    }
+
+    if (typeof body.gabarito !== 'number' || body.gabarito < 0 || body.gabarito >= body.alternativas.length) {
+      const err: any = new Error('Gabarito fora do intervalo de alternativas.');
+      err.status = 400;
+      throw err;
+    }
+
+    try {
+      const url = `${this.baseURL}/${listaId}/questoes/${questaoId}`;
+      const response = await api.put(url, body);
+      return response.data as QuestaoResponseDTO;
+    } catch (error: any) {
+      // Repassa erro com status quando disponível
+      if (error && error.response && error.response.status) {
+        const err: any = new Error(error.response.data?.message || 'Erro ao atualizar questão');
+        err.status = error.response.status;
+        throw err;
+      }
+      throw error;
+    }
+  }
+
+  // Deleta uma questão da lista
+  async deleteQuestion(listaId: string, questaoId: string | number): Promise<void> {
+    try {
+      const url = `${this.baseURL}/${listaId}/questoes/${questaoId}`;
+      await api.delete(url);
+    } catch (error: any) {
+      if (error && error.response && error.response.status) {
+        const err: any = new Error(error.response.data?.message || 'Erro ao deletar questão');
+        err.status = error.response.status;
+        throw err;
+      }
+      throw error;
+    }
   }
 }
 

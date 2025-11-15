@@ -3,6 +3,7 @@ import { Grid, List } from 'lucide-react';
 import { useQuestionListViewModel } from '../../viewmodels/QuestionList.viewmodel';
 import type { QuestionList as QuestionListType, QuestionListProps } from '../../model/QuestionList.types';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../auth/AuthProvider';
 import SearchSection from './SearchSection';
 import SortSection from './SortSection';
 import ListsView from './ListsView';
@@ -15,6 +16,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
   className = '',
 }) => {
   const navigate = useNavigate();
+  const auth = useAuth();
   
   const {
     filteredLists,
@@ -33,13 +35,18 @@ export const QuestionList: React.FC<QuestionListProps> = ({
     if (onListClick) {
       onListClick(list);
     }
-    
+
     // feedback imediato: marca o card como clicado (mostra spinner)
     setClickedListId(list.id);
 
     // Navega para a página de questões da lista após pequeno delay para renderizar o feedback
     setTimeout(() => {
-      navigate(`/listas/${list.id}/questoes`);
+      const role = auth?.user?.role || localStorage.getItem('role') || '';
+      if (role === 'PROFESSOR') {
+        navigate(`/listas/${list.id}/questoes/professor`);
+      } else {
+        navigate(`/listas/${list.id}/questoes`);
+      }
     }, 120);
   };
   return (
