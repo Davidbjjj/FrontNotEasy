@@ -12,29 +12,35 @@ import ActivityDetailPage from './Atividade/view/pages/ActivityDetailPage';
 import QuestoesPage from './questoes/view/pages/QuestoesPage';
 import LoginPage from './login/views/pages/LoginPage';
 import RedefinirSenha from './senha/RedefinirSenhaComponent';
+import AccessDenied from './auth/AccessDenied';
+import ProtectedRoute from './auth/ProtectedRoute';
 
 
 
 const RouterConfig = () => {
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/atividades" element={<ActivityPage />} />
-  <Route path="/atividades/:id" element={<ActivityDetailPage />} />
-  {/* Sample route with fictitious id for design preview */}
-  <Route path="/atividades/exemplo-123" element={<ActivityDetailPage />} />
-      <Route path="/questoes" element={<QuestoesPage />} />
+      <Route path="/login" element={<LoginPage/>} />
+      <Route path="/redefinir-senha" element={<RedefinirSenha/>} />
+      <Route path="/validar-token" element={<ValidateTokenPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/access-denied" element={<AccessDenied />} />
+
+      {/* Protected routes - require authentication */}
+      <Route path="/atividades" element={<ProtectedRoute><ActivityPage /></ProtectedRoute>} />
+      <Route path="/atividades/:id" element={<ProtectedRoute><ActivityDetailPage /></ProtectedRoute>} />
+      {/* Sample route with fictitious id for design preview */}
+      <Route path="/atividades/exemplo-123" element={<ProtectedRoute><ActivityDetailPage /></ProtectedRoute>} />
+      <Route path="/questoes" element={<ProtectedRoute><QuestoesPage /></ProtectedRoute>} />
       {/* <Route path="/minhasQuestoes" element={<MinhasQuestoesComponent />} /> */}
       {/* <Route path="/formaluno" element={<CadastroAlunoComponent />} /> */}
       {/* <Route path="/formprofessor" element={<CadastroProfessorComponent />} /> */}
-      <Route path="/login" element={<LoginPage/>} />
-      <Route path="/redefinir-senha" element={<RedefinirSenha/>} />
       {/* <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} /> */}
-      <Route path="/validar-token" element={<ValidateTokenPage />} />
-      <Route path="/disciplinas" element={<DisciplinasPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/listas" element={<QuestionListPage />} />
-      <Route path="/listas/:listaId/questoes" element={<QuestionPage />} />
+      <Route path="/disciplinas" element={<ProtectedRoute><DisciplinasPage /></ProtectedRoute>} />
+      <Route path="/listas" element={<ProtectedRoute><QuestionListPage /></ProtectedRoute>} />
+      <Route path="/listas/:listaId/questoes" element={<ProtectedRoute><QuestionPage /></ProtectedRoute>} />
     </Routes>
   );
 };
