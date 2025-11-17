@@ -9,6 +9,7 @@ import './AddListButton.css';
 export const AddListButton: React.FC<AddListButtonProps> = ({
   className = '',
   professorId,
+  onCreated,
 }) => {
   const {
     isModalOpen,
@@ -47,7 +48,12 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
       <CreateListModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        onSubmit={handleCreateList}
+        onSubmit={async () => {
+          const created = await handleCreateList();
+          if (created && onCreated) {
+            try { onCreated(created); } catch (e) { console.error('onCreated callback error', e); }
+          }
+        }}
         isLoading={isLoading}
         isLoadingDisciplinas={isLoadingDisciplinas}
         error={error}

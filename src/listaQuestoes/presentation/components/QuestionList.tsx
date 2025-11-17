@@ -25,6 +25,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
     handleSearch,
     handleSortChange,
     handleViewModeChange,
+    reload,
   } = useQuestionListViewModel(initialLists, onListClick);
 
   const [clickedListId, setClickedListId] = React.useState<string | null>(null);
@@ -83,8 +84,8 @@ export const QuestionList: React.FC<QuestionListProps> = ({
 
       {/* Seção de ordenação */}
       <SortSection onSortChange={handleSortChange} />
-<div className="question-list__header-actions">
-          <AddListButton professorId={localStorage.getItem('userId') || ''} />
+          <div className="question-list__header-actions">
+          <AddListButton professorId={localStorage.getItem('userId') || ''} onCreated={() => reload()} />
           </div>
       {/* Lista de questões */}
       {isLoading ? (
@@ -97,6 +98,7 @@ export const QuestionList: React.FC<QuestionListProps> = ({
           viewMode={viewMode}
           onListClick={handleListClickWithNavigation}
           loadingListId={clickedListId}
+          onQuestionsAdded={reload}
         />
       )}
     </div>

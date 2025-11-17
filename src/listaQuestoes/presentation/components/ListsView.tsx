@@ -115,7 +115,7 @@ export const ListsView: React.FC<
         <p className="question-list__empty-desc">Parece que ainda não há listas de questões. Crie sua primeira lista para começar a organizar as avaliações.</p>
         <div className="question-list__empty-actions">
           {/* Usamos o AddListButton para abrir o modal de criação de lista */}
-          <AddListButton className="add-list-button--empty" professorId={localStorage.getItem('userId') || ''} />
+          <AddListButton className="add-list-button--empty" professorId={localStorage.getItem('userId') || ''} onCreated={() => onQuestionsAdded && onQuestionsAdded()} />
         </div>
       </div>
     );

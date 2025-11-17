@@ -1,6 +1,7 @@
 export interface AddListButtonProps {
   className?: string;
   professorId: string; // UUID do professor logado
+  onCreated?: (lista: ListaResponseDTO) => void;
 }
 
 export interface CreateListRequest {

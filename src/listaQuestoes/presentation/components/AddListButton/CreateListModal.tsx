@@ -5,7 +5,7 @@ import './CreateListModal.css';
 interface CreateListModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: () => void | Promise<void>;
   isLoading: boolean;
   isLoadingDisciplinas: boolean;
   error: string | null;
