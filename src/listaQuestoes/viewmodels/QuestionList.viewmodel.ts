@@ -32,6 +32,11 @@ export const useQuestionListViewModel = (
     }
   }, []);
 
+  // Expose a reload function so parent components can trigger a fresh load
+  const reload = useCallback(() => {
+    loadQuestionLists();
+  }, [loadQuestionLists]);
+
   useEffect(() => {
     if (!initialLists) {
       loadQuestionLists();
@@ -105,5 +110,6 @@ export const useQuestionListViewModel = (
     handleSortChange,
     handleViewModeChange,
     handleListClick,
+    reload,
   };
 };

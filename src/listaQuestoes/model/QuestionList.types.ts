@@ -66,4 +66,5 @@ export interface QuestionListViewModel {
   handleSortChange: (sortBy: SearchFilters['sortBy']) => void;
   handleViewModeChange: (mode: 'grid' | 'list') => void;
   handleListClick: (list: QuestionList) => void;
+  reload: () => void;
 }
