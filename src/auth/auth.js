@@ -4,6 +4,8 @@ const STORAGE_TOKEN_KEY = 'token';
 const STORAGE_ROLE_KEY = 'role';
 const STORAGE_USERID_KEY = 'userId';
 
+// Backend API base used for logout call
+const API_BASE = 'http://localhost:8080';
 // Fill localStorage based only on token decoding
 export function loginFromResponse(response) {
   if (!response || !response.token) {
@@ -32,6 +34,62 @@ export function logout() {
   localStorage.removeItem(STORAGE_TOKEN_KEY);
   localStorage.removeItem(STORAGE_ROLE_KEY);
   localStorage.removeItem(STORAGE_USERID_KEY);
+}
+
+/**
+ * logoutServer - Calls backend to revoke token and then clears local storage.
+ * Behavior:
+ *  - Makes POST /auth/logout with Authorization: Bearer <token>
+ *  - Treats 200 OK as successful logout
+ *  - Treats 401 as already logged out (still clears local storage)
+ *  - Returns an object { status, ok }
+ */
+export async function logoutServer() {
+  const token = localStorage.getItem(STORAGE_TOKEN_KEY);
+  const url = API_BASE + '/auth/logout';
+
+  // If no token, behave as already logged out
+  if (!token) {
+    logout();
+    return { status: 401, ok: false };
+  }
+
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: null,
+    });
+
+    // If backend says OK, or 401 (already invalid), clear storage
+    if (res.status === 200) {
+      logout();
+      return { status: 200, ok: true };
+    }
+
+    if (res.status === 401) {
+      // Token invalid/expired/revoked - treat as already logged out
+      logout();
+      return { status: 401, ok: false };
+    }
+
+    // For 400 or other errors, do not assume success; still clear storage to avoid stale token
+    if (res.status === 400) {
+      logout();
+      return { status: 400, ok: false };
+    }
+
+    // Other statuses: clear storage as a safe fallback
+    logout();
+    return { status: res.status || 0, ok: false };
+  } catch (err) {
+    // Network error: clear storage and propagate minimal info
+    try { logout(); } catch (e) {}
+    return { status: 0, ok: false };
+  }
 }
 
 // verify authentication: checks token presence and not expired; returns { role, userId } or null

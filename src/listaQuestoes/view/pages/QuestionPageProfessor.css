@@ -1,0 +1,123 @@
+/* Styles for QuestionPageProfessor modal and list */
+.qpp-container {
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color: #111827;
+}
+.qpp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.qpp-title { font-size: 20px; font-weight: 700; }
+.qpp-list { list-style: none; padding: 0; margin: 0; }
+.qpp-item {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+}
+.qpp-question-card {
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e6edf0;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+  margin-bottom: 16px;
+}
+.qpp-question-head { display:flex; justify-content:space-between; align-items:center; gap:12px }
+.qpp-question-number { font-size:12px; color:#6b7280; font-weight:700; }
+.qpp-question-title { font-size:16px; font-weight:700; margin:6px 0 }
+.qpp-question-enunciado { color:#374151; margin-bottom:12px; line-height:1.5 }
+
+/* Alternative cards (big, clickable style) */
+.qpp-alt-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px }
+.qpp-alt-card {
+  display:flex; gap:12px; align-items:center; padding:14px; border-radius:10px; border:1px solid #eef2f7; background:#fcfeff; cursor:default;
+}
+.qpp-alt-card:hover { box-shadow: 0 6px 18px rgba(2,6,23,0.04); }
+.qpp-alt-letter { width:44px; min-width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:8px; background:#ffffff; border:1px solid #e6eef2; font-weight:700; color:#111827 }
+.qpp-alt-text { flex:1; color:#374151 }
+.qpp-alt-correct { border:2px solid #10b981; background: #ecfdf5 }
+.qpp-alt-correct .qpp-alt-letter { background:#d1fae5; border-color:#10b981 }
+
+/* remove visual progress bar area if any (defensive) */
+.qpp-progress { display:none !important }
+.qpp-item-head { display:flex; justify-content:space-between; gap:12px; align-items:flex-start }
+.qpp-item-title { font-weight:600; margin-bottom:6px }
+.qpp-item-content { color:#374151; margin-top:6px }
+.qpp-actions button { margin-left:8px; }
+
+/* Modal */
+.qpp-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15,23,42,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.qpp-modal {
+  width: 880px;
+  max-width: calc(100% - 40px);
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.2);
+  transform: translateY(-6px) scale(.995);
+  opacity: 0;
+  animation: qpp-modal-in 200ms ease forwards;
+}
+
+@keyframes qpp-modal-in {
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.qpp-modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px }
+.qpp-modal-title { font-size:18px; font-weight:700 }
+.qpp-row { display:flex; gap:12px; align-items:flex-start }
+.qpp-col { flex:1 }
+.qpp-label { display:block; font-size:12px; color:#6b7280; margin-bottom:6px }
+.qpp-input, .qpp-textarea { width:100%; padding:8px 10px; border-radius:6px; border:1px solid #e5e7eb; font-size:14px }
+.qpp-textarea { min-height:100px; resize:vertical }
+
+.qpp-alternatives { margin-top:12px }
+.qpp-alt-item { display:flex; align-items:center; gap:10px; padding:8px; border-radius:6px; border:1px solid #f3f4f6; background:#fafafa }
+.qpp-alt-text { flex:1; }
+.qpp-badge { background:#e6f6ff; color:#0369a1; padding:4px 8px; border-radius:999px; font-weight:600; font-size:12px }
+.qpp-alt-actions { position:relative }
+.qpp-hamburger { background:transparent; border:0; font-size:18px; cursor:pointer; padding:6px }
+.qpp-menu { position:absolute; right:0; top:28px; background:#fff; border:1px solid #e5e7eb; border-radius:6px; box-shadow:0 6px 20px rgba(2,6,23,0.08); min-width:160px; z-index:50 }
+.qpp-menu button { display:block; width:100%; text-align:left; padding:8px 10px; border:0; background:transparent; cursor:pointer }
+.qpp-menu button:hover { background:#f8fafc }
+
+/* animate menu */
+.qpp-menu { animation: qpp-menu-in 140ms ease both; }
+@keyframes qpp-menu-in { from { transform: translateY(-6px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
+
+.qpp-footer { display:flex; justify-content:space-between; align-items:center; margin-top:16px }
+.qpp-btn { padding:8px 12px; border-radius:6px; border:0; cursor:pointer }
+.qpp-btn.primary { background:#0ea5a4; color:#fff }
+.qpp-btn.danger { background:#ef4444; color:#fff }
+.qpp-muted { color:#6b7280 }
+
+/* Toasts */
+.qpp-toast-wrap { position: fixed; right: 18px; top: 18px; z-index: 2000; display:flex; flex-direction:column; gap:8px }
+.qpp-toast { background: #111827; color: #fff; padding:10px 14px; border-radius:8px; box-shadow:0 6px 20px rgba(2,6,23,0.12); min-width:220px; max-width:360px; font-size:14px }
+.qpp-toast.success { background: #065f46 }
+.qpp-toast.error { background: #7f1d1d }
+.qpp-toast.info { background: #0f172a }
+
+/* Spinner */
+.qpp-spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(0,0,0,0.08); border-top-color: rgba(0,0,0,0.4); border-radius:50%; animation: qpp-spin 800ms linear infinite }
+@keyframes qpp-spin { to { transform: rotate(360deg) } }
+
+
+/* small screens adjustments */
+@media (max-width: 600px) {
+  .qpp-modal { width: 92%; padding: 14px }
+  .qpp-row { flex-direction: column }
+}

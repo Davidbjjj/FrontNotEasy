@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { loginFromResponse, logout as doLogout, getCurrentUser, isAuthenticated } from './auth';
+import { loginFromResponse, logout as clearLocalLogout, logoutServer, getCurrentUser, isAuthenticated } from './auth';
 
 type AuthContextType = {
   authenticated: boolean;
@@ -28,11 +28,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuthenticated(true);
   }
 
-  function logout() {
-    doLogout();
-    setUser(null);
-    setAuthenticated(false);
+  async function logout() {
+    try {
+      // call server to revoke token; result handling done inside logoutServer
+      await logoutServer();
+    } catch (e) {
+      // ignore network errors; proceed to clear local auth state
+    } finally {
+      // ensure local storage is cleared and state updated
+      clearLocalLogout();
+      setUser(null);
+      setAuthenticated(false);
+      // redirect to login page
+      try {
+        window.location.href = '/login';
+      } catch (e) {
+        // noop
+      }
+    }
   }
+
+  // Listen for a global logout event (used by demo pages without provider)
+  React.useEffect(() => {
+    const handler = () => {
+      try {
+        logout();
+      } catch (e) {
+        // noop
+      }
+    };
+    window.addEventListener('app-logout', handler as EventListener);
+    return () => window.removeEventListener('app-logout', handler as EventListener);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ authenticated, user, login, logout }}>

@@ -2,10 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import api from '../../../services/apiClient';
+import { getCurrentUser } from '../../../auth/auth';
+import QuestionEstudante from '../../../questionaluno/QuestionEstudante';
+import QuestionProfessor from '../../../questionaluno/QuestionProfessor';
 
 export default function QuestoesPage() {
     const { id } = useParams();
     const [questoes, setQuestoes] = useState([]);
+    const currentUser = getCurrentUser();
+    // Normaliza a leitura do papel (role): primeiro do token decodificado, depois do localStorage.
+    const rawRole = currentUser?.role || localStorage.getItem('role') || '';
+    const normalizedRole = String(rawRole).toUpperCase();
+    const isProfessor = normalizedRole === 'PROFESSOR';
 
     useEffect(() => {
         const fetchQuestoes = async () => {
@@ -18,6 +26,29 @@ export default function QuestoesPage() {
         };
         fetchQuestoes();
     }, [id]);
+
+    const handleAdd = () => {
+        // Navegar para página de criação/edição ou abrir modal
+        // Implementação mínima: redirecionar para uma rota de criação (se existir)
+        window.location.href = `/listas/${id}/questoes/novo`;
+    };
+
+    const handleEdit = (questaoId) => {
+        // Redireciona para rota de edição (implemente a rota conforme necessário)
+        window.location.href = `/listas/${id}/questoes/${questaoId}/editar`;
+    };
+
+    const handleDelete = async (questaoId) => {
+        if (!window.confirm('Deseja realmente excluir esta questão?')) return;
+        try {
+            await api.delete(`/listas/${id}/questoes/${questaoId}`);
+            // atualizar lista local
+            setQuestoes((prev) => prev.filter((q) => q.id !== questaoId));
+        } catch (err) {
+            console.error('Erro ao excluir questão:', err);
+            alert('Erro ao excluir a questão. Verifique o console.');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10">
@@ -33,29 +64,28 @@ export default function QuestoesPage() {
                     </h1>
                 </div>
 
+                {isProfessor && (
+                    <div className="flex justify-end mb-4">
+                        <button
+                            onClick={handleAdd}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                        >
+                            Adicionar questão
+                        </button>
+                    </div>
+                )}
+
                 {questoes.length === 0 ? (
                     <p className="text-gray-500">Nenhuma questão encontrada.</p>
                 ) : (
                     <div className="space-y-6">
                         {questoes.map((q) => (
-                            <div
-                                key={q.id}
-                                className="border border-gray-200 rounded-xl p-5 hover:shadow-md transition"
-                            >
-                                <h2 className="font-semibold text-lg text-gray-800 mb-2">
-                                    {q.cabecalho}
-                                </h2>
-                                <p className="text-gray-700 mb-4">{q.enunciado}</p>
-                                <ul className="space-y-2">
-                                    {q.alternativas.map((alt, i) => (
-                                        <li
-                                            key={i}
-                                            className="border rounded-lg p-2 hover:bg-gray-100 transition"
-                                        >
-                                            {alt}
-                                        </li>
-                                    ))}
-                                </ul>
+                            <div key={q.id}>
+                                {isProfessor ? (
+                                    <QuestionProfessor questao={q} onEdit={handleEdit} onDelete={handleDelete} />
+                                ) : (
+                                    <QuestionEstudante questao={q} />
+                                )}
                             </div>
                         ))}
                     </div>

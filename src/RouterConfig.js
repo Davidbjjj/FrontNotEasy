@@ -5,7 +5,9 @@ import ResetPasswordPage from './token/views/pages/ResetPasswordPage';
 import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
 import LandingPage from './landingPage/view/pages/LandingPage';
 import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
-import QuestionPage from './question/view/pages/QuestionPage';
+import QuestionPageProfessor from './listaQuestoes/view/pages/QuestionPageProfessor';
+import QuestionPageEstudante from './question/view/pages/QuestionPageEstudante';
+import RoleProtectedRoute from './auth/RoleProtectedRoute';
 
 import ActivityPage from './Atividade/view/pages/ActivityPage';
 import ActivityDetailPage from './Atividade/view/pages/ActivityDetailPage';
@@ -40,7 +42,8 @@ const RouterConfig = () => {
       {/* <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} /> */}
       <Route path="/disciplinas" element={<ProtectedRoute><DisciplinasPage /></ProtectedRoute>} />
       <Route path="/listas" element={<ProtectedRoute><QuestionListPage /></ProtectedRoute>} />
-      <Route path="/listas/:listaId/questoes" element={<ProtectedRoute><QuestionPage /></ProtectedRoute>} />
+      <Route path="/listas/:listaId/questoes/professor" element={<RoleProtectedRoute allowedRoles={["PROFESSOR"]}><QuestionPageProfessor /></RoleProtectedRoute>} />
+      <Route path="/listas/:listaId/questoes" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><QuestionPageEstudante /></RoleProtectedRoute>} />
     </Routes>
   );
 };

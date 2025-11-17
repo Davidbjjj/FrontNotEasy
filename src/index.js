@@ -5,13 +5,16 @@ import './global.css';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { TokenProvider } from "./token/states/TokenState"; 
+import { AuthProvider } from './auth/AuthProvider';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <TokenProvider>
-        <App />
-      </TokenProvider>
+        <TokenProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </TokenProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
