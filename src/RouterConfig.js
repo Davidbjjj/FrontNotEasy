@@ -3,6 +3,7 @@ import ValidateTokenPage from './token/views/pages/ValidateTokenPage';
 import ResetPasswordPage from './token/views/pages/ResetPasswordPage';
 // import MinhasQuestoesPage from './listaQuestoes/views/pages/MinhasQuestoesPage';
 import DisciplinasPage from "./disciplinas/presentation/views/DisciplinasPage";
+import DisciplinaDetailRouter from './disciplinas/presentation/views/DisciplinaDetailRouter';
 import LandingPage from './landingPage/view/pages/LandingPage';
 import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPageProfessor from './listaQuestoes/view/pages/QuestionPageProfessor';
@@ -41,6 +42,7 @@ const RouterConfig = () => {
       {/* <Route path="/formprofessor" element={<CadastroProfessorComponent />} /> */}
       {/* <Route path="/minhas-questoes" element={<MinhasQuestoesPage />} /> */}
       <Route path="/disciplinas" element={<ProtectedRoute><DisciplinasPage /></ProtectedRoute>} />
+      <Route path="/disciplinas/:disciplinaId" element={<ProtectedRoute><DisciplinaDetailRouter /></ProtectedRoute>} />
       <Route path="/listas" element={<ProtectedRoute><QuestionListPage /></ProtectedRoute>} />
       <Route path="/listas/:listaId/questoes/professor" element={<RoleProtectedRoute allowedRoles={["PROFESSOR"]}><QuestionPageProfessor /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><QuestionPageEstudante /></RoleProtectedRoute>} />
