@@ -38,6 +38,67 @@ class DisciplinaService {
       throw error;
     }
   }
+
+  /**
+   * Buscar estudantes disponíveis para adicionar à disciplina
+   * GET /disciplinas/{disciplinaId}/estudantes
+   */
+  async getAvailableStudents(disciplinaId: string): Promise<any[]> {
+    if (!disciplinaId) throw new Error('disciplinaId é obrigatório');
+    try {
+      const resp = await api.get(`${this.baseURL}/${disciplinaId}/estudantes`);
+      return resp.data || [];
+    } catch (err) {
+      console.error('Erro ao buscar estudantes disponíveis:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Adiciona um estudante à disciplina
+   * POST /disciplinas/{disciplinaId}/adicionar-estudante/{estudanteId}
+   */
+  async addStudentToDisciplina(disciplinaId: string, estudanteId: string): Promise<any> {
+    if (!disciplinaId || !estudanteId) throw new Error('disciplinaId e estudanteId são obrigatórios');
+    try {
+      const resp = await api.post(`${this.baseURL}/${disciplinaId}/adicionar-estudante/${estudanteId}`);
+      return resp.data;
+    } catch (err: any) {
+      const message = err?.response?.data?.message || err.message || 'Erro ao adicionar estudante';
+      console.error('Erro ao adicionar estudante:', message);
+      throw new Error(message);
+    }
+  }
+
+  /**
+   * Busca informações completas da disciplina
+   * GET /disciplinas/{disciplinaId}
+   */
+  async getDisciplina(disciplinaId: string): Promise<any> {
+    if (!disciplinaId) throw new Error('disciplinaId é obrigatório');
+    try {
+      const resp = await api.get(`${this.baseURL}/${disciplinaId}`);
+      return resp.data;
+    } catch (err) {
+      console.error('Erro ao buscar disciplina:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Lista atividades da disciplina
+   * GET /disciplinas/{disciplinaId}/atividades
+   */
+  async getAtividades(disciplinaId: string): Promise<any[]> {
+    if (!disciplinaId) throw new Error('disciplinaId é obrigatório');
+    try {
+      const resp = await api.get(`${this.baseURL}/${disciplinaId}/atividades`);
+      return resp.data || [];
+    } catch (err) {
+      console.error('Erro ao buscar atividades da disciplina:', err);
+      throw err;
+    }
+  }
 }
 
 export const disciplinaService = new DisciplinaService();
