@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import api from '../../../services/apiClient';
 import { useParams, useNavigate } from 'react-router-dom';
 import { questionService } from '../../../question/service/api/question.service';
 import './QuestionPageProfessor.css';
@@ -47,6 +48,39 @@ const ToastList: React.FC<{ toasts: ToastItem[] }> = ({ toasts }) => {
       ))}
     </div>
   );
+};
+
+// Image component that falls back to fetching via `api` (axios) so Authorization header is included
+const ImageWithAuth: React.FC<{ src: string; alt?: string; className?: string }> = ({ src, alt, className }) => {
+  const [imgSrc, setImgSrc] = useState<string>(src);
+  const blobUrlRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    // update when src prop changes
+    setImgSrc(src);
+    return () => {
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+        blobUrlRef.current = null;
+      }
+    };
+  }, [src]);
+
+  const handleError = async () => {
+    try {
+      // Try to GET the image using axios instance so Authorization header is attached
+      const resp = await api.get(src, { responseType: 'blob' as const });
+      const blob = resp.data;
+      const url = URL.createObjectURL(blob);
+      blobUrlRef.current = url;
+      setImgSrc(url);
+    } catch (err) {
+      // leave broken image; optionally set a placeholder
+      console.warn('Failed to load image directly and via API fetch:', src, err);
+    }
+  };
+
+  return <img src={imgSrc} alt={alt} className={className} onError={handleError} />;
 };
 
 const ConfirmModal: React.FC<{ open: boolean; title?: string; message?: string; onConfirm: () => void; onCancel: () => void; loading?: boolean }> = ({ open, title, message, onConfirm, onCancel, loading }) => {
@@ -279,8 +313,12 @@ const QuestionPageProfessor: React.FC = () => {
                   const alternativasText = (q.options || []).map((o: any) => String(o.text || '').toLowerCase()).join('\n');
                   const isReferenced = textoOcr && (enunciado.includes(textoOcr.toLowerCase()) || alternativasText.includes(textoOcr.toLowerCase()));
                   const imgClass = `qpp-quest-image ${!isReferenced ? 'qpp-quest-image--large' : ''}`;
+                  const rawSrc = img.urlPublica || img.url || img.src || '';
+                  // Normalize relative URLs: if starts with '/' use api.defaults.baseURL as origin
+                  const base = (api && (api.defaults && api.defaults.baseURL)) || 'https://backnoteasy-production.up.railway.app';
+                  const normalized = rawSrc.startsWith('/') ? `${base}${rawSrc}` : rawSrc;
                   return (
-                    <img key={i} src={img.urlPublica || img.url || img.src} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />
+                    <ImageWithAuth key={i} src={normalized} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />
                   );
                 })}
               </div>
