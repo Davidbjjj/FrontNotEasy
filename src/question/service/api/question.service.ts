@@ -5,8 +5,10 @@ export interface QuestaoResponseDTO {
   id: number;
   cabecalho: string;
   enunciado: string;
-  alternativas: string[];
+  // backend may return alternativas as array of strings or array of objects { id, ordem, texto }
+  alternativas: Array<string | { id?: number | string; ordem?: number; texto?: string }>;
   gabarito: number;
+  imagens?: Array<any>;
 }
 
 class QuestionService {
@@ -32,12 +34,15 @@ class QuestionService {
 
   private transformDTOToQuestion(dto: QuestaoResponseDTO, index: number, total: number): Question {
     // Mapear alternativas para o formato do frontend
-    const options: QuestionOption[] = dto.alternativas.map((alternativa, altIndex) => ({
-      id: String.fromCharCode(65 + altIndex), // A, B, C, D...
-      label: String.fromCharCode(65 + altIndex),
-      value: String.fromCharCode(65 + altIndex),
-      text: alternativa
-    }));
+    const options: QuestionOption[] = (dto.alternativas || []).map((alternativa: any, altIndex: number) => {
+      const text = typeof alternativa === 'string' ? alternativa : (alternativa?.texto ?? '');
+      return {
+        id: String.fromCharCode(65 + altIndex), // A, B, C, D...
+        label: String.fromCharCode(65 + altIndex),
+        value: String.fromCharCode(65 + altIndex),
+        text
+      } as QuestionOption;
+    });
 
     return {
       id: dto.id.toString(),
@@ -45,6 +50,8 @@ class QuestionService {
       content: dto.enunciado,
       options: options,
       correctAnswer: String.fromCharCode(65 + dto.gabarito), // Converte número para letra (0 -> A, 1 -> B, etc.)
+      // preserve imagens from backend if provided
+      imagens: (dto as any).imagens || [],
       explanation: 'Explicação da questão será fornecida aqui.', // Você precisará obter isso do backend
       subject: 'Disciplina', // Você precisará obter isso do backend
       tags: [], // Você precisará obter isso do backend

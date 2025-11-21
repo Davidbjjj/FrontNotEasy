@@ -7,7 +7,7 @@ export const serviceIAService = {
     const formData = new FormData();
     formData.append('file', file);
 
-    const response = await fetch(`${API_BASE_URL}/serviceIA/${listaId}/processar-pdf`, {
+    const response = await fetch(`${API_BASE_URL}/serviceIA/${listaId}/processar-pdf-com-imagens`, {
       method: 'POST',
       body: formData,
       // Não definir Content-Type manualmente - o browser vai definir automaticamente com boundary
