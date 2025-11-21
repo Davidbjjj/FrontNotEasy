@@ -183,13 +183,17 @@ const QuestionPageProfessor: React.FC = () => {
       const updated = await questionService.updateQuestion(listaId, editingQuestion.id, body);
 
       // update local list
-      setQuestions((prev) => prev.map((p) => (String(p.id) === String(updated.id) ? {
+        setQuestions((prev) => prev.map((p) => (String(p.id) === String(updated.id) ? {
         ...p,
         id: String(updated.id),
         title: updated.cabecalho,
         content: updated.enunciado,
-        options: updated.alternativas.map((a: string, i: number) => ({ id: String.fromCharCode(65 + i), label: String.fromCharCode(65 + i), value: String.fromCharCode(65 + i), text: a })),
+        options: (updated.alternativas || []).map((a: any, i: number) => {
+          const text = typeof a === 'string' ? a : (a?.texto ?? '');
+          return { id: String.fromCharCode(65 + i), label: String.fromCharCode(65 + i), value: String.fromCharCode(65 + i), text };
+        }),
         correctAnswer: String.fromCharCode(65 + updated.gabarito),
+        imagens: updated.imagens || []
       } : p)));
 
       closeEditor();
@@ -265,6 +269,22 @@ const QuestionPageProfessor: React.FC = () => {
             </div>
 
             <div className="qpp-question-enunciado">{q.content}</div>
+
+            { (q.imagens && q.imagens.length > 0) && (
+              <div className="qpp-images" style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                {q.imagens.map((img: any, i: number) => {
+                  // Determine if image text (OCR) appears inside enunciado or any alternativa
+                  const textoOcr = (img?.textoOcr || '').toString().trim();
+                  const enunciado = String(q.content || '').toLowerCase();
+                  const alternativasText = (q.options || []).map((o: any) => String(o.text || '').toLowerCase()).join('\n');
+                  const isReferenced = textoOcr && (enunciado.includes(textoOcr.toLowerCase()) || alternativasText.includes(textoOcr.toLowerCase()));
+                  const imgClass = `qpp-quest-image ${!isReferenced ? 'qpp-quest-image--large' : ''}`;
+                  return (
+                    <img key={i} src={img.urlPublica || img.url || img.src} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />
+                  );
+                })}
+              </div>
+            )}
 
             <ul className="qpp-alt-list">
               {q.options && q.options.map((o: any, i: number) => {

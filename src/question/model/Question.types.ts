@@ -14,6 +14,7 @@ export interface Question {
   currentQuestion: number;
   totalQuestions: number;
   listaId?: string;
+  imagens?: Array<any>;
 }
 
 export interface QuestionOption {
