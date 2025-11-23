@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { logout as authLogout } from '../auth/auth';
 
-const API_BASE = 'http://localhost:8080';
+const API_BASE = 'https://backnoteasy-production.up.railway.app';
 
 const api = axios.create({
   baseURL: API_BASE,

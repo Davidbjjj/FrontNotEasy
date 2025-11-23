@@ -315,7 +315,7 @@ const QuestionPageProfessor: React.FC = () => {
                   const imgClass = `qpp-quest-image ${!isReferenced ? 'qpp-quest-image--large' : ''}`;
                   const rawSrc = img.urlPublica || img.url || img.src || '';
                   // Normalize relative URLs: if starts with '/' use api.defaults.baseURL as origin
-                  const base = (api && (api.defaults && api.defaults.baseURL)) || 'http://localhost:8080';
+                  const base = (api && (api.defaults && api.defaults.baseURL)) || 'https://backnoteasy-production.up.railway.app';
                   const normalized = rawSrc.startsWith('/') ? `${base}${rawSrc}` : rawSrc;
                   return (
                     <ImageWithAuth key={i} src={normalized} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />
