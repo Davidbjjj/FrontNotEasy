@@ -35,6 +35,23 @@ const App: React.FC = () => {
     return () => { mounted = false; };
   }, [loadActivities]);
 
+  // Listen for externally created activities (dispatched by other components)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      try {
+        const detail = (e as CustomEvent).detail as Activity | undefined;
+        if (detail) {
+          addActivity(detail);
+        }
+      } catch (err) {
+        // ignore malformed events
+      }
+    };
+
+    window.addEventListener('activity:created', handler as EventListener);
+    return () => window.removeEventListener('activity:created', handler as EventListener);
+  }, [addActivity]);
+
   return (
     <div className="App">
       <ActivityList 

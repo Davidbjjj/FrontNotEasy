@@ -6,9 +6,10 @@ interface Props {
   onClose: () => void;
   onConfirm: () => Promise<void>;
   listTitle?: string;
+  isLoading?: boolean;
 }
 
-const ConfirmCreateActivityModal: React.FC<Props> = ({ isOpen, onClose, onConfirm, listTitle }) => {
+const ConfirmCreateActivityModal: React.FC<Props> = ({ isOpen, onClose, onConfirm, listTitle, isLoading = false }) => {
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -31,8 +32,8 @@ const ConfirmCreateActivityModal: React.FC<Props> = ({ isOpen, onClose, onConfir
           <p className="ccam-sub">Você poderá configurar data, nota e outras opções depois.</p>
         </div>
         <footer className="ccam-footer">
-          <button className="ccam-btn ccam-btn-ghost" onClick={onClose}>Não, obrigado</button>
-          <button className="ccam-btn ccam-btn-primary" onClick={onConfirm}>Criar atividade</button>
+          <button className="ccam-btn ccam-btn-ghost" onClick={onClose} disabled={isLoading}>Não, obrigado</button>
+          <button className="ccam-btn ccam-btn-primary" onClick={onConfirm} disabled={isLoading}>{isLoading ? 'Criando...' : 'Criar atividade'}</button>
         </footer>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { Plus } from 'lucide-react';
 import { useAddListButtonViewModel } from '../../../viewmodels/AddListButton.viewmodel';
 import { eventoService } from '../../../../Atividade/services/api/eventoService';
 import { getCurrentUser } from '../../../../auth/auth';
+import { useNavigate } from 'react-router-dom';
 import type { AddListButtonProps } from '../../../model/AddListButton.types';
 import CreateListModal from './CreateListModal';
 import ConfirmCreateActivityModal from './ConfirmCreateActivityModal';
@@ -32,7 +33,15 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
   const [createdList, setCreatedList] = useState<any | null>(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [isCreatingActivity, setIsCreatingActivity] = useState(false);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [toastData, setToastData] = useState<{
+    title?: string;
+    message: string;
+    variant?: 'success'|'error'|'info';
+    actionLabel?: string;
+    onAction?: (() => void) | null;
+  } | null>(null);
+
+  const navigate = useNavigate();
 
   // Ler role do token ou localStorage e normalizar para evitar exibição indevida
   const rawRole = getCurrentUser()?.role || localStorage.getItem('role') || '';
@@ -58,13 +67,43 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
       const eventoId = (evento && (evento.idEvento || (evento as any).id)) as string | number;
       if (eventoId) {
         await eventoService.associarLista(eventoId, createdList.id);
-        setToastMessage('Atividade criada e associada à lista com sucesso.');
+          // build an Activity-like object so the rest of the UI can consume it
+          const newActivity = {
+            id: String(eventoId || Date.now()),
+            title: payload.titulo,
+            subject: createdList.disciplina || (createdList.disciplinaNome ?? ''),
+            class: '',
+            completed: false,
+            deadline: payload.data || ''
+          } as any;
+
+          // dispatch a global event so pages showing activities can update instantly
+          try {
+            window.dispatchEvent(new CustomEvent('activity:created', { detail: newActivity }));
+          } catch (e) {
+            // fallback: no-op
+          }
+
+          // show a rich success toast with action to open the activity
+          setToastData({
+            title: 'Atividade criada',
+            message: 'Atividade criada e associada à lista com sucesso.',
+            variant: 'success',
+            actionLabel: 'Abrir atividade',
+            onAction: () => {
+              try {
+                navigate(`/atividades/${eventoId}`);
+              } catch (e) {
+                window.location.href = `/atividades/${eventoId}`;
+              }
+            }
+          });
       } else {
-        setToastMessage('Atividade criada, porém id não retornado pelo servidor.');
+        setToastData({ title: 'Atividade criada', message: 'Atividade criada, porém id não retornado pelo servidor.', variant: 'info' });
       }
-    } catch (err) {
+      } catch (err) {
       console.error('Erro ao criar/associar atividade:', err);
-      setToastMessage('Erro ao criar atividade.');
+      setToastData({ title: 'Erro', message: 'Erro ao criar atividade.', variant: 'error' });
     } finally {
       setIsCreatingActivity(false);
       setShowConfirm(false);
@@ -110,14 +149,22 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
       />
       <ConfirmCreateActivityModal
         isOpen={showConfirm}
-        onClose={() => { setShowConfirm(false); setCreatedList(null); }}
+        onClose={() => { if (!isCreatingActivity) { setShowConfirm(false); setCreatedList(null); } }}
         onConfirm={handleConfirmCreateActivity}
         listTitle={createdList?.titulo}
+        isLoading={isCreatingActivity}
       />
 
-      {toastMessage && (
+      {toastData && (
         <div style={{ position: 'fixed', right: 16, top: 18, zIndex: 4000 }}>
-          <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
+          <Toast
+            title={toastData.title}
+            message={toastData.message}
+            variant={toastData.variant}
+            onClose={() => setToastData(null)}
+            actionLabel={toastData.actionLabel}
+            onAction={() => { toastData.onAction && toastData.onAction(); setToastData(null); }}
+          />
         </div>
       )}
     </>
