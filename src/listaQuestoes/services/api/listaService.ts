@@ -1,6 +1,6 @@
 import type { CreateListRequest, ListaResponseDTO } from '../../model/AddListButton.types';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://backnoteasy-production.up.railway.app';
 
 export type EventoDTO = {
   id: string;
