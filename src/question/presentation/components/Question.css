@@ -105,6 +105,26 @@
   background: #eff6ff;
 }
 
+.question-option--disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-submit-answer {
+  padding: 10px 14px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-submit-answer:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .question-option__label {
   font-weight: 600;
   color: #374151;
@@ -234,3 +254,8 @@
     flex: 1;
   }
 }
+
+/* Question images (student view) */
+.question-images{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap }
+.question-image{ max-width:160px; height:auto; border-radius:8px; box-shadow:0 6px 18px rgba(15,23,42,0.04); object-fit:cover }
+.question-image--large{ max-width:420px; }

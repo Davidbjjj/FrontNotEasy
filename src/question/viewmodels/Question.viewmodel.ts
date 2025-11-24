@@ -6,10 +6,12 @@ interface UseQuestionViewModelReturn {
   currentQuestion: Question;
   selectedAnswer: string | null;
   isAnswered: boolean;
+  isSubmitting: boolean;
   navigation: QuestionNavigation;
   showResults: boolean;
   quizResult: QuizResult | null;
   handleAnswerSelect: (answerId: string) => void;
+  handleSubmitAnswer: () => Promise<void>;
   handleNavigate: (direction: 'previous' | 'next') => void;
   handleFinish: () => void;
   handleShowResults: () => void;
@@ -26,6 +28,7 @@ export const useQuestionViewModel = (
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
@@ -38,32 +41,39 @@ export const useQuestionViewModel = (
     hasNext: currentQuestionIndex < questions.length - 1,
   };
 
-  const handleAnswerSelect = useCallback(async (answerId: string) => {
+  // Select an answer locally; submission happens when the student clicks "Enviar resposta"
+  const handleAnswerSelect = useCallback((answerId: string) => {
+    setSelectedAnswer(answerId);
+  }, []);
+
+  const handleSubmitAnswer = useCallback(async () => {
+    if (!selectedAnswer) return;
+
+    setIsSubmitting(true);
     try {
-      setSelectedAnswer(answerId);
-      setIsAnswered(true);
-      
-      const alternativaIndex = respostaService.converterLetraParaIndice(answerId);
-      
+      const alternativaIndex = respostaService.converterLetraParaIndice(selectedAnswer);
+
       await respostaService.enviarResposta({
         estudanteId: estudanteId,
         questaoId: parseInt(currentQuestion.id),
         alternativa: alternativaIndex,
-        listaId: listaId
+        listaId: listaId,
       });
 
+      setIsAnswered(true);
+
       if (onAnswerSelect) {
-        onAnswerSelect(currentQuestion.id, answerId, alternativaIndex);
+        onAnswerSelect(currentQuestion.id, selectedAnswer, alternativaIndex);
       }
 
-      console.log(`Resposta ${answerId} enviada para questão ${currentQuestion.id}`);
-      
+      console.log(`Resposta ${selectedAnswer} enviada para questão ${currentQuestion.id}`);
     } catch (error) {
       console.error('Erro ao enviar resposta:', error);
-      setSelectedAnswer(null);
-      setIsAnswered(false);
+      // keep selection so student can retry; do not clear selectedAnswer
+    } finally {
+      setIsSubmitting(false);
     }
-  }, [currentQuestion.id, estudanteId, listaId, onAnswerSelect]);
+  }, [selectedAnswer, estudanteId, listaId, currentQuestion.id, onAnswerSelect]);
 
   const handleNavigate = useCallback((direction: 'previous' | 'next') => {
     if (direction === 'previous' && navigation.hasPrevious) {
@@ -84,9 +94,28 @@ export const useQuestionViewModel = (
   const handleFinish = useCallback(async () => {
     try {
       console.log('Finalizando questionário...');
-      
+
+      // Ensure backend marks the lista as finalized for this estudante
+      try {
+        const estudante = estudanteId || localStorage.getItem('userId') || '';
+        await respostaService.finalizarLista(listaId, estudante);
+      } catch (finErr) {
+        // If finalize fails, continue to try to calculate result anyway
+        console.warn('Falha ao finalizar lista antes de calcular resultado:', finErr);
+      }
+
       // Buscar o resultado final
       const resultado = await respostaService.calcularResultadoFinal(listaId, estudanteId);
+
+      // also fetch the student view (visao) for this lista to show summary
+      try {
+        const estudante = estudanteId || localStorage.getItem('userId') || '';
+        const visData = await respostaService.fetchVisao(listaId, estudante);
+        if (visData) (resultado as any).visao = visData;
+      } catch (e) {
+        // ignore visao fetch errors
+      }
+
       setQuizResult(resultado);
       setShowResults(true);
       
@@ -105,6 +134,15 @@ export const useQuestionViewModel = (
   const handleShowResults = useCallback(async () => {
     try {
       const resultado = await respostaService.calcularResultadoFinal(listaId, estudanteId);
+
+      try {
+        const estudante = estudanteId || localStorage.getItem('userId') || '';
+        const visData = await respostaService.fetchVisao(listaId, estudante);
+        if (visData) (resultado as any).visao = visData;
+      } catch (e) {
+        // ignore
+      }
+
       setQuizResult(resultado);
       setShowResults(true);
     } catch (error) {
@@ -116,10 +154,12 @@ export const useQuestionViewModel = (
     currentQuestion,
     selectedAnswer,
     isAnswered,
+    isSubmitting,
     navigation,
     showResults,
     quizResult,
     handleAnswerSelect,
+    handleSubmitAnswer,
     handleNavigate,
     handleFinish,
     handleShowResults,

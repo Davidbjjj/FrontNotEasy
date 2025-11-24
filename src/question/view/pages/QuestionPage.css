@@ -114,3 +114,57 @@
   .question-page-empty-actions{ flex-direction:column }
   .question-page-empty-actions .btn{ width:100% }
 }
+
+/* Student view / result styles */
+.student-view-card{
+  background: linear-gradient(180deg,#ffffff 0%, #fbfdff 100%);
+  border:1px solid #eef2f7;
+  box-shadow:0 8px 24px rgba(15,23,42,0.04);
+  border-radius:12px;
+  padding:20px;
+  max-width:980px;
+  width:100%;
+}
+
+.result-metrics{
+  display:flex;
+  gap:16px;
+  align-items:stretch;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+
+.metric{
+  flex:1 1 160px;
+  background:#fbfdff;
+  border:1px solid #eef6ff;
+  padding:12px;
+  border-radius:10px;
+}
+.metric .label{ font-size:0.85rem; color:#6b7280 }
+.metric .value{ font-size:1.25rem; color:#0f172a; font-weight:700; margin-top:6px }
+
+.progress-wrap{ margin-top:10px }
+.progress-bar{
+  height:12px; background:#eef2f7; border-radius:999px; overflow:hidden;
+}
+.progress-fill{ height:100%; background:linear-gradient(90deg,#10b981,#06b6d4); width:0%; transition:width 450ms ease }
+
+.result-card{
+  margin-top:14px;
+  padding:12px;
+  background:#ffffff;
+  border:1px solid #eef2f7;
+  border-radius:10px;
+}
+
+.respostas-table{ width:100%; border-collapse:collapse; margin-top:8px }
+.respostas-table th, .respostas-table td{ padding:8px 10px; border-bottom:1px solid #f1f5f9; text-align:left }
+.respostas-table th{ font-size:0.85rem; color:#475569; font-weight:600 }
+.respostas-table td{ color:#0f172a }
+
+.endpoint-pre{ background:#0b1220; color:#cbd5e1; padding:12px; border-radius:8px; overflow:auto; font-family:monospace; font-size:0.85rem }
+
+@media (max-width:720px){
+  .result-metrics{ flex-direction:column }
+}

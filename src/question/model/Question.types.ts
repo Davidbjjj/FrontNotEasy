@@ -47,6 +47,7 @@ export interface QuestionProps {
   listaId: string;
   estudanteId: string;
   onAnswerSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
+  onOptionSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   onNavigate?: (direction: 'previous' | 'next') => void;
   onFinish?: (respostas: RespostaEstudanteQuestaoDTO[]) => void;
   className?: string;
@@ -75,6 +76,15 @@ export interface QuizResult {
   wrongAnswers: number;
   score: number;
   respostas: RespostaEstudanteQuestaoDTO[];
+  // visão do estudante para a lista (quando disponível)
+  visao?: {
+    porcentagemAcertos?: number;
+    totalQuestoes?: number;
+    respondida?: boolean;
+    nota?: number;
+    questoesRespondidas?: number;
+    questoesCorretas?: number;
+  };
 }
 
 export interface QuestionHeaderProps {
@@ -87,8 +97,14 @@ export interface QuestionHeaderProps {
 export interface QuestionContentProps {
   content: string;
   options: QuestionOption[];
+  imagens?: Array<any>;
+  questionId?: string;
   selectedAnswer?: string;
   onAnswerSelect: (answerId: string) => void;
+  onSubmitAnswer?: () => Promise<void> | void;
+  isSubmitting?: boolean;
+  isAnswered?: boolean;
+  onOptionSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   disabled?: boolean;
   className?: string;
 }

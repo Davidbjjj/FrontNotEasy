@@ -4,6 +4,8 @@ import AddQuestionsButton from './AddQuestionsButton/AddQuestionsButton';
 import AddListButton from './AddListButton/AddListButton';
 import { ArrowRight, Clock, Book, FileText } from 'lucide-react';
 import './QuestionList.css';
+import { respostaService } from '../../../question/service/api/respostaService';
+import { useEffect, useState } from 'react';
 
 const getPreferredTeacherName = (fallbackName?: string) => {
   try {
@@ -28,12 +30,46 @@ interface ListCardProps {
 
 const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestionsAdded, isLoading }) => {
   const progress = list.totalQuestions ? Math.round((list.questionsCompleted / list.totalQuestions) * 100) : 0;
+  const role = localStorage.getItem('role') || '';
+  const isProfessor = role === 'PROFESSOR';
+  const estudanteId = localStorage.getItem('userId') || '';
+
+  const [studentAnswered, setStudentAnswered] = useState<number | null>(null);
+  const [studentTotal, setStudentTotal] = useState<number | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const loadStudentVisao = async () => {
+      if (isProfessor) return;
+      try {
+        const visao = await respostaService.fetchVisao(list.id, estudanteId);
+        if (!mounted) return;
+        if (visao) {
+          const total = visao.totalQuestoes ?? visao.lista?.questoes?.length ?? list.totalQuestions ?? 0;
+          const responded = visao.questoesRespondidas ?? visao.respondidas ?? 0;
+          setStudentTotal(total);
+          setStudentAnswered(responded);
+        }
+      } catch (err) {
+        // ignore per-list visao errors
+      }
+    };
+
+    loadStudentVisao();
+    return () => { mounted = false };
+  }, [isProfessor, list.id, estudanteId, list.totalQuestions]);
 
   const handleAddQuestionsClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Impede que o clique propague para o card
   };
 
   const progressColor = progress >= 70 ? '#10b981' : progress >= 40 ? '#f59e0b' : '#ef4444';
+
+  // compute displayed progress: professor sees class progress, student sees own progress if available
+  const displayedPercent = isProfessor ? progress : (studentTotal && studentAnswered != null ? Math.round((studentAnswered / Math.max(1, studentTotal)) * 100) : 0);
+  const progressText = isProfessor
+    ? `Alunos que entregaram a lista ${list.questionsCompleted} de ${list.totalQuestions}`
+    : (studentTotal != null && studentAnswered != null ? `Você respondeu ${studentAnswered} de ${studentTotal}` : `Alunos que entregaram a lista ${list.questionsCompleted} de ${list.totalQuestions}`);
 
   return (
     <div className="list-card" onClick={() => onClick(list)}>
@@ -57,22 +93,24 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
               <p className="list-card__professor">{list.subject?.name} · {getPreferredTeacherName(list.professor.name)}</p>
             </div>
             <div className="list-card__actions" onClick={handleAddQuestionsClick}>
-              <AddQuestionsButton 
-                listaId={list.id}
-                onQuestionsAdded={onQuestionsAdded}
-              />
+              {isProfessor && (
+                <AddQuestionsButton 
+                  listaId={list.id}
+                  onQuestionsAdded={onQuestionsAdded}
+                />
+              )}
             </div>
           </div>
 
           <div className="list-card__progress">
-            <p className="list-card__progress-text">Alunos que entregaram a lista {list.questionsCompleted} de {list.totalQuestions}</p>
+            <p className="list-card__progress-text">{progressText}</p>
             <div className="list-card__progress-bar">
               <div
                 className="list-card__progress-fill"
-                style={{ width: `${progress}%`, background: progressColor }}
+                style={{ width: `${displayedPercent}%`, background: progressColor }}
               />
             </div>
-            <div className="list-card__progress-percent" style={{ color: progressColor }}>{progress}%</div>
+            <div className="list-card__progress-percent" style={{ color: progressColor }}>{displayedPercent}%</div>
           </div>
 
           <div className="list-card__bottom-row">

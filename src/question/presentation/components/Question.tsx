@@ -7,15 +7,17 @@ import QuestionNavigation from './QuestionNavigation';
 import QuestionResults from './QuestionResults';
 import './Question.css';
 
-export const Question: React.FC<QuestionProps> = ({
-  questions,
-  listaId,
-  estudanteId,
-  onAnswerSelect,
-  onNavigate,
-  onFinish,
-  className = '',
-}) => {
+export const Question: React.FC<QuestionProps> = (props) => {
+  const {
+    questions,
+    listaId,
+    estudanteId,
+    onAnswerSelect,
+    onNavigate,
+    onFinish,
+    onOptionSelect,
+    className = '',
+  } = props;
   const {
     currentQuestion,
     selectedAnswer,
@@ -23,6 +25,9 @@ export const Question: React.FC<QuestionProps> = ({
     showResults,
     quizResult,
     handleAnswerSelect,
+    handleSubmitAnswer,
+    isSubmitting,
+    isAnswered,
     handleNavigate,
     handleFinish,
     handleShowResults,
@@ -56,9 +61,19 @@ export const Question: React.FC<QuestionProps> = ({
 
       <QuestionContent
         content={currentQuestion.content}
+        imagens={currentQuestion.imagens}
+        questionId={currentQuestion.id}
         options={currentQuestion.options}
         selectedAnswer={selectedAnswer || undefined}
         onAnswerSelect={handleAnswerSelect}
+        onSubmitAnswer={handleSubmitAnswer}
+        isSubmitting={isSubmitting}
+        isAnswered={isAnswered}
+        onOptionSelect={(questionId, answerId, alternativaIndex) => {
+          if (onOptionSelect && typeof onOptionSelect === 'function') {
+            onOptionSelect(questionId, answerId, alternativaIndex);
+          }
+        }}
       />
 
       <div className="question-tags">

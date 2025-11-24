@@ -12,17 +12,14 @@ export interface QuestaoResponseDTO {
 }
 
 class QuestionService {
-  private baseURL = 'https://backnoteasy-production.up.railway.app/listas';
+  private baseURL = 'http://localhost:8080/listas';
 
   async getQuestionsByListId(listaId: string): Promise<Question[]> {
     try {
-      const response = await fetch(`${this.baseURL}/${listaId}/questoes`);
-
-      if (!response.ok) {
-        throw new Error(`Erro ao buscar questões: ${response.status}`);
-      }
-
-      const questoesDTO: QuestaoResponseDTO[] = await response.json();
+      // Use centralized axios `api` so Authorization header is included
+      const url = `${this.baseURL}/${listaId}/questoes`;
+      const response = await api.get(url);
+      const questoesDTO: QuestaoResponseDTO[] = response.data;
 
       // Transformar DTO do backend para o formato do frontend
       return questoesDTO.map((dto, index) => this.transformDTOToQuestion(dto, index, questoesDTO.length));
