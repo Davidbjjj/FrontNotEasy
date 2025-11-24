@@ -4,6 +4,9 @@ import { LoadingState, ErrorState, EmptyState } from './StateComponents';
 import { useEvento } from '../../viewmodels/useActivityNotasViewModel';
 import { Activity } from '../../model/Activity';
 import './styles/EventComponents.css';
+import EventResumoAluno from './EventResumoAluno';
+import { getCurrentUser } from '../../../auth/auth';
+import eventoService from '../../services/api/eventoService';
 
 interface StudentViewProps {
   activity: Activity;
@@ -15,47 +18,93 @@ interface StudentViewProps {
  */
 export const StudentView: React.FC<StudentViewProps> = ({ activity }) => {
   const [attachment, setAttachment] = useState('');
+  const current = getCurrentUser();
+  const estudanteId = current?.userId ?? null;
+  const [submitting, setSubmitting] = useState(false);
 
+  // Always render the real resumo UI. If not logged, prompt to login.
   return (
     <div className="activity-detail-card">
-      <h1 className="ad-title">{activity.title}</h1>
-      {activity.description && <p className="ad-desc">{activity.description}</p>}
-      {activity.deadline && (
-        <p className="ad-deadline">Data de entrega: {activity.deadline}</p>
+      {activity?.id ? (
+        estudanteId ? (
+          <>
+            <EventResumoAluno eventoId={activity.id} estudanteId={estudanteId} />
+            <hr aria-hidden="true" />
+
+            <div className="ad-section">
+              <h2 className="ad-section-title">Lista de exercícios</h2>
+              <div className="ad-list-item">
+                <div className="ad-list-left">{activity.list?.title}</div>
+                <div className="ad-list-right">{activity.list?.grade}</div>
+              </div>
+            </div>
+
+            <div className="ad-section">
+              <label htmlFor="attachment-input" className="ad-section-label">
+                Anexar arquivo ou link
+              </label>
+              <textarea
+                id="attachment-input"
+                className="ad-textarea"
+                placeholder="Cole link ou anexe arquivo..."
+                value={attachment}
+                onChange={(e) => setAttachment(e.target.value)}
+                aria-describedby="attachment-help"
+              />
+              <div id="attachment-help" className="sr-only">
+                Cole o link do seu trabalho ou descreva o arquivo que será anexado
+              </div>
+            </div>
+
+            <button
+              className="ad-submit"
+              aria-label="Entregar atividade"
+              onClick={async () => {
+                if (!estudanteId) {
+                  alert('Você precisa estar logado para entregar.');
+                  return;
+                }
+
+                if (submitting) return;
+
+                setSubmitting(true);
+                try {
+                  const payload = {
+                    statusEntrega: 'ENTREGUE',
+                    comentarioEntrega: attachment || undefined,
+                    arquivosEntrega: attachment ? [attachment] : undefined,
+                  } as any;
+
+                  await eventoService.entregarEvento(activity.id, estudanteId, payload);
+
+                  // limpar campo e dar feedback simples
+                  setAttachment('');
+                  try {
+                    alert('Entrega enviada com sucesso.');
+                  } catch {}
+                } catch (err) {
+                  console.error('Erro ao enviar entrega', err);
+                  try {
+                    alert('Erro ao enviar entrega. Tente novamente.');
+                  } catch {}
+                } finally {
+                  setSubmitting(false);
+                }
+              }}
+              disabled={submitting}
+            >
+              {submitting ? 'Entregando...' : 'Entregar'}
+            </button>
+          </>
+        ) : (
+          <div role="status" className="ad-login-prompt">
+            Você precisa estar logado como aluno para ver o resumo. Faça login para continuar.
+          </div>
+        )
+      ) : (
+        // If event has no id, show friendly message (remove mock)
+        <div className="ad-empty">Evento sem identificação. Selecione um evento válido.</div>
       )}
-
-      {activity.status && <div className="ad-status">{activity.status}</div>}
-
-      <hr aria-hidden="true" />
-
-      <div className="ad-section">
-        <h2 className="ad-section-title">Lista de exercícios</h2>
-        <div className="ad-list-item">
-          <div className="ad-list-left">{activity.list?.title}</div>
-          <div className="ad-list-right">{activity.list?.grade}</div>
-        </div>
-      </div>
-
-      <div className="ad-section">
-        <label htmlFor="attachment-input" className="ad-section-label">
-          Anexar arquivo ou link
-        </label>
-        <textarea
-          id="attachment-input"
-          className="ad-textarea"
-          placeholder="Cole link ou anexe arquivo..."
-          value={attachment}
-          onChange={(e) => setAttachment(e.target.value)}
-          aria-describedby="attachment-help"
-        />
-        <div id="attachment-help" className="sr-only">
-          Cole o link do seu trabalho ou descreva o arquivo que será anexado
-        </div>
-      </div>
-
-      <button className="ad-submit" aria-label="Entregar atividade">
-        Entregar
-      </button>
     </div>
   );
 };
