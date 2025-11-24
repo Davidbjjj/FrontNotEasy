@@ -1,13 +1,10 @@
 // src/question/service/api/respostaService.ts
 
 import { QuizResult, RespostaEstudanteQuestaoDTO, RespostasListaDTO } from "../../model/Question.types";
+import api from '../../../services/apiClient';
 
 export class RespostaService {
-  private baseURL: string;
-
-  constructor(baseURL?: string) {
-    this.baseURL = baseURL || 'https://backnoteasy-production.up.railway.app';
-  }
+  // use axios instance with baseURL and auth interceptor
 
   /**
    * Converte letra (A, B, C, D) para índice numérico (0, 1, 2, 3)
@@ -34,18 +31,7 @@ export class RespostaService {
     listaId: string;
   }): Promise<void> {
     try {
-      const response = await fetch(`${this.baseURL}/enviaresposta`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(resposta),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Erro ao enviar resposta: ${response.statusText}`);
-      }
-
+      await api.post('/enviaresposta', resposta);
       console.log('Resposta individual enviada com sucesso!');
     } catch (error) {
       console.error('Erro ao enviar resposta individual:', error);
@@ -58,15 +44,8 @@ export class RespostaService {
    */
   async calcularResultadoFinal(listaId: string, estudanteId: string): Promise<QuizResult> {
     try {
-      const response = await fetch(
-        `${this.baseURL}/listas/${listaId}/estudantes/${estudanteId}/respostas-com-nota`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Erro ao calcular resultado: ${response.statusText}`);
-      }
-
-      return await response.json();
+      const response = await api.get(`/listas/${listaId}/estudantes/${estudanteId}/respostas-com-nota`);
+      return response.data as QuizResult;
     } catch (error) {
       console.error('Erro ao calcular resultado:', error);
       throw error;
@@ -78,18 +57,8 @@ export class RespostaService {
    */
   async enviarRespostas(respostasDTO: RespostasListaDTO): Promise<void> {
     try {
-      const response = await fetch(`${this.baseURL}/enviar`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(respostasDTO),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Erro ao enviar respostas: ${response.statusText}`);
-      }
-
+      // prefer '/respostas/multiplas' as batch endpoint
+      await api.post('/respostas/multiplas', respostasDTO);
       console.log('Respostas enviadas com sucesso!');
     } catch (error) {
       console.error('Erro ao enviar respostas:', error);
@@ -105,15 +74,8 @@ export class RespostaService {
     estudanteId: string
   ): Promise<RespostaEstudanteQuestaoDTO[]> {
     try {
-      const response = await fetch(
-        `${this.baseURL}/lista/${listaId}/estudante/${estudanteId}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Erro ao buscar respostas: ${response.statusText}`);
-      }
-
-      return await response.json();
+      const response = await api.get(`/lista/${listaId}/estudante/${estudanteId}`);
+      return response.data as RespostaEstudanteQuestaoDTO[];
     } catch (error) {
       console.error('Erro ao buscar respostas:', error);
       throw error;
@@ -128,15 +90,8 @@ export class RespostaService {
     estudanteId: string
   ): Promise<QuizResult> {
     try {
-      const response = await fetch(
-        `${this.baseURL}/resultado/lista/${listaId}/estudante/${estudanteId}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Erro ao buscar resultado: ${response.statusText}`);
-      }
-
-      return await response.json();
+      const response = await api.get(`/resultado/lista/${listaId}/estudante/${estudanteId}`);
+      return response.data as QuizResult;
     } catch (error) {
       console.error('Erro ao buscar resultado:', error);
       throw error;
@@ -151,20 +106,22 @@ export class RespostaService {
     estudanteId: string
   ): Promise<boolean> {
     try {
-      const response = await fetch(
-        `${this.baseURL}/verificar/lista/${listaId}/estudante/${estudanteId}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`Erro ao verificar lista: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      return result.respondida || false;
+      const response = await api.get(`/verificar/lista/${listaId}/estudante/${estudanteId}`);
+      return response.data?.respondida || false;
     } catch (error) {
       console.error('Erro ao verificar lista:', error);
       return false;
     }
+  }
+
+  // fetch visao do estudante para a lista
+  async fetchVisao(listaId: string, estudanteId: string): Promise<any> {
+    const res = await api.get(`/listas/${listaId}/estudantes/${estudanteId}/visao`);
+    return res.data;
+  }
+
+  async finalizarLista(listaId: string, estudanteId: string): Promise<void> {
+    await api.post(`/listas/${listaId}/estudantes/${estudanteId}/finalizar`);
   }
 
   /**

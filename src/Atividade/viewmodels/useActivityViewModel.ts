@@ -20,12 +20,21 @@ export const useActivityViewModel = (initialActivities: Activity[] = []) => {
     );
   }, []);
 
+  // stable callbacks to avoid re-creating functions on each render
+  const addActivity = useCallback((activity: Activity) => {
+    setActivities(prev => [activity, ...prev]);
+  }, []);
+
+  const loadActivities = useCallback((items: Activity[]) => {
+    setActivities(items);
+  }, []);
+
   return {
     activities,
     toggleActivity,
-    addActivity: (activity: Activity) => setActivities(prev => [activity, ...prev]),
+    addActivity,
     // Replace the current activities list with a fetched/loaded list
-    loadActivities: (items: Activity[]) => setActivities(items),
+    loadActivities,
   };
 };
 

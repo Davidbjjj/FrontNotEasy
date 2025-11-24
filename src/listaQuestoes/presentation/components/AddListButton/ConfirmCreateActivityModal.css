@@ -1,0 +1,32 @@
+.ccam-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+.ccam-modal {
+  width: 520px;
+  max-width: calc(100% - 32px);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(2,6,23,0.28);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ccam-header h2 { margin: 0; font-size: 18px; color: #0f172a }
+.ccam-body { color: #334155; font-size: 14px }
+.ccam-list-title { margin-top: 8px; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #e6eef2 }
+.ccam-sub { margin-top: 10px; color: #64748b; font-size: 13px }
+.ccam-footer { display:flex; justify-content:flex-end; gap:10px; margin-top: 6px }
+.ccam-btn { padding: 8px 12px; border-radius: 8px; border: 0; cursor: pointer }
+.ccam-btn-ghost { background: #f1f5f9; color: #0f172a }
+.ccam-btn-primary { background: #0ea5a4; color: #fff }
+
+@media (max-width: 480px) {
+  .ccam-modal { width: 92%; padding: 14px }
+}

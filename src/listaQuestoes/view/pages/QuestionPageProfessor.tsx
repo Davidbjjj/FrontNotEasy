@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
+import api from '../../../services/apiClient';
 import { useParams, useNavigate } from 'react-router-dom';
 import { questionService } from '../../../question/service/api/question.service';
+import { respostaService } from '../../../question/service/api/respostaService';
+import ImageWithAuth from '../../../components/ImageWithAuth';
 import './QuestionPageProfessor.css';
 
 // Small helper components inside file to keep everything together
@@ -49,6 +52,7 @@ const ToastList: React.FC<{ toasts: ToastItem[] }> = ({ toasts }) => {
   );
 };
 
+
 const ConfirmModal: React.FC<{ open: boolean; title?: string; message?: string; onConfirm: () => void; onCancel: () => void; loading?: boolean }> = ({ open, title, message, onConfirm, onCancel, loading }) => {
   if (!open) return null;
   return (
@@ -88,14 +92,54 @@ const QuestionPageProfessor: React.FC = () => {
   const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [previewVisaoStudent, setPreviewVisaoStudent] = useState<any | null>(null);
 
   useEffect(() => {
     const load = async () => {
       if (!listaId) return setError('Lista não informada');
       try {
         setLoading(true);
-        const dados = await questionService.getQuestionsByListId(listaId);
-        setQuestions(dados);
+        // allow professor to view a specific student's visao by adding
+        // ?estudanteId=<id> to the URL. If provided, prefer the visao
+        // values (when lista is not finalizada) so the professor sees
+        // provisional student data instead of the sampling endpoint.
+        const params = new URLSearchParams(window.location.search);
+        const estudanteQuery = params.get('estudanteId');
+
+        if (estudanteQuery) {
+          try {
+            const vis = await respostaService.fetchVisao(listaId, estudanteQuery);
+            // Support both shapes: vis.lista.questoes and vis.questoes (top-level)
+            const questoesFromVis = (vis && (vis.questoes || vis.lista?.questoes)) || null;
+            const isFinalizada = Boolean(vis && (vis.finalizada || vis.respondida || vis.respondida === true));
+
+            if (questoesFromVis && !isFinalizada) {
+              // use the questoes from visao as source of truth while not finalized
+              const totalQ = Array.isArray(questoesFromVis) ? questoesFromVis.length : 0;
+              const questionsData = (questoesFromVis || []).map((dto: any, idx: number) => (questionService as any).transformDTOToQuestion ? (questionService as any).transformDTOToQuestion(dto, idx, totalQ) : dto);
+              setQuestions(questionsData);
+              setPreviewVisaoStudent({ estudanteId: estudanteQuery, visao: vis });
+            } else if (questoesFromVis && isFinalizada) {
+              // if the student's view is already finalized/respondida, show empty or final data
+              setQuestions([]);
+              setPreviewVisaoStudent({ estudanteId: estudanteQuery, visao: vis });
+            } else {
+              const dados = await questionService.getQuestionsByListId(listaId);
+              setQuestions(dados);
+              setPreviewVisaoStudent(null);
+            }
+          } catch (err) {
+            // fall back to regular questions when visao fetch fails
+            console.warn('Falha ao buscar visao do estudante, carregando questões normalmente', err);
+            const dados = await questionService.getQuestionsByListId(listaId);
+            setQuestions(dados);
+            setPreviewVisaoStudent(null);
+          }
+        } else {
+          const dados = await questionService.getQuestionsByListId(listaId);
+          setQuestions(dados);
+          setPreviewVisaoStudent(null);
+        }
         setError(null);
       } catch (err) {
         console.error(err);
@@ -254,6 +298,24 @@ const QuestionPageProfessor: React.FC = () => {
         <div className="qpp-muted">Lista: {listaId}</div>
       </div>
 
+      {previewVisaoStudent && previewVisaoStudent.estudanteId && (
+        <div className="qpp-preview-banner" style={{ marginTop: 8, padding: 8, background: '#fff7ed', border: '1px solid #ffedd5', borderRadius: 6 }}>
+          <div>
+            Visualizando visão do estudante <strong>{previewVisaoStudent.estudanteId}</strong>
+            {previewVisaoStudent.visao?.titulo && <span> — Lista: <strong>{previewVisaoStudent.visao.titulo}</strong></span>}
+          </div>
+          <div style={{ marginTop: 6 }}>
+            {previewVisaoStudent.visao?.progresso ? (
+              <span>Progresso: {previewVisaoStudent.visao.progresso.questoesRespondidas} / {previewVisaoStudent.visao.progresso.totalQuestoes}</span>
+            ) : (previewVisaoStudent.visao?.totalQuestoes ? (
+              <span>Progresso: {previewVisaoStudent.visao.questoesRespondidas ?? 0} / {previewVisaoStudent.visao.totalQuestoes}</span>
+            ) : null)}
+            {previewVisaoStudent.visao?.professorNome && <span style={{ marginLeft: 12 }}>Professor: {previewVisaoStudent.visao.professorNome}</span>}
+          </div>
+          <div style={{ marginTop: 6, fontStyle: 'italic' }}>Valores provisórios — o aluno ainda não finalizou a lista.</div>
+        </div>
+      )}
+
       <div>
         {questions.map((q, idx) => (
           <article key={q.id} className="qpp-question-card" aria-labelledby={`q-title-${q.id}`}>
@@ -279,8 +341,12 @@ const QuestionPageProfessor: React.FC = () => {
                   const alternativasText = (q.options || []).map((o: any) => String(o.text || '').toLowerCase()).join('\n');
                   const isReferenced = textoOcr && (enunciado.includes(textoOcr.toLowerCase()) || alternativasText.includes(textoOcr.toLowerCase()));
                   const imgClass = `qpp-quest-image ${!isReferenced ? 'qpp-quest-image--large' : ''}`;
+                  const rawSrc = img.urlPublica || img.url || img.src || '';
+                  // Normalize relative URLs: if starts with '/' use api.defaults.baseURL as origin
+                  const base = (api && (api.defaults && api.defaults.baseURL)) || 'https://backnoteasy-production.up.railway.app';
+                  const normalized = rawSrc.startsWith('/') ? `${base}${rawSrc}` : rawSrc;
                   return (
-                    <img key={i} src={img.urlPublica || img.url || img.src} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />
+                    <ImageWithAuth key={i} src={normalized} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />
                   );
                 })}
               </div>

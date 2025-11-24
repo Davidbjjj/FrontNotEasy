@@ -2,7 +2,6 @@
   position: fixed;
   right: 20px;
   bottom: 20px;
-  background: linear-gradient(180deg, #0ea5e9 0%, #0369a1 100%);
   color: white;
   padding: 12px 14px;
   border-radius: 10px;
@@ -10,16 +9,32 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  min-width: 220px;
+  min-width: 260px;
   z-index: 9999;
 }
 
-.message { flex: 1; font-weight: 600 }
+.content { flex: 1 }
+.title { font-weight: 700; margin-bottom: 6px }
+.message { font-weight: 600 }
+.actions { display:flex; gap:8px; align-items:center }
 .close {
   background: transparent;
   border: none;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.95);
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
 }
+.action {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.success { background: linear-gradient(180deg,#16a34a 0%,#047857 100%); }
+.error { background: linear-gradient(180deg,#ef4444 0%,#b91c1c 100%); }
+.info { background: linear-gradient(180deg,#0ea5e9 0%,#0369a1 100%); }

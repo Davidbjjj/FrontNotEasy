@@ -14,6 +14,7 @@ export interface ListaResponseDTO {
   id: string;
   titulo: string;
   professorNome: string;
+  disciplinaId?: string;
 }
 
 export interface DisciplinaProfessorResponseDTO {

@@ -71,35 +71,13 @@ export const useAddListButtonViewModel = (props: AddListButtonProps) => {
       };
 
       const response = await listaService.criarListaComDisciplina(createListRequest);
-        // se for professor, criar evento automaticamente e associar a lista
-        const role = localStorage.getItem('role') || '';
-        if (role === 'PROFESSOR') {
-          try {
-            const payload = {
-              titulo: `Prova - ${createListRequest.titulo}`,
-              descricao: createListRequest.titulo,
-              notaMaxima: 10,
-              data: new Date().toISOString(),
-              disciplinaId: createListRequest.disciplinaId,
-              arquivos: [] as string[],
-            };
 
-            const evento = await eventoService.criarEvento(payload);
-            // A API do backend retorna idEvento (conforme especificado). Tenta extrair o id.
-            const eventoId = (evento && (evento.idEvento || (evento as any).id)) as string | number;
-            if (eventoId) {
-              await eventoService.associarLista(eventoId, response.id);
-              console.log('Lista associada ao evento:', eventoId);
-            } else {
-              console.warn('Evento criado mas não retornou idEvento:', evento);
-            }
-          } catch (err) {
-            console.error('Erro ao criar/associar evento automaticamente:', err);
-          }
-        }
+      // Nota: anteriormente criávamos um evento automaticamente para professores aqui.
+      // Agora a criação automática foi movida para a camada de apresentação (AddListButton)
+      // para perguntar ao usuário se deseja criar uma atividade associada à lista.
 
-        closeModal();
-        return response;
+      closeModal();
+      return response;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao criar lista';
       setError(errorMessage);

@@ -16,6 +16,14 @@ export const QuestionResults: React.FC<QuestionResultsProps> = ({
   onClose,
 }) => {
   const { respostas } = result;
+  const visao = (result as any).visao as {
+    porcentagemAcertos?: number;
+    totalQuestoes?: number;
+    respondida?: boolean;
+    nota?: number;
+    questoesRespondidas?: number;
+    questoesCorretas?: number;
+  } | undefined;
 
   // Encontrar a questão correspondente para cada resposta
   const getQuestionDetails = (questaoId: number): Question | undefined => {
@@ -41,7 +49,15 @@ export const QuestionResults: React.FC<QuestionResultsProps> = ({
     <div className="question-results">
       <div className="results-header">
         <h2 className="results-title">Resultado do Questionário</h2>
-        
+        {visao && (
+          <div className="student-vision-summary">
+            <div className="summary-row"><strong>Nota:</strong> {visao.nota ?? '—'}</div>
+            <div className="summary-row"><strong>% Acertos:</strong> {typeof visao.porcentagemAcertos === 'number' ? visao.porcentagemAcertos.toFixed(2) + '%' : '—'}</div>
+            <div className="summary-row"><strong>Total questões:</strong> {visao.totalQuestoes ?? '—'}</div>
+            <div className="summary-row"><strong>Questões respondidas:</strong> {visao.questoesRespondidas ?? '—'}</div>
+            <div className="summary-row"><strong>Questões corretas:</strong> {visao.questoesCorretas ?? '—'}</div>
+          </div>
+        )}
       </div>
 
       <div className="results-details">
