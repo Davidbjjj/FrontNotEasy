@@ -6,34 +6,32 @@ import CreateActivityModal from './CreateActivityModal';
 import { useNavigate } from 'react-router-dom';
 import { eventoService } from '../../services/api/eventoService';
 
-function formatGroupDate(index: number) {
-  const d = new Date();
-  d.setDate(d.getDate() + index);
-  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(d);
-}
 
 export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggleActivity, onCreateActivity }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | 'urgent' | 'overdue' | 'upcoming'>('all');
   const [query, setQuery] = useState<string>('');
   const navigate = useNavigate();
-  // helpers to classify activities
-  const toDate = (val: any) => val ? new Date(val) : null;
-  const isOverdue = (a: Activity) => {
-    const d = toDate(a.deadline);
-    if (!d) return false;
-    return d.getTime() < Date.now();
-  };
-  const isUrgent = (a: Activity) => {
-    const d = toDate(a.deadline);
-    if (!d) return false;
-    const diffTime = d.getTime() - Date.now();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 2; // 2 days or less
-  };
+  // NOTE: helper functions moved inside useMemo to satisfy react-hooks/exhaustive-deps
 
   // apply search + filter, then sort by due date ascending (nearest first)
   const filtered = useMemo(() => {
+    const toDate = (val: any) => (val ? new Date(val) : null);
+
+    const isOverdue = (a: Activity) => {
+      const d = toDate(a.deadline);
+      if (!d) return false;
+      return d.getTime() < Date.now();
+    };
+
+    const isUrgent = (a: Activity) => {
+      const d = toDate(a.deadline);
+      if (!d) return false;
+      const diffTime = d.getTime() - Date.now();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays <= 2; // 2 days or less
+    };
+
     if (!activities) return [] as Activity[];
     const q = (query || '').trim().toLowerCase();
     return activities
@@ -57,6 +55,7 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
 
   // group by formatted dueDate for display
   const groups = useMemo(() => {
+    const toDate = (val: any) => (val ? new Date(val) : null);
     return filtered.reduce<Record<string, Activity[]>>((acc, activity) => {
       const d = toDate(activity.deadline) || new Date();
       const groupKey = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(d);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { listaService } from './../services/api/listaService';
-import { eventoService } from '../../Atividade/services/api/eventoService';
+// removed unused eventoService import
 import { professorService } from './../services/api/professorService';
 import type { 
   CreateListRequest, 
