@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8080';
+const API_BASE = 'https://backnoteasy-production.up.railway.app';
 
 export const dashboardService = {
   async getAlunoMetricas(alunoId: string, disciplinaId: string) {

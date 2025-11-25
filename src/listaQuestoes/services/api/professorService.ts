@@ -1,7 +1,7 @@
 import type { DisciplinaProfessorResponseDTO } from '../../model/AddListButton.types';
 import { getCurrentUser } from '../../../auth/auth';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://backnoteasy-production.up.railway.app';
 
 export const professorService = {
   async getDisciplinasByProfessor(professorId: string): Promise<DisciplinaProfessorResponseDTO[]> {

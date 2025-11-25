@@ -33,7 +33,7 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
             const isReferenced = textoOcr && (enunciado.includes(textoOcr.toLowerCase()) || alternativasText.includes(textoOcr.toLowerCase()));
             const imgClass = `question-image ${!isReferenced ? 'question-image--large' : ''}`;
             const rawSrc = img.urlPublica || img.url || img.src || '';
-            const base = (api && (api.defaults && api.defaults.baseURL)) || 'http://localhost:8080';
+            const base = (api && (api.defaults && api.defaults.baseURL)) || 'https://backnoteasy-production.up.railway.app';
             const normalized = rawSrc.startsWith('/') ? `${base}${rawSrc}` : rawSrc;
             return <ImageWithAuth key={i} src={normalized} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />;
           })}
