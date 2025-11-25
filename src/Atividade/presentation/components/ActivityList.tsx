@@ -1,5 +1,5 @@
 // components/ActivityList.tsx
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ActivityListProps, Activity } from '../../model/Activity';
 import './ActivityList.css';
 import CreateActivityModal from './CreateActivityModal';
@@ -14,20 +14,78 @@ function formatGroupDate(index: number) {
 
 export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggleActivity, onCreateActivity }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [filter, setFilter] = useState<'all' | 'urgent' | 'overdue' | 'upcoming'>('all');
+  const [query, setQuery] = useState<string>('');
   const navigate = useNavigate();
-  // group activities by a computed display date (for demo/mock data)
-  const groups = activities.reduce<Record<string, typeof activities>>((acc, activity, idx) => {
-    const groupKey = formatGroupDate(idx % 3); // rotate some dates for visual grouping
-    if (!acc[groupKey]) acc[groupKey] = [];
-    acc[groupKey].push(activity);
-    return acc;
-  }, {});
+  // helpers to classify activities
+  const toDate = (val: any) => val ? new Date(val) : null;
+  const isOverdue = (a: Activity) => {
+    const d = toDate(a.deadline);
+    if (!d) return false;
+    return d.getTime() < Date.now();
+  };
+  const isUrgent = (a: Activity) => {
+    const d = toDate(a.deadline);
+    if (!d) return false;
+    const diffTime = d.getTime() - Date.now();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 2; // 2 days or less
+  };
+
+  // apply search + filter, then sort by due date ascending (nearest first)
+  const filtered = useMemo(() => {
+    if (!activities) return [] as Activity[];
+    const q = (query || '').trim().toLowerCase();
+    return activities
+      .filter((a) => {
+        if (q) {
+          const hay = `${a.title || ''} ${a.subject || ''}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        if (filter === 'urgent') return isUrgent(a);
+        if (filter === 'overdue') return isOverdue(a);
+        if (filter === 'upcoming') return !isOverdue(a);
+        return true;
+      })
+      .slice()
+      .sort((x, y) => {
+        const dx = toDate(x.deadline)?.getTime() ?? Infinity;
+        const dy = toDate(y.deadline)?.getTime() ?? Infinity;
+        return dx - dy;
+      });
+  }, [activities, filter, query]);
+
+  // group by formatted dueDate for display
+  const groups = useMemo(() => {
+    return filtered.reduce<Record<string, Activity[]>>((acc, activity) => {
+      const d = toDate(activity.deadline) || new Date();
+      const groupKey = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short' }).format(d);
+      if (!acc[groupKey]) acc[groupKey] = [];
+      acc[groupKey].push(activity);
+      return acc;
+    }, {} as Record<string, Activity[]>);
+  }, [filtered]);
 
   return (
     <div className="activity-list-outer">
       <div className="activities-header">
         <h1 className="activities-page-title">Atividades</h1>
-        <button className="activities-add-btn" onClick={() => setIsCreateOpen(true)}>Adicionar Atividade</button>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <input
+            placeholder="Pesquisar título ou disciplina"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            aria-label="Pesquisar atividades"
+            style={{ padding: '6px 8px', borderRadius: 6, border: '1px solid #ccc' }}
+          />
+          <select value={filter} onChange={(e) => setFilter(e.target.value as any)} aria-label="Filtrar atividades">
+            <option value="all">Todos</option>
+            <option value="urgent">Urgentes (≤2 dias)</option>
+            <option value="overdue">Vencidas</option>
+            <option value="upcoming">Futuras</option>
+          </select>
+          <button className="activities-add-btn" onClick={() => setIsCreateOpen(true)}>Adicionar Atividade</button>
+        </div>
       </div>
 
       <div className="activities-groups">
@@ -69,8 +127,10 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
         onClose={() => setIsCreateOpen(false)}
         onCreate={async (data) => {
           try {
-            const role = localStorage.getItem('role') || '';
-            if (role === 'PROFESSOR') {
+            const rawRole = localStorage.getItem('role') || '';
+            const normalizedRole = String(rawRole).toUpperCase();
+            const isProfessor = normalizedRole === 'PROFESSOR' || normalizedRole === 'TEACHER' || normalizedRole === 'INSTITUICAO';
+            if (isProfessor) {
               localStorage.getItem('userId');
               const payload = {
                 titulo: data.name,

@@ -13,7 +13,7 @@ export default function QuestoesPage() {
     // Normaliza a leitura do papel (role): primeiro do token decodificado, depois do localStorage.
     const rawRole = currentUser?.role || localStorage.getItem('role') || '';
     const normalizedRole = String(rawRole).toUpperCase();
-    const isProfessor = normalizedRole === 'PROFESSOR';
+    const isProfessor = normalizedRole === 'PROFESSOR' || normalizedRole === 'INSTITUICAO' || normalizedRole === 'TEACHER';
 
     useEffect(() => {
         const fetchQuestoes = async () => {

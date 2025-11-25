@@ -42,8 +42,8 @@ export const QuestionList: React.FC<QuestionListProps> = ({
 
     // Navega para a página de questões da lista após pequeno delay para renderizar o feedback
     setTimeout(() => {
-      const role = auth?.user?.role || localStorage.getItem('role') || '';
-      if (role === 'PROFESSOR') {
+      const role = (auth?.user?.role || localStorage.getItem('role') || '').toUpperCase();
+      if (role === 'PROFESSOR' || role === 'INSTITUICAO') {
         navigate(`/listas/${list.id}/questoes/professor`);
       } else {
         navigate(`/listas/${list.id}/questoes`);

@@ -46,7 +46,8 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
   // Ler role do token ou localStorage e normalizar para evitar exibição indevida
   const rawRole = getCurrentUser()?.role || localStorage.getItem('role') || '';
   const normalizedRole = String(rawRole).toUpperCase();
-  const isProfessor = normalizedRole === 'PROFESSOR' || normalizedRole === 'TEACHER';
+  // Institutions should be treated like professors for create/list management
+  const isProfessor = normalizedRole === 'PROFESSOR' || normalizedRole === 'TEACHER' || normalizedRole === 'INSTITUICAO';
 
   if (!isProfessor) return null;
 

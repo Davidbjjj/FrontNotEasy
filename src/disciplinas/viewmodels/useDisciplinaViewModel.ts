@@ -4,6 +4,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { disciplinaService } from '../services/api/disciplina.service';
+import { decodeJwt } from '../../auth/jwt';
+import { getCurrentUser } from '../../auth/auth';
 import type { Disciplina } from '../model/Disciplina';
 
 export const useDisciplinaViewModel = () => {
@@ -13,9 +15,24 @@ export const useDisciplinaViewModel = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Obter userId e role do localStorage
-  const userId = localStorage.getItem('userId') || '';
-  const role = localStorage.getItem('role') || 'ESTUDANTE';
+  // Preferir helper centralizado para obter userId/role (token-decoding consistente)
+  const current = getCurrentUser();
+  const token = localStorage.getItem('token') || '';
+  let userId = (current?.userId as string) || localStorage.getItem('userId') || '';
+  const role = ((current?.role as string) || localStorage.getItem('role') || 'ESTUDANTE').toUpperCase();
+
+  // Quando for INSTITUICAO, tentar extrair `instituicaoId` do token payload
+  if (role === 'INSTITUICAO') {
+    try {
+      const payload: any = token ? decodeJwt(token) : null;
+      const instituicaoId = payload?.instituicaoId ?? payload?.instituicao_id ?? payload?.instituicaoID ?? payload?.id ?? null;
+      if (instituicaoId) {
+        userId = String(instituicaoId);
+      }
+    } catch (e) {
+      console.warn('Não foi possível extrair instituicaoId do token, usando userId armazenado', e);
+    }
+  }
 
   // Fetch disciplinas
   const fetchDisciplinas = useCallback(async () => {

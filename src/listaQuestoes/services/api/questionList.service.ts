@@ -8,7 +8,7 @@ export interface ListaResponseDTO {
 
 class QuestionListService {
   // Base da rota de listas; estudante será concatenado dinamicamente
-  private baseURL = 'https://backnoteasy-production.up.railway.app/listas';
+  private baseURL = 'http://localhost:8080/listas';
 
   async getAllQuestionLists(): Promise<QuestionList[]> {
     try {
@@ -16,7 +16,7 @@ class QuestionListService {
       const userId = localStorage.getItem('userId') || '';
 
       let url = this.baseURL;
-      if (role === 'PROFESSOR' && userId) {
+      if ((role === 'PROFESSOR' || role === 'INSTITUICAO') && userId) {
         // Quando for professor, buscamos as listas do professor
         url = `${this.baseURL}/professor/${userId}`;
       } else if (userId) {

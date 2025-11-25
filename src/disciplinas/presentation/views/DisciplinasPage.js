@@ -74,7 +74,7 @@ export default function DisciplinasPage() {
                                 Escola: {disciplina.nomeEscola}
                             </p>
                             <p className={styles.cardSubtitle}>
-                                Alunos: {disciplina.alunos.length}
+                                Alunos: {disciplina.quantidadeAlunos ?? (disciplina.alunos ? disciplina.alunos.length : 0)}
                             </p>
                         </div>
                     ))

@@ -37,8 +37,9 @@ const CreateActivityModal: React.FC<CreateActivityModalProps> = ({ isOpen, onClo
         setDisciplinasOptions(null);
         setListasOptions(null);
         try {
-          const role = localStorage.getItem('role') || '';
-          if (role === 'PROFESSOR') {
+          const rawRole = localStorage.getItem('role') || '';
+          const normalizedRole = String(rawRole).toUpperCase();
+          if (normalizedRole === 'PROFESSOR' || normalizedRole === 'TEACHER' || normalizedRole === 'INSTITUICAO') {
             const professorId = localStorage.getItem('userId') || '';
             if (professorId) {
               // fetch disciplinas and listas in parallel

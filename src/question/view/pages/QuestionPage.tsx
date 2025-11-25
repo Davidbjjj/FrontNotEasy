@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Question } from '../../presentation/components/Question';
 import { questionService } from '../../service/api/question.service';
 import { respostaService } from '../../service/api/respostaService';
-import api from '../../../services/apiClient';
 import AddQuestionsButton from '../../../listaQuestoes/presentation/components/AddQuestionsButton/AddQuestionsButton';
 import { FileText } from 'lucide-react';
 import './QuestionPage.css';
@@ -26,8 +25,8 @@ const QuestionPage: React.FC = () => {
   // Em um app real, você pegaria o estudanteId do contexto/auth.
   // Usar userId salvo no localStorage em vez de id mocado
   const estudanteId = localStorage.getItem('userId') || '';
-  const role = localStorage.getItem('role') || '';
-  const isProfessor = role === 'PROFESSOR';
+  const role = (localStorage.getItem('role') || '').toUpperCase();
+  const isProfessor = role === 'PROFESSOR' || role === 'INSTITUICAO';
 
   useEffect(() => {
     const loadView = async () => {

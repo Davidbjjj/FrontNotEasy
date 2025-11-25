@@ -5,11 +5,12 @@ import styles from '../components/Disciplinas.module.css';
 import layoutStyles from './DisciplinaAnalytics.module.css';
 import AdicionarAlunoModal from '../components/AdicionarAlunoModal';
 import Toast from '../../../components/Toast';
-import { RefreshCw, UserPlus, User, BookOpen } from 'lucide-react';
+import { RefreshCw, UserPlus, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const DisciplinaAnalyticsPage: React.FC = () => {
   const { disciplinaId } = useParams();
+  const currentRole = (localStorage.getItem('role') || '').toUpperCase();
   const professorId = localStorage.getItem('userId') || '';
 
   const { medias, listas, atividades, atividadesList, disciplina, isLoading, error, reload } = useDisciplinaAnalyticsViewModel(disciplinaId, professorId);
@@ -30,15 +31,19 @@ const DisciplinaAnalyticsPage: React.FC = () => {
       <div className={layoutStyles.header}>
         <div>
           <h1 className={layoutStyles.title}>{disciplina?.nome || 'Analytics da Disciplina'}</h1>
-          <div className={layoutStyles.smallMuted}>{disciplina?.professor?.nome || ''}</div>
+          <div className={layoutStyles.smallMuted}>
+            {currentRole === 'INSTITUICAO' ? (disciplina?.nomeEscola || '') : (disciplina?.professor?.nome || '')}
+          </div>
         </div>
         <div className={layoutStyles.actions}>
           <button className={`${layoutStyles.btn} ${layoutStyles.btnGhost} iconBtn`} onClick={() => reload()}><RefreshCw size={16}/> Recarregar</button>
-          <button className={`${layoutStyles.btn} ${layoutStyles.btnPrimary} iconBtn`} onClick={() => setShowAddModal(true)}><UserPlus size={16}/> Adicionar Aluno</button>
+          {(currentRole === 'PROFESSOR' || currentRole === 'INSTITUICAO' || currentRole === 'TEACHER') && (
+            <button className={`${layoutStyles.btn} ${layoutStyles.btnPrimary} iconBtn`} onClick={() => setShowAddModal(true)}><UserPlus size={16}/> Adicionar Aluno</button>
+          )}
         </div>
       </div>
 
-      {showAddModal && disciplinaId && (
+      {showAddModal && disciplinaId && (currentRole === 'PROFESSOR' || currentRole === 'INSTITUICAO' || currentRole === 'TEACHER') && (
         <AdicionarAlunoModal disciplinaId={disciplinaId} onClose={() => setShowAddModal(false)} onSuccess={handleAlunoAdded} />
       )}
 
