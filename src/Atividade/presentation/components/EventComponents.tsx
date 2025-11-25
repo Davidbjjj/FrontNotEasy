@@ -6,6 +6,7 @@ import { Activity } from '../../model/Activity';
 import './styles/EventComponents.css';
 import EventResumoAluno from './EventResumoAluno';
 import { getCurrentUser } from '../../../auth/auth';
+import { formatDateTime } from '../../../utils/date';
 import eventoService from '../../services/api/eventoService';
 
 interface StudentViewProps {
@@ -127,6 +128,8 @@ export const EventDetailCard: React.FC<EventDetailCardProps> = ({ activity }) =>
   const description =
     activity?.descricao || activity?.description || '';
   const prazo = activity?.prazo || activity?.deadline || '';
+  // formatted prazo
+  const prazoFmt = prazo ? formatDateTime(prazo) : '';
   const disciplina =
     activity?.disciplina?.nome || activity?.list?.title || '';
   const professor = activity?.professor?.nome || '';
@@ -147,7 +150,7 @@ export const EventDetailCard: React.FC<EventDetailCardProps> = ({ activity }) =>
 
       {description && <p className="ad-desc">{description}</p>}
 
-      <p className="ad-deadline">Data de entrega: {prazo}</p>
+      <p className="ad-deadline">Data de entrega: {prazoFmt || '—'}</p>
 
       <div className="ad-meta">
         <div className="ad-meta-left">{disciplina}</div>

@@ -16,10 +16,11 @@ export const Question: React.FC<QuestionProps> = (props) => {
     onNavigate,
     onFinish,
     onOptionSelect,
+    initialAnswers,
     className = '',
   } = props;
   const {
-    currentQuestion,
+      currentQuestion,
     selectedAnswer,
     navigation,
     showResults,
@@ -31,7 +32,7 @@ export const Question: React.FC<QuestionProps> = (props) => {
     handleNavigate,
     handleFinish,
     handleShowResults,
-  } = useQuestionViewModel(questions, listaId, estudanteId, onAnswerSelect, onNavigate, onFinish);
+  } = useQuestionViewModel(questions, listaId, estudanteId, onAnswerSelect, onNavigate, onFinish, initialAnswers);
 
   // Se estiver mostrando resultados, exibe o componente de resultados
   if (showResults && quizResult) {

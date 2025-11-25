@@ -1,0 +1,8 @@
+.instituicao-page{padding:20px}
+.instituicao-section{margin-bottom:18px;background:#fff;border:1px solid #eaeaea;padding:12px;border-radius:8px}
+.instituicao-section h2{margin:0 0 8px}
+.instituicao-section form{display:flex;flex-wrap:wrap;gap:8px}
+.instituicao-section input{padding:8px;border:1px solid #d1d5db;border-radius:6px;min-width:200px}
+.instituicao-section button{padding:8px 12px;border-radius:6px;background:#1890ff;color:#fff;border:none}
+.instituicao-message{margin-bottom:12px;padding:8px;background:#f0f9ff;border:1px solid #cfe8ff;border-radius:6px}
+.instituicao-result{margin-top:8px;background:#f7f7f8;padding:8px;border-radius:6px;overflow:auto}

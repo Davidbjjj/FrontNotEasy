@@ -252,6 +252,16 @@
   transition: all 0.2s ease;
 }
 
+/* Make list cards visually clickable and keyboard accessible */
+.listCardClickable{
+  cursor: pointer;
+  outline: none;
+}
+.listCardClickable:focus{
+  box-shadow: 0 0 0 3px rgba(24,144,255,0.12);
+  border-color: var(--primary);
+}
+
 .listCard:hover{
   border-color: var(--primary);
   transform: translateY(-2px);

@@ -19,8 +19,8 @@ const QuestionPage: React.FC = () => {
   const [resultData, setResultData] = useState<any | null>(null);
   const [loadingResult, setLoadingResult] = useState(false);
   const [resultError, setResultError] = useState<string | null>(null);
-  const [submittingAll, setSubmittingAll] = useState(false);
-  const [pendingAnswers, setPendingAnswers] = useState<Record<string, number>>({});
+  const [, setPendingAnswers] = useState<Record<string, number>>({});
+  const [initialAnswers, setInitialAnswers] = useState<Record<string, string>>({});
 
   // Em um app real, você pegaria o estudanteId do contexto/auth.
   // Usar userId salvo no localStorage em vez de id mocado
@@ -56,6 +56,22 @@ const QuestionPage: React.FC = () => {
             if (data.lista && Array.isArray(data.lista.questoes)) {
               const questionsData = data.lista.questoes.map((dto: any, idx: number) => questionService['transformDTOToQuestion'] ? (questionService as any).transformDTOToQuestion(dto, idx, data.lista.questoes.length) : dto);
               setQuestions(questionsData);
+              // try to fetch already-sent respostas for this estudante so UI shows selected alternatives
+              try {
+                const respostas = await respostaService.buscarRespostasPorLista(listaId, estudante);
+                const map: Record<string, string> = {};
+                respostas.forEach((r: any) => {
+                  try {
+                    const letter = respostaService.converterIndiceParaLetra(r.alternativa ?? 0);
+                    map[String(r.questaoId)] = letter;
+                  } catch (e) {
+                    // ignore malformed
+                  }
+                });
+                setInitialAnswers(map);
+              } catch (err) {
+                // ignore fetch respostas error
+              }
             } else {
               const questionsData = await questionService.getQuestionsByListId(listaId);
               setQuestions(questionsData);
@@ -276,6 +292,7 @@ const QuestionPage: React.FC = () => {
             questions={questions}
             listaId={listaId!}
             estudanteId={estudanteId}
+            initialAnswers={initialAnswers}
             onAnswerSelect={handleAnswerSelect}
             onNavigate={handleNavigate}
             onFinish={handleFinish}
@@ -284,54 +301,7 @@ const QuestionPage: React.FC = () => {
             }}
           />
 
-          <div style={{ marginTop: 16 }}>
-            <button
-              className="btn-submit-all"
-              disabled={Object.keys(pendingAnswers).length === 0 || submittingAll}
-              onClick={async () => {
-                if (!listaId) return;
-                setSubmittingAll(true);
-                try {
-                  const estudante = estudanteId || localStorage.getItem('userId') || '';
-                  const respostas = Object.entries(pendingAnswers).map(([qId, altIndex]) => ({ questaoId: Number(qId), alternativa: altIndex }));
-                  const payload = { listaId, tituloLista: '', respostas };
-                  await respostaService.enviarRespostas(payload as any);
-                  // refresh view to get nota
-                  const data = await respostaService.fetchVisao(listaId, estudante);
-                  if (data) {
-                    setVisao(data);
-                    setIsRespondida(Boolean(data.respondida || data.responded || data.resposta === true));
-
-                    const total = data.totalQuestoes ?? data.lista?.questoes?.length ?? questions.length;
-                    const respondedCount = data.questoesRespondidas ?? data.questoesRespondidas ?? 0;
-                    if (!data.respondida && total && respondedCount >= total) {
-                      try {
-                        await respostaService.finalizarLista(listaId, estudante);
-                        const refreshed = await respostaService.fetchVisao(listaId, estudante);
-                        if (refreshed) {
-                          setVisao(refreshed);
-                          setIsRespondida(Boolean(refreshed.respondida || refreshed.responded || refreshed.resposta === true));
-                          if (refreshed.respondida) setQuestions([]);
-                        }
-                      } catch (err) {
-                        console.error('Erro ao finalizar lista após envio em lote:', err);
-                      }
-                    } else {
-                      if (data.respondida) setQuestions([]);
-                    }
-
-                    setPendingAnswers({});
-                  }
-                } catch (err) {
-                  console.error('Erro ao enviar respostas em lote:', err);
-                } finally {
-                  setSubmittingAll(false);
-                }
-              }}
-            >
-              {submittingAll ? 'Enviando...' : 'Enviar respostas'}
-            </button>
-          </div>
+          {/* Botão de envio em lote removido conforme solicitado */}
         </>
       )}
     </div>

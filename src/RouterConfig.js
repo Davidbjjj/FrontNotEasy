@@ -8,6 +8,7 @@ import LandingPage from './landingPage/view/pages/LandingPage';
 import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPageProfessor from './listaQuestoes/view/pages/QuestionPageProfessor';
 import QuestionPageEstudante from './question/view/pages/QuestionPageEstudante';
+import InstituicaoPage from './instituicao/view/pages/InstituicaoPage';
 import RoleProtectedRoute from './auth/RoleProtectedRoute';
 
 import ActivityPage from './Atividade/view/pages/ActivityPage';
@@ -44,6 +45,7 @@ const RouterConfig = () => {
       <Route path="/disciplinas" element={<ProtectedRoute><DisciplinasPage /></ProtectedRoute>} />
       <Route path="/disciplinas/:disciplinaId" element={<ProtectedRoute><DisciplinaDetailRouter /></ProtectedRoute>} />
       <Route path="/listas" element={<ProtectedRoute><QuestionListPage /></ProtectedRoute>} />
+      <Route path="/instituicao" element={<RoleProtectedRoute allowedRoles={["INSTITUICAO"]}><InstituicaoPage /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes/professor" element={<RoleProtectedRoute allowedRoles={["PROFESSOR"]}><QuestionPageProfessor /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><QuestionPageEstudante /></RoleProtectedRoute>} />
     </Routes>

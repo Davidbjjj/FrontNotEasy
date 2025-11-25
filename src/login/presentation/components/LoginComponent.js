@@ -51,6 +51,8 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
       // Envia credenciais + token ReCAPTCHA para o backend
       const loginData = {
         ...values,
+        // force email to lowercase as backend expects
+        email: values.email ? String(values.email).toLowerCase().trim() : values.email,
         recaptchaToken,
       };
       
@@ -137,6 +139,7 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
                     { required: true, message: "Informe seu e-mail" },
                     { type: "email", message: "E-mail inválido" },
                   ]}
+                  getValueFromEvent={(e) => (e && e.target ? String(e.target.value).toLowerCase() : e)}
                 >
                   <Input
                     size="large"

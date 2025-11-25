@@ -91,9 +91,11 @@ export const listaService = {
 
     return data.map((e: any) => ({
       id: e.idEvento ?? e.id ?? '',
-      title: e.nomeEvento ?? e.nome ?? '',
-      deadline: e.prazo ?? e.dataEntrega ?? null,
-      disciplina: e.nomeDisciplina ?? (e.disciplina?.nome ?? ''),
+      // API sometimes uses 'titulo' (PT) or 'nomeEvento'/'nome' (legacy)
+      title: e.titulo ?? e.nomeEvento ?? e.nome ?? '',
+      // deadline may be 'prazo', 'data', 'dataEntrega' depending on endpoint/version
+      deadline: e.prazo ?? e.data ?? e.dataEntrega ?? null,
+      disciplina: e.disciplinaNome ?? e.nomeDisciplina ?? (e.disciplina?.nome ?? ''),
       maxGrade: e.notaMaxima ?? e.nota_maxima ?? null,
     }));
   }

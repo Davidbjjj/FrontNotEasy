@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../../../auth/auth';
 import { dashboardService } from '../../services/api/dashboard.service';
 import styles from './StudentDisciplinaMetrics.module.css';
@@ -56,6 +56,7 @@ function useWindowSize() {
 
 export default function StudentDisciplinaMetrics(): JSX.Element {
   const { disciplinaId } = useParams();
+  const navigate = useNavigate();
   const current = getCurrentUser();
   const alunoId = (current?.userId as string) || localStorage.getItem('userId') || '';
 
@@ -409,29 +410,40 @@ export default function StudentDisciplinaMetrics(): JSX.Element {
           <h3 className={styles.sectionTitle}>Listas Detalhadas</h3>
           <div className={styles.listGrid}>
             {Array.isArray(metrics.listas) && metrics.listas.length > 0 ? 
-              metrics.listas.slice(0, 12).map((l: any, index: number) => (
-                <Card 
-                  key={l.listaId || index} 
-                  className={styles.listCard} 
-                  size="small"
-                  bodyStyle={{ padding: '12px 16px' }}
-                >
-                  <div className={styles.listTitle}>
-                    {l.titulo?.length > 50 ? `${l.titulo.substring(0, 50)}...` : l.titulo}
-                  </div>
-                  <div className={styles.listMeta}>
-                    <span className={styles.listStat}>
-                      Nota: <strong>{l.nota ?? '—'}</strong>
-                    </span>
-                    <span className={styles.listStat}>
-                      {l.percentual}% concluído
-                    </span>
-                    <span className={styles.listStat}>
-                      {l.questoesRespondidas}/{l.totalQuestoes} questões
-                    </span>
-                  </div>
-                </Card>
-              )) : 
+                metrics.listas.slice(0, 12).map((l: any, index: number) => (
+                  <Card 
+                    key={l.listaId || index} 
+                    className={`${styles.listCard} ${styles.listCardClickable}`}
+                    size="small"
+                    bodyStyle={{ padding: '12px 16px' }}
+                    onClick={() => {
+                      const role = (localStorage.getItem('role') || '').toUpperCase();
+                      if (role === 'PROFESSOR' || role === 'INSTITUICAO') {
+                        navigate(`/listas/${l.listaId}/questoes/professor`);
+                      } else {
+                        navigate(`/listas/${l.listaId}/questoes`);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { const role = (localStorage.getItem('role') || '').toUpperCase(); if (role === 'PROFESSOR' || role === 'INSTITUICAO') { navigate(`/listas/${l.listaId}/questoes/professor`); } else { navigate(`/listas/${l.listaId}/questoes`); } } }}
+                  >
+                    <div className={styles.listTitle}>
+                      {l.titulo?.length > 50 ? `${l.titulo.substring(0, 50)}...` : l.titulo}
+                    </div>
+                    <div className={styles.listMeta}>
+                      <span className={styles.listStat}>
+                        Nota: <strong>{l.nota ?? '—'}</strong>
+                      </span>
+                      <span className={styles.listStat}>
+                        {l.percentual}% concluído
+                      </span>
+                      <span className={styles.listStat}>
+                        {l.questoesRespondidas}/{l.totalQuestoes} questões
+                      </span>
+                    </div>
+                  </Card>
+                )) : 
               <Card className={styles.listCard}>
                 <div className={styles.emptyState}>Nenhuma lista registrada.</div>
               </Card>
