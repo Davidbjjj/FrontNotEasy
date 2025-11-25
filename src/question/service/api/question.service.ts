@@ -12,7 +12,7 @@ export interface QuestaoResponseDTO {
 }
 
 class QuestionService {
-  private baseURL = 'https://backnoteasy-production.up.railway.app/listas';
+  private baseURL = 'http://localhost:8080/listas';
 
   async getQuestionsByListId(listaId: string): Promise<Question[]> {
     try {

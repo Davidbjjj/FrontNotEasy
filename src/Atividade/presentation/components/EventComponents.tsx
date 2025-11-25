@@ -21,6 +21,8 @@ export const StudentView: React.FC<StudentViewProps> = ({ activity }) => {
   const current = getCurrentUser();
   const estudanteId = current?.userId ?? null;
   const [submitting, setSubmitting] = useState(false);
+  const [resumoStatus, setResumoStatus] = useState<string | null>(null);
+  const isEntregue = (resumoStatus ?? '').toLowerCase() === 'entregue';
 
   // Always render the real resumo UI. If not logged, prompt to login.
   return (
@@ -28,7 +30,9 @@ export const StudentView: React.FC<StudentViewProps> = ({ activity }) => {
       {activity?.id ? (
         estudanteId ? (
           <>
-            <EventResumoAluno eventoId={activity.id} estudanteId={estudanteId} />
+            <EventResumoAluno eventoId={activity.id} estudanteId={estudanteId}
+              onResumo={(r) => setResumoStatus(r?.status ?? null)}
+            />
             <hr aria-hidden="true" />
 
             <div className="ad-section">
@@ -91,9 +95,9 @@ export const StudentView: React.FC<StudentViewProps> = ({ activity }) => {
                   setSubmitting(false);
                 }
               }}
-              disabled={submitting}
+              disabled={submitting || isEntregue}
             >
-              {submitting ? 'Entregando...' : 'Entregar'}
+              {submitting ? 'Entregando...' : (isEntregue ? 'Entregue' : 'Entregar')}
             </button>
           </>
         ) : (

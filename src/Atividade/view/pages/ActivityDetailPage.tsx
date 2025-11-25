@@ -20,7 +20,9 @@ const ActivityDetailPage: React.FC<ActivityDetailPageProps> = ({ isProfessor }) 
   const activity = useActivity();
   
   // Detecta role se não for passado via prop
-  const isUserProfessor = isProfessor ?? localStorage.getItem('role') === 'PROFESSOR';
+  const roleFromStorage = localStorage.getItem('role') || '';
+  const normalizedRole = String(roleFromStorage).toUpperCase();
+  const isUserProfessor = isProfessor ?? (normalizedRole === 'PROFESSOR' || normalizedRole === 'TEACHER' || normalizedRole === 'INSTITUICAO');
 
   return (
     <div className="activity-detail-page">

@@ -30,8 +30,8 @@ interface ListCardProps {
 
 const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestionsAdded, isLoading }) => {
   const progress = list.totalQuestions ? Math.round((list.questionsCompleted / list.totalQuestions) * 100) : 0;
-  const role = localStorage.getItem('role') || '';
-  const isProfessor = role === 'PROFESSOR';
+  const role = (localStorage.getItem('role') || '').toUpperCase();
+  const isProfessor = role === 'PROFESSOR' || role === 'INSTITUICAO';
   const estudanteId = localStorage.getItem('userId') || '';
 
   const [studentAnswered, setStudentAnswered] = useState<number | null>(null);

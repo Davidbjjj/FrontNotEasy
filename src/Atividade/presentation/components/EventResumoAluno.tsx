@@ -6,9 +6,10 @@ type Props = {
   eventoId: string | number;
   estudanteId: string | number;
   refreshKey?: any; // change this prop to force refetch
+  onResumo?: (resumo: EventoResumo | null) => void;
 };
 
-export default function EventResumoAluno({ eventoId, estudanteId, refreshKey }: Props) {
+export default function EventResumoAluno({ eventoId, estudanteId, refreshKey, onResumo }: Props) {
   const [resumo, setResumo] = useState<EventoResumo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,17 +21,20 @@ export default function EventResumoAluno({ eventoId, estudanteId, refreshKey }: 
     try {
       const r = await eventoService.getResumoEventoParaAluno(eventoId, estudanteId);
       setResumo(r);
+      if (onResumo) onResumo(r);
     } catch (err: any) {
       if (err instanceof ApiError && err.status === 404) {
         setError('Resumo não encontrado para este estudante.');
         setResumo(null);
+        if (onResumo) onResumo(null);
       } else {
         setError('Erro ao buscar resumo. Tentar novamente.');
+        if (onResumo) onResumo(null);
       }
     } finally {
       setLoading(false);
     }
-  }, [eventoId, estudanteId]);
+  }, [eventoId, estudanteId, onResumo]);
 
   useEffect(() => {
     fetchResumo();

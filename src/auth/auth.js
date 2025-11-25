@@ -5,18 +5,36 @@ const STORAGE_ROLE_KEY = 'role';
 const STORAGE_USERID_KEY = 'userId';
 
 // Backend API base used for logout call
-const API_BASE = 'https://backnoteasy-production.up.railway.app';
+const API_BASE = 'http://localhost:8080';
 // Fill localStorage based only on token decoding
 export function loginFromResponse(response) {
-  if (!response || !response.token) {
+  if (!response) {
+    throw new Error('Invalid response: empty');
+  }
+
+  const token = response.token;
+  if (!token) {
+    // If backend returned no token, but returned an id (legacy), surface a clearer error
     throw new Error('Invalid response: missing token');
   }
-  const token = response.token;
+
   const payload = decodeJwt(token);
   if (!payload) throw new Error('Invalid token');
 
-  const role = payload.role;
-  const userId = payload.userId;
+  // Role: prefer token claim, fallback to top-level response.role
+  const role = payload.role ?? response.role ?? null;
+
+  // userId: try multiple possible claim names and fall back to response.id
+  const userId =
+    payload.userId ??
+    payload.userID ??
+    payload.user_id ??
+    payload.sub ??
+    payload.id ??
+    payload.instituicaoId ??
+    response.userId ??
+    response.id ??
+    null;
 
   if (!role || !userId) {
     throw new Error('Token missing required claims (role or userId)');
@@ -25,7 +43,7 @@ export function loginFromResponse(response) {
   // store token and the two required values only
   localStorage.setItem(STORAGE_TOKEN_KEY, token);
   localStorage.setItem(STORAGE_ROLE_KEY, role);
-  localStorage.setItem(STORAGE_USERID_KEY, userId);
+  localStorage.setItem(STORAGE_USERID_KEY, String(userId));
 
   return { token, role, userId };
 }
@@ -95,9 +113,21 @@ export async function logoutServer() {
 // verify authentication: checks token presence and not expired; returns { role, userId } or null
 export function verifyAuth() {
   const token = localStorage.getItem(STORAGE_TOKEN_KEY);
-  if (!token) return null;
+  const storedRole = localStorage.getItem(STORAGE_ROLE_KEY);
+  const storedUserId = localStorage.getItem(STORAGE_USERID_KEY);
+
+  if (!token) {
+    // Fallback: if token missing, but role/userId are stored, treat as authenticated
+    if (storedRole && storedUserId) return { role: storedRole, userId: storedUserId };
+    return null;
+  }
+
   const payload = decodeJwt(token);
-  if (!payload) return null;
+  if (!payload) {
+    // If token cannot be decoded, fall back to stored values
+    if (storedRole && storedUserId) return { role: storedRole, userId: storedUserId };
+    return null;
+  }
 
   // exp is in seconds since epoch
   const exp = payload.exp;
@@ -109,8 +139,17 @@ export function verifyAuth() {
     }
   }
 
-  const role = payload.role;
-  const userId = payload.userId;
+  const role = payload.role ?? storedRole;
+  const userId =
+    payload.userId ??
+    payload.userID ??
+    payload.user_id ??
+    payload.sub ??
+    payload.id ??
+    payload.instituicaoId ??
+    storedUserId ??
+    null;
+
   if (!role || !userId) return null;
   return { role, userId };
 }
@@ -118,11 +157,31 @@ export function verifyAuth() {
 // get current user based on decoding token in localStorage
 export function getCurrentUser() {
   const token = localStorage.getItem(STORAGE_TOKEN_KEY);
-  if (!token) return null;
+  const storedRole = localStorage.getItem(STORAGE_ROLE_KEY);
+  const storedUserId = localStorage.getItem(STORAGE_USERID_KEY);
+
+  if (!token) {
+    if (storedRole && storedUserId) return { token: null, role: storedRole, userId: storedUserId };
+    return null;
+  }
+
   const payload = decodeJwt(token);
-  if (!payload) return null;
-  const role = payload.role;
-  const userId = payload.userId;
+  if (!payload) {
+    if (storedRole && storedUserId) return { token, role: storedRole, userId: storedUserId };
+    return null;
+  }
+
+  const role = payload.role ?? storedRole;
+  const userId =
+    payload.userId ??
+    payload.userID ??
+    payload.user_id ??
+    payload.sub ??
+    payload.id ??
+    payload.instituicaoId ??
+    storedUserId ??
+    null;
+
   if (!role || !userId) return null;
   return { token, role, userId };
 }

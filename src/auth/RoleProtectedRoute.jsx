@@ -15,7 +15,14 @@ const RoleProtectedRoute = ({ children, allowedRoles = [] }) => {
   const normalizedRole = String(rawRole).toUpperCase();
   const allowed = (allowedRoles || []).map((r) => String(r).toUpperCase());
 
-  if (!allowed.includes(normalizedRole)) {
+  // Treat some roles as equivalent: institutions should have the same access as professors
+  const effectiveRoles = [normalizedRole];
+  if (normalizedRole === 'INSTITUICAO') {
+    effectiveRoles.push('PROFESSOR');
+  }
+
+  const isAllowed = effectiveRoles.some((r) => allowed.includes(r));
+  if (!isAllowed) {
     return <Navigate to="/access-denied" replace />;
   }
 

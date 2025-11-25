@@ -24,10 +24,14 @@ class DisciplinaService {
     let endpoint: string;
     if (normalizedRole === 'PROFESSOR') {
       endpoint = `${this.baseURL}/professor/${userId}`;
-    } else if (normalizedRole === 'ESTUDANTE') {
+    } else if (normalizedRole === 'ALUNO') {
       endpoint = `${this.baseURL}/estudante/${userId}`;
+    } else if (normalizedRole === 'INSTITUICAO') {
+      // Role institucional: backend expos a rota em /instituicao/{instituicaoId}
+      // o id da instituição vem no token como userId
+      endpoint = `${this.baseURL}/instituicao/${userId}`;
     } else {
-      throw new Error('Role inválida. Use PROFESSOR ou ESTUDANTE');
+      throw new Error('Role inválida. Use PROFESSOR, ESTUDANTE ou INSTITUICAO');
     }
 
     try {

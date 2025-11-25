@@ -7,7 +7,8 @@ export interface Disciplina {
   nome: string;
   nomeProfessor: string;
   nomeEscola: string;
-  alunos: string[];
+  alunos?: string[];
+  quantidadeAlunos?: number;
 }
 
 export type DisciplinaDTO = Disciplina;

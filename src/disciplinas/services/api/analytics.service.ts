@@ -23,10 +23,10 @@ export interface AtividadesConcluidasDTO {
 }
 
 const analyticsService = {
-  async getMediasAlunos(disciplinaId: string, professorId: string): Promise<MediasAlunoDTO[]> {
+  async getMediasAlunos(disciplinaId: string, solicitanteId: string): Promise<MediasAlunoDTO[]> {
     try {
       const resp = await api.get(`/disciplinas/${disciplinaId}/analytics/alunos/medias`, {
-        params: { professorId },
+        params: { solicitanteId },
       });
       return resp.data as MediasAlunoDTO[];
     } catch (err: any) {
@@ -35,10 +35,10 @@ const analyticsService = {
     }
   },
 
-  async getListasMenorMedia(disciplinaId: string, professorId: string): Promise<ListaMenorMediaDTO[]> {
+  async getListasMenorMedia(disciplinaId: string, solicitanteId: string): Promise<ListaMenorMediaDTO[]> {
     try {
       const resp = await api.get(`/disciplinas/${disciplinaId}/analytics/listas/menor-media`, {
-        params: { professorId },
+        params: { solicitanteId },
       });
       return resp.data as ListaMenorMediaDTO[];
     } catch (err: any) {
@@ -47,10 +47,10 @@ const analyticsService = {
     }
   },
 
-  async getAtividadesConcluidas(disciplinaId: string, professorId: string): Promise<AtividadesConcluidasDTO[]> {
+  async getAtividadesConcluidas(disciplinaId: string, solicitanteId: string): Promise<AtividadesConcluidasDTO[]> {
     try {
       const resp = await api.get(`/disciplinas/${disciplinaId}/analytics/atividades-concluidas`, {
-        params: { professorId },
+        params: { solicitanteId },
       });
       return resp.data as AtividadesConcluidasDTO[];
     } catch (err: any) {
