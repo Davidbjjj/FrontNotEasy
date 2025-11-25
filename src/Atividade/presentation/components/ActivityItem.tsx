@@ -1,6 +1,7 @@
 // components/ActivityItem.tsx
 import React from 'react';
 import { Activity } from '../../model/Activity';
+import { formatDateTime } from '../../../utils/date';
 
 interface ActivityItemProps {
   activity: Activity;
@@ -32,7 +33,7 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({
           {activity.subject} {activity.class}
         </label>
         <div className={`deadline ${activity.completed ? 'completed' : ''}`}>
-          {activity.completed && '✓ '}{activity.deadline}
+          {activity.completed && '✓ '}{formatDateTime(activity.deadline)}
         </div>
       </div>
     </div>

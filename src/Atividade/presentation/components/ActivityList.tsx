@@ -1,6 +1,7 @@
 // components/ActivityList.tsx
 import React, { useState, useMemo } from 'react';
 import { ActivityListProps, Activity } from '../../model/Activity';
+import { formatDateTime } from '../../../utils/date';
 import './ActivityList.css';
 import CreateActivityModal from './CreateActivityModal';
 import { useNavigate } from 'react-router-dom';
@@ -106,11 +107,17 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
                     </div>
                     <div className="activity-body">
                       <div>
-                        <h3 className="activity-card-title">{activity.title}</h3>
-                        <p className="activity-card-sub">{activity.subject} · {activity.class}</p>
+                        <h3 className="activity-card-title">{activity.title || 'Sem título'}</h3>
+                        {
+                          (() => {
+                            const parts = [activity.subject, activity.class].filter(Boolean);
+                            if (parts.length === 0) return null;
+                            return <p className="activity-card-sub">{parts.join(' · ')}</p>;
+                          })()
+                        }
                       </div>
-                      <div className="activity-meta">
-                        <div className="deadline">{activity.deadline}</div>
+                        <div className="activity-meta">
+                        <div className="deadline">{formatDateTime(activity.deadline)}</div>
                         <div className="activity-card-action">›</div>
                       </div>
                     </div>

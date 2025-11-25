@@ -4,6 +4,7 @@ import AddQuestionsButton from './AddQuestionsButton/AddQuestionsButton';
 import AddListButton from './AddListButton/AddListButton';
 import { ArrowRight, Clock, Book, FileText } from 'lucide-react';
 import './QuestionList.css';
+import { formatDateTime } from '../../../utils/date';
 import { respostaService } from '../../../question/service/api/respostaService';
 import { useEffect, useState } from 'react';
 
@@ -121,7 +122,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
             </div>
             <div className="list-card__deadline">
               <Clock size={16} style={{ verticalAlign: 'middle', marginRight: 6 }} />
-              {list.deadline ? `Prazo entrega em ${list.deadline}` : 'Prazo entrega em --'}
+              {list.deadline ? `Prazo entrega em ${formatDateTime(list.deadline)}` : 'Prazo entrega em --'}
             </div>
           </div>
         </div>

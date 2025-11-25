@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Question, QuestionNavigation, QuizResult, RespostaEstudanteQuestaoDTO } from '../model/Question.types';
 import { respostaService } from '../service/api/respostaService'; // Importação correta
 
@@ -24,6 +24,7 @@ export const useQuestionViewModel = (
   onAnswerSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void,
   onNavigate?: (direction: 'previous' | 'next') => void,
   onFinish?: (respostas: RespostaEstudanteQuestaoDTO[]) => void
+  , initialAnswers?: Record<string, string>
 ): UseQuestionViewModelReturn => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -33,6 +34,25 @@ export const useQuestionViewModel = (
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
   const currentQuestion = questions[currentQuestionIndex];
+
+  // If the parent provided initialAnswers (from visao/buscarRespostas), initialize selection when question changes
+  useEffect(() => {
+    try {
+      const qid = currentQuestion?.id;
+      if (!qid) return;
+      if (initialAnswers && Object.prototype.hasOwnProperty.call(initialAnswers, qid)) {
+        const letter = initialAnswers[qid];
+        setSelectedAnswer(letter ?? null);
+        setIsAnswered(Boolean(letter));
+      } else {
+        // clear selection when no initial answer exists
+        setSelectedAnswer(null);
+        setIsAnswered(false);
+      }
+    } catch (e) {
+      // ignore
+    }
+  }, [currentQuestionIndex, currentQuestion?.id, initialAnswers]);
 
   const navigation: QuestionNavigation = {
     current: currentQuestionIndex + 1,

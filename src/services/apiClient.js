@@ -10,6 +10,14 @@ const api = axios.create({
   },
 });
 
+// Plain API instance without auth interceptor — use for public endpoints
+export const plainApi = axios.create({
+  baseURL: API_BASE,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 // Attach Authorization header if token exists in localStorage
 api.interceptors.request.use((config) => {
   try {

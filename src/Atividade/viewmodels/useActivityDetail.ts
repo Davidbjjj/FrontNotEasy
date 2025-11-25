@@ -75,7 +75,7 @@ export const useActivity = () => {
         // Map API response to Activity shape (best-effort)
         const mapped: Activity = {
           id: ev.id ?? ev.idEvento ?? String(id),
-          title: ev.nomeEvento ?? ev.title ?? '',
+          title: ev.titulo ?? ev.nomeEvento ?? ev.title ?? '',
           description: ev.descricao ?? ev.description ?? ev.descricaoEvento ?? '',
           deadline: ev.prazo ?? ev.data ?? ev.deadline ?? '',
           status: ev.status ?? '',

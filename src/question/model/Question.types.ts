@@ -46,6 +46,8 @@ export interface QuestionProps {
   questions: Question[];
   listaId: string;
   estudanteId: string;
+  /** Map of questionId -> selected answer letter (e.g. { '12': 'A' }) */
+  initialAnswers?: Record<string, string>;
   onAnswerSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   onOptionSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   onNavigate?: (direction: 'previous' | 'next') => void;

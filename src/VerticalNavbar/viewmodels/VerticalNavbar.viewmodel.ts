@@ -17,6 +17,17 @@ export const useVerticalNavbarViewModel = (
     { id: 'config', label: 'Configuração', isActive: false, path: '/config' },
   ];
 
+  // If the current user is an institution, add an 'Instituição' area
+  try {
+    const roleRaw = (localStorage.getItem('role') || '').toString().toUpperCase();
+    if (roleRaw === 'INSTITUICAO') {
+      // put institution first so it's easy to find
+      defaultItems.unshift({ id: 'instituicao', label: 'Instituição', isActive: false, path: '/instituicao' });
+    }
+  } catch (e) {
+    // ignore localStorage errors
+  }
+
   const [navItems, setNavItems] = useState<NavItem[]>(initialItems || defaultItems);
   const [activeItem, setActiveItem] = useState<string | null>(null);
 

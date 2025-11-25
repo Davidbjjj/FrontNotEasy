@@ -3,6 +3,7 @@ import { useActivityCardViewModel } from '../../viewmodels/ActivityCard.viewmode
 import eventoService from '../../services/api/eventoService';
 import { useState } from 'react';
 import { ActivityCardProps } from '../../model/ActivityCard.types';
+import { formatDateTime } from '../../../utils/date';
 import './ActivityCard.css';
 
 export const ActivityCard: React.FC<ActivityCardProps> = ({ activities }) => {
@@ -54,16 +55,7 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({ activities }) => {
   };
 
   // Função para formatar a data
-  const formatDueDate = (dueDate: string | number | Date) => {
-    const options: Intl.DateTimeFormatOptions = { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    };
-    return new Date(dueDate).toLocaleDateString('pt-BR', options);
-  };
+  const formatDueDate = (dueDate: string | number | Date) => formatDateTime(dueDate);
 
   // Estado vazio
   if (!activities || activities.length === 0) {
