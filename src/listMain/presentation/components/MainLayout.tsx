@@ -1,6 +1,7 @@
 // presentation/components/MainLayout.tsx
 import React from 'react';
 import VerticalNavbar from '../../../VerticalNavbar/presentation/components/VerticalNavbar';
+import BottomNavbar from '../../../VerticalNavbar/presentation/components/BottomNavbar';
 import TopBar from '../../../TopBar/presentation/components/TopBar';
 import { useAuth } from '../../../auth/AuthProvider';
 import './MainLayout.css';
@@ -44,7 +45,7 @@ const MainLayoutComponent: React.FC<MainLayoutProps> = ({ children }) => {
       />
 
       <div className="main-layout__body">
-        {/* Navbar lateral inicia abaixo da TopBar */}
+        {/* Navbar lateral inicia abaixo da TopBar (escondida em mobile) */}
         <VerticalNavbar />
 
         <main className="main-layout__main">
@@ -53,6 +54,9 @@ const MainLayoutComponent: React.FC<MainLayoutProps> = ({ children }) => {
           </div>
         </main>
       </div>
+
+      {/* Bottom navbar aparece somente em dispositivos móveis */}
+      <BottomNavbar />
     </div>
   );
 };

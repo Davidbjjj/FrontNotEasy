@@ -179,8 +179,10 @@
 /* Responsivo */
 @media (max-width: 768px) {
   .top-bar {
-    left: 80px;
-    padding: 0 15px;
+    /* Em mobile queremos a TopBar ocupando toda a largura */
+    left: 0;
+    right: 0;
+    padding: 0 12px;
   }
   
   .top-bar__user-name {
@@ -188,8 +190,8 @@
   }
   
   .top-bar__notifications-dropdown {
-    width: 300px;
-    right: -50px;
+    width: 260px;
+    right: 0;
   }
   
   .top-bar__action span {

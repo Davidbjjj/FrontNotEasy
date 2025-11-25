@@ -62,6 +62,19 @@
   
 
 }
+/* Esconder a vertical navbar em mobile e reservar espaço para a bottom navbar */
+@media (max-width: 768px) {
+  .vertical-navbar {
+    display: none !important;
+  }
+
+  /* remover margem lateral e dar espaço inferior para a bottom navbar */
+  .main-layout__main {
+    margin-left: 0;
+    padding-bottom: 80px; /* espaço para a bottom navbar fixa */
+  }
+
+}
 .main-layout__main--expanded {
   margin-left: 220px;
 }
