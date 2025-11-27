@@ -37,6 +37,11 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
   const handleFinish = async (values) => {
     try {
       setIsSubmitting(true);
+
+      const sanitizedValues = {
+        email: values.email?.trim(),
+        password: values.password,
+      };
       
       // Executa ReCAPTCHA
       let recaptchaToken = null;
@@ -50,7 +55,7 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
 
       // Envia credenciais + token ReCAPTCHA para o backend
       const loginData = {
-        ...values,
+        ...sanitizedValues,
         recaptchaToken,
       };
       

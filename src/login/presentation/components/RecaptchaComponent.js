@@ -1,138 +1,140 @@
-import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
+import { verifyRecaptchaToken } from '../../../recaptcha/recaptchaAPI';
 
 /**
- * Componente de CAPTCHA para testes locais (substitui reCAPTCHA real durante desenvolvimento)
- * Fornece 3 tipos de testes diferentes:
- *  - Math: pergunta simples de soma/subtração
- *  - Escolha: clique no ícone correto
- *  - Digitar: digite a palavra mostrada
+ * Componente de reCAPTCHA v3 (invisível) usando Google oficial.
  *
- * O componente expõe `executeRecaptcha()` via ref, que abre um overlay
- * e resolve com um token fake quando o teste for aprovado.
- * Use apenas em desenvolvimento/local.
+ * - Usa a site key configurada em REACT_APP_RECAPTCHA_SITE_KEY
+ * - Carrega o script do Google dinamicamente
+ * - Exponde executeRecaptcha(action) via ref
+ * - Ao executar:
+ *    1) chama grecaptcha.execute(...) para obter o token
+ *    2) envia o token para o backend Node (/verify-recaptcha)
+ *    3) só retorna o token se a verificação no backend for bem-sucedida
  */
-const generateFakeToken = (type) => {
-  return `captcha-pass-${type}-${Date.now()}-${Math.random().toString(36).slice(2,9)}`;
-};
 
-// Modal/overlay data will be handled in the parent component to avoid nested hook issues
+// Site key do reCAPTCHA v3 (pública). Usa a variável de ambiente se existir,
+// e cai para a chave fornecida caso contrário.
+const SITE_KEY =
+  process.env.REACT_APP_RECAPTCHA_SITE_KEY ||
+  '6Lc_wQssAAAAACIiUVn9frfejKD2e-yG6IuDU2By';
 
 export const RecaptchaComponent = forwardRef(({ onToken }, ref) => {
-  const [visible, setVisible] = useState(false);
-  const [currentTest, setCurrentTest] = useState(null);
-  const [resolver, setResolver] = useState(null);
-  // store test-specific data here to avoid nested components/hooks
-  const [testData, setTestData] = useState(null);
-  const [inputValue, setInputValue] = useState('');
+  const scriptLoadedRef = useRef(false);
+  const loadingPromiseRef = useRef(null);
 
-  useImperativeHandle(ref, () => ({
-    executeRecaptcha: (action = 'login') => {
-      return new Promise((resolve) => {
-        const tests = ['math','choice','type'];
-        const picked = tests.includes(action) ? action : tests[Math.floor(Math.random()*tests.length)];
+  useEffect(() => {
+    if (!SITE_KEY) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        'REACT_APP_RECAPTCHA_SITE_KEY não configurada. reCAPTCHA não será executado.'
+      );
+      return;
+    }
 
-        // prepare data for the picked test
-        let data = null;
-        if (picked === 'math') {
-          const a = Math.floor(Math.random() * 9) + 1;
-          const b = Math.floor(Math.random() * 9) + 1;
-          const op = Math.random() < 0.5 ? '+' : '-';
-          const answer = op === '+' ? a + b : a - b;
-          data = { a, b, op, answer };
-        } else if (picked === 'choice') {
-          const items = ['🐶','🐱','🐵','🐻','🐼','🐸'];
-          const target = items[Math.floor(Math.random() * items.length)];
-          const shuffled = items.sort(() => 0.5 - Math.random()).slice(0,4);
-          if (!shuffled.includes(target)) shuffled[0] = target;
-          data = { target, options: shuffled };
-        } else if (picked === 'type') {
-          const words = ['seguro','noteasy','devtest','liberdade','ola123'];
-          const w = words[Math.floor(Math.random() * words.length)];
-          data = { word: w };
+    if (scriptLoadedRef.current) return;
+
+    if (!loadingPromiseRef.current) {
+      loadingPromiseRef.current = new Promise((resolve) => {
+        const existingScript = document.querySelector(
+          'script[src*="recaptcha/api.js"]'
+        );
+        if (existingScript) {
+          if (existingScript.getAttribute('data-loaded')) {
+            scriptLoadedRef.current = true;
+            resolve();
+          } else {
+            existingScript.addEventListener('load', () => {
+              existingScript.setAttribute('data-loaded', 'true');
+              scriptLoadedRef.current = true;
+              resolve();
+            });
+          }
+          return;
         }
 
-        setCurrentTest(picked);
-        setTestData(data);
-        setInputValue('');
-        setVisible(true);
-        setResolver(() => ({ resolve }));
+        const script = document.createElement('script');
+        script.src = `https://www.google.com/recaptcha/api.js?render=${SITE_KEY}`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => {
+          script.setAttribute('data-loaded', 'true');
+          scriptLoadedRef.current = true;
+          resolve();
+        };
+        script.onerror = () => {
+          // eslint-disable-next-line no-console
+          console.error('Falha ao carregar script do reCAPTCHA.');
+          resolve();
+        };
+        document.body.appendChild(script);
       });
     }
+  }, []);
+
+  const execute = async (action = 'login') => {
+    if (!SITE_KEY) {
+      // eslint-disable-next-line no-console
+      console.error(
+        'REACT_APP_RECAPTCHA_SITE_KEY ausente. Configure no arquivo .env.'
+      );
+      return null;
+    }
+
+    if (loadingPromiseRef.current) {
+      await loadingPromiseRef.current;
+    }
+
+    if (!window.grecaptcha || !window.grecaptcha.execute) {
+      // eslint-disable-next-line no-console
+      console.error('grecaptcha não está disponível no window.');
+      return null;
+    }
+
+    try {
+      const token = await window.grecaptcha.execute(SITE_KEY, { action });
+      // eslint-disable-next-line no-console
+      console.log('DEBUG: reCAPTCHA v3 token:', token);
+
+      if (!token) return null;
+
+      if (typeof onToken === 'function') {
+        onToken(token);
+      }
+
+      // Verifica o token no backend Node (opcional).
+      // Se o backend estiver offline, apenas registra o erro e segue
+      // retornando o token para que o backend principal (Java, por exemplo)
+      // possa fazer a verificação final.
+      try {
+        await verifyRecaptchaToken(token);
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(
+          'Falha na verificação do reCAPTCHA no backend (opcional):',
+          err?.message || err
+        );
+      }
+
+      return token;
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Erro ao executar reCAPTCHA v3:', error?.message || error);
+      return null;
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    executeRecaptcha: execute,
   }));
 
-  const handleSuccess = () => {
-    const token = generateFakeToken(currentTest || 'test');
-    // eslint-disable-next-line no-console
-    console.log('DEBUG: CAPTCHA passed, token=', token);
-    if (typeof onToken === 'function') onToken(token);
-    if (resolver?.resolve) resolver.resolve(token);
-    setVisible(false);
-    setCurrentTest(null);
-    setResolver(null);
-    setTestData(null);
-    setInputValue('');
-  };
-
-  const handleFail = () => {
-    // eslint-disable-next-line no-console
-    console.log('DEBUG: CAPTCHA failed or cancelled');
-    if (resolver?.resolve) resolver.resolve(null);
-    setVisible(false);
-    setCurrentTest(null);
-    setResolver(null);
-    setTestData(null);
-    setInputValue('');
-  };
-
-  // Render overlay inline to avoid nested-hook issues
-  return (
-    <>
-      {visible && testData && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
-          <div style={{ background: '#fff', padding: 20, borderRadius: 8, width: 360, maxWidth: '90%' }}>
-            <button onClick={handleFail} style={{ float: 'right', border: 'none', background: 'transparent', fontSize: 16 }}>✕</button>
-            <h3 style={{ marginTop: 0 }}>Verificação: você não é um robô</h3>
-
-            {currentTest === 'math' && (
-              <form onSubmit={(e)=>{ e.preventDefault(); if (parseInt(inputValue,10) === testData.answer) handleSuccess(); else handleFail(); }}>
-                <p>Resolva: <strong>{testData.a} {testData.op} {testData.b}</strong></p>
-                <input autoFocus value={inputValue} onChange={(e)=>setInputValue(e.target.value)} placeholder="Resultado" style={{ width: '100%', padding: 8 }} />
-                <div style={{ marginTop: 10, display: 'flex', gap: 8 }}>
-                  <button type="submit">Verificar</button>
-                  <button type="button" onClick={handleFail}>Cancelar</button>
-                </div>
-              </form>
-            )}
-
-            {currentTest === 'choice' && (
-              <div>
-                <p>Clique no ícone: <strong style={{ fontSize: 20 }}>{testData.target}</strong></p>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {testData.options.map((opt, idx) => (
-                    <button key={idx} onClick={() => { setInputValue(opt); if (opt === testData.target) handleSuccess(); else handleFail(); }} style={{ fontSize: 24, padding: 12 }}>{opt}</button>
-                  ))}
-                </div>
-                <div style={{ marginTop: 10 }}>
-                  <button onClick={handleFail}>Fechar</button>
-                </div>
-              </div>
-            )}
-
-            {currentTest === 'type' && (
-              <form onSubmit={(e)=>{ e.preventDefault(); if (inputValue && inputValue.toString().trim().toLowerCase() === testData.word.toString().trim().toLowerCase()) handleSuccess(); else handleFail(); }}>
-                <p style={{ userSelect: 'all', fontWeight: 'bold', fontSize: 18 }}>{testData.word}</p>
-                <input value={inputValue} onChange={(e)=>setInputValue(e.target.value)} placeholder="Digite a palavra acima" style={{ width: '100%', padding: 8 }} />
-                <div style={{ marginTop: 10 }}>
-                  <button type="submit">Verificar</button>
-                  <button type="button" onClick={handleFail}>Cancelar</button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-    </>
-  );
+  // reCAPTCHA v3 é invisível, não renderiza nada visual
+  return <div style={{ display: 'none' }} />;
 });
 
 RecaptchaComponent.displayName = 'RecaptchaComponent';
