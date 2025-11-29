@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Form, Input, Button, Select, Card, Table, message } from 'antd';
 import { instituicaoService } from '../../services/api/instituicao.service';
 
 interface DisciplinaManagerProps {
@@ -9,82 +10,84 @@ interface DisciplinaManagerProps {
 }
 
 const DisciplinaManager: React.FC<DisciplinaManagerProps> = ({ instituicaoId, professorOptions, disciplinasList, onSuccess }) => {
-    const [disciplina, setDisciplina] = useState({ nome: '', professorId: '' });
+    const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<string | null>(null);
 
-    const handleCreateDisciplina = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setMessage(null);
-        if (!disciplina.nome) return setMessage('Informe o nome da disciplina');
-        // Professor is optional in some contexts, but let's keep it consistent with previous logic
-        // if (!disciplina.professorId) return setMessage('Informe o professor responsável (ID)');
-
+    const handleCreateDisciplina = async (values: any) => {
         setLoading(true);
         try {
-            const payload = { nome: disciplina.nome, instituicaoId, professorId: disciplina.professorId };
+            const payload = { ...values, instituicaoId };
             await instituicaoService.createDisciplina(payload);
-            setMessage('Disciplina criada com sucesso');
-            setDisciplina({ nome: '', professorId: '' });
+            message.success('Disciplina criada com sucesso');
+            form.resetFields();
             onSuccess();
         } catch (err: any) {
             const errorData = err?.response?.data;
             const errorMsg = typeof errorData === 'string' ? errorData : (errorData?.error || errorData?.message || String(err));
-            setMessage(errorMsg);
+            message.error(errorMsg);
         } finally {
             setLoading(false);
         }
     };
 
+    const columns = [
+        {
+            title: 'Nome',
+            dataIndex: 'nome',
+            key: 'nome',
+        },
+        {
+            title: 'Professor',
+            key: 'professor',
+            render: (text: any, record: any) => record.nomeProfessor || (record.professor && record.professor.nome) || '-',
+        },
+    ];
+
     return (
-        <div className="manager-container">
-            <h2>Gerenciar Disciplinas</h2>
-            {message && <div className="instituicao-message">{message}</div>}
+        <Card title="Gerenciar Disciplinas" bordered={false}>
+            <Card type="inner" title="Criar Nova Disciplina" style={{ marginBottom: 24, background: 'transparent' }} bodyStyle={{ padding: 0 }}>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleCreateDisciplina}
+                >
+                    <Form.Item
+                        name="nome"
+                        label="Nome da Disciplina"
+                        rules={[{ required: true, message: 'Informe o nome da disciplina' }]}
+                    >
+                        <Input placeholder="Ex: Matemática Avançada" />
+                    </Form.Item>
 
-            <div className="form-section">
-                <h3>Criar Nova Disciplina</h3>
-                <form onSubmit={handleCreateDisciplina} className="instituicao-form">
-                    <div className="form-group">
-                        <label>Nome da Disciplina</label>
-                        <input placeholder="Ex: Matemática Avançada" value={disciplina.nome} onChange={(e) => setDisciplina({ ...disciplina, nome: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                        <label>Professor Responsável (Opcional)</label>
-                        <select value={disciplina.professorId} onChange={(e) => setDisciplina({ ...disciplina, professorId: e.target.value })}>
-                            <option value="">-- Selecionar Professor --</option>
+                    <Form.Item
+                        name="professorId"
+                        label="Professor Responsável (Opcional)"
+                    >
+                        <Select placeholder="-- Selecionar Professor --">
                             {professorOptions.map((p) => (
-                                <option key={p.id} value={p.id}>{p.nome}</option>
+                                <Select.Option key={p.id} value={p.id}>{p.nome}</Select.Option>
                             ))}
-                        </select>
-                    </div>
-                    <button type="submit" disabled={loading} className="submit-btn">{loading ? 'Criando...' : 'Criar Disciplina'}</button>
-                </form>
-            </div>
+                        </Select>
+                    </Form.Item>
 
-            <div className="list-section" style={{ marginTop: '30px' }}>
-                <h3>Disciplinas Cadastradas</h3>
-                {disciplinasList.length === 0 ? (
-                    <p>Nenhuma disciplina encontrada.</p>
-                ) : (
-                    <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '10px' }}>
-                        <thead>
-                            <tr style={{ textAlign: 'left', borderBottom: '1px solid #ddd' }}>
-                                <th style={{ padding: '10px' }}>Nome</th>
-                                <th style={{ padding: '10px' }}>Professor</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {disciplinasList.map((d) => (
-                                <tr key={d.id} style={{ borderBottom: '1px solid #eee' }}>
-                                    <td style={{ padding: '10px' }}>{d.nome}</td>
-                                    <td style={{ padding: '10px' }}>{d.nomeProfessor || (d.professor && d.professor.nome) || '-'}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
-            </div>
-        </div>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={loading}>
+                            Criar Disciplina
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Card>
+
+            <Card type="inner" title="Disciplinas Cadastradas" style={{ background: 'transparent' }} bodyStyle={{ padding: 0 }}>
+                <Table
+                    dataSource={disciplinasList}
+                    columns={columns}
+                    rowKey="id"
+                    locale={{ emptyText: 'Nenhuma disciplina encontrada' }}
+                    scroll={{ x: 'max-content' }}
+                />
+            </Card>
+        </Card>
     );
 };
 

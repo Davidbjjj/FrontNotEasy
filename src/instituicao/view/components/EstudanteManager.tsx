@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Form, Input, Button, DatePicker, Card, message } from 'antd';
 import { instituicaoService } from '../../services/api/instituicao.service';
 
 interface EstudanteManagerProps {
@@ -6,66 +7,83 @@ interface EstudanteManagerProps {
 }
 
 const EstudanteManager: React.FC<EstudanteManagerProps> = ({ instituicaoId }) => {
-    const [estudante, setEstudante] = useState({ nome: '', email: '', senha: '', dataNascimento: '' });
+    const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<string | null>(null);
 
-    const isEmailValid = (em: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
-    const isDateValid = (d: string) => /^\d{4}-\d{2}-\d{2}$/.test(d);
-
-    const handleCreateEstudante = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setMessage(null);
-        if (!estudante.nome) return setMessage('Informe o nome do estudante');
-        if (!estudante.email) return setMessage('Informe o email do estudante');
-        if (!isEmailValid(estudante.email)) return setMessage('Email do estudante inválido');
-        if (!estudante.senha || estudante.senha.length < 6) return setMessage('Senha deve ter ao menos 6 caracteres');
-        if (!estudante.dataNascimento) return setMessage('Informe a data de nascimento');
-        if (!isDateValid(estudante.dataNascimento)) return setMessage('Formato de data inválido (YYYY-MM-DD)');
-
+    const handleCreateEstudante = async (values: any) => {
         setLoading(true);
         try {
-            const payload = { nome: estudante.nome, dataNascimento: estudante.dataNascimento || '', email: estudante.email, senha: estudante.senha, instituicaoId };
+            const payload = {
+                ...values,
+                dataNascimento: values.dataNascimento ? values.dataNascimento.format('YYYY-MM-DD') : '',
+                instituicaoId,
+            };
             await instituicaoService.registerEstudante(payload);
-            setMessage('Estudante criado com sucesso');
-            setEstudante({ nome: '', email: '', senha: '', dataNascimento: '' });
+            message.success('Estudante criado com sucesso');
+            form.resetFields();
         } catch (err: any) {
             const errorData = err?.response?.data;
             const errorMsg = typeof errorData === 'string' ? errorData : (errorData?.error || errorData?.message || String(err));
-            setMessage(errorMsg);
+            message.error(errorMsg);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="manager-container">
-            <h2>Gerenciar Estudantes</h2>
-            {message && <div className="instituicao-message">{message}</div>}
+        <Card title="Gerenciar Estudantes" bordered={false}>
+            <Card type="inner" title="Criar Novo Estudante" bodyStyle={{ padding: 0 }} style={{ background: 'transparent' }}>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleCreateEstudante}
+                >
+                    <Form.Item
+                        name="nome"
+                        label="Nome"
+                        rules={[{ required: true, message: 'Informe o nome do estudante' }]}
+                    >
+                        <Input placeholder="Nome completo" />
+                    </Form.Item>
 
-            <div className="form-section">
-                <h3>Criar Novo Estudante</h3>
-                <form onSubmit={handleCreateEstudante} className="instituicao-form">
-                    <div className="form-group">
-                        <label>Nome</label>
-                        <input placeholder="Nome completo" value={estudante.nome} onChange={(e) => setEstudante({ ...estudante, nome: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input placeholder="Email" value={estudante.email} onChange={(e) => setEstudante({ ...estudante, email: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                        <label>Senha</label>
-                        <input type="password" placeholder="Senha" value={estudante.senha} onChange={(e) => setEstudante({ ...estudante, senha: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                        <label>Data de Nascimento</label>
-                        <input type="date" value={estudante.dataNascimento} onChange={(e) => setEstudante({ ...estudante, dataNascimento: e.target.value })} />
-                    </div>
-                    <button type="submit" disabled={loading} className="submit-btn">{loading ? 'Criando...' : 'Criar Estudante'}</button>
-                </form>
-            </div>
-        </div>
+                    <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[
+                            { required: true, message: 'Informe o email do estudante' },
+                            { type: 'email', message: 'Email inválido' }
+                        ]}
+                    >
+                        <Input placeholder="Email" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="senha"
+                        label="Senha"
+                        rules={[
+                            { required: true, message: 'Informe a senha' },
+                            { min: 6, message: 'Senha deve ter ao menos 6 caracteres' }
+                        ]}
+                    >
+                        <Input.Password placeholder="Senha" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="dataNascimento"
+                        label="Data de Nascimento"
+                        rules={[{ required: true, message: 'Informe a data de nascimento' }]}
+                    >
+                        <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={loading}>
+                            Criar Estudante
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Card>
+        </Card>
     );
 };
 

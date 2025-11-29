@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Form, Input, Button, DatePicker, Select, Card, message, Modal } from 'antd';
 import { instituicaoService } from '../../services/api/instituicao.service';
 import { Materia } from '../../services/api/materia.service';
 
@@ -9,57 +10,40 @@ interface ProfessorManagerProps {
 }
 
 const ProfessorManager: React.FC<ProfessorManagerProps> = ({ instituicaoId, materiasList, onSuccess }) => {
-    const [professor, setProfessor] = useState({ nome: '', email: '', senha: '', dataNascimento: '', materia1Id: '', materia2Id: '' });
+    const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState<string | null>(null);
 
-    const isEmailValid = (em: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
-    const isDateValid = (d: string) => /^\d{4}-\d{2}-\d{2}$/.test(d);
-
-    const handleCreateProfessor = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setMessage(null);
-        // basic validation
-        if (!professor.nome) return setMessage('Informe o nome do professor');
-        if (!professor.email) return setMessage('Informe o email do professor');
-        if (!isEmailValid(professor.email)) return setMessage('Email do professor inválido');
-        if (!professor.senha || professor.senha.length < 6) return setMessage('Senha deve ter ao menos 6 caracteres');
-        if (!professor.materia1Id) return setMessage('Informe a matéria principal');
-        if (professor.dataNascimento && !isDateValid(professor.dataNascimento)) return setMessage('Formato de data inválido (YYYY-MM-DD)');
-
+    const handleCreateProfessor = async (values: any) => {
         setLoading(true);
         try {
             const payload = {
-                nome: professor.nome,
-                dataNascimento: professor.dataNascimento || '',
-                email: professor.email,
-                senha: professor.senha,
-                materia1Id: professor.materia1Id || '',
-                materia2Id: professor.materia2Id || '',
+                ...values,
+                dataNascimento: values.dataNascimento ? values.dataNascimento.format('YYYY-MM-DD') : '',
                 instituicaoId,
             };
             await instituicaoService.registerProfessor(payload);
-            setMessage('Professor criado com sucesso');
-            setProfessor({ nome: '', email: '', senha: '', dataNascimento: '', materia1Id: '', materia2Id: '' });
+            message.success('Professor criado com sucesso');
+            form.resetFields();
             onSuccess();
         } catch (err: any) {
             const errorData = err?.response?.data;
             const msg = typeof errorData === 'string' ? errorData : (errorData?.error || errorData?.message || String(err));
-            // If backend says email not authorized, offer to add
+
             if (err?.response?.status === 400 && String(msg).toLowerCase().includes('email não autorizado')) {
-                const confirmAdd = window.confirm('Email não autorizado. Deseja adicionar este e-mail à lista de permitidos?');
-                if (confirmAdd) {
-                    try {
-                        await instituicaoService.addPermittedEmails(instituicaoId, [professor.email]);
-                        setMessage('Email adicionado. Tente criar o professor novamente.');
-                    } catch (addErr: any) {
-                        setMessage(addErr?.response?.data || String(addErr));
+                Modal.confirm({
+                    title: 'Email não autorizado',
+                    content: 'Deseja adicionar este e-mail à lista de permitidos?',
+                    onOk: async () => {
+                        try {
+                            await instituicaoService.addPermittedEmails(instituicaoId, [values.email]);
+                            message.success('Email adicionado. Tente criar o professor novamente.');
+                        } catch (addErr: any) {
+                            message.error(addErr?.response?.data || String(addErr));
+                        }
                     }
-                } else {
-                    setMessage(msg);
-                }
+                });
             } else {
-                setMessage(msg);
+                message.error(msg);
             }
         } finally {
             setLoading(false);
@@ -67,51 +51,81 @@ const ProfessorManager: React.FC<ProfessorManagerProps> = ({ instituicaoId, mate
     };
 
     return (
-        <div className="manager-container">
-            <h2>Gerenciar Professores</h2>
-            {message && <div className="instituicao-message">{message}</div>}
+        <Card title="Gerenciar Professores" bordered={false}>
+            <Card type="inner" title="Criar Novo Professor" bodyStyle={{ padding: 0 }} style={{ background: 'transparent', marginBottom: 24 }}>
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={handleCreateProfessor}
+                >
+                    <Form.Item
+                        name="nome"
+                        label="Nome"
+                        rules={[{ required: true, message: 'Informe o nome do professor' }]}
+                    >
+                        <Input placeholder="Nome completo" />
+                    </Form.Item>
 
-            <div className="form-section">
-                <h3>Criar Novo Professor</h3>
-                <form onSubmit={handleCreateProfessor} className="instituicao-form">
-                    <div className="form-group">
-                        <label>Nome</label>
-                        <input placeholder="Nome completo" value={professor.nome} onChange={(e) => setProfessor({ ...professor, nome: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                        <label>Email</label>
-                        <input placeholder="Email" value={professor.email} onChange={(e) => setProfessor({ ...professor, email: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                        <label>Senha</label>
-                        <input type="password" placeholder="Senha" value={professor.senha} onChange={(e) => setProfessor({ ...professor, senha: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                        <label>Data de Nascimento</label>
-                        <input type="date" value={professor.dataNascimento} onChange={(e) => setProfessor({ ...professor, dataNascimento: e.target.value })} />
-                    </div>
-                    <div className="form-group">
-                        <label>Matéria Principal</label>
-                        <select value={professor.materia1Id} onChange={(e) => setProfessor({ ...professor, materia1Id: e.target.value })} required>
-                            <option value="">-- Selecionar --</option>
+                    <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[
+                            { required: true, message: 'Informe o email do professor' },
+                            { type: 'email', message: 'Email inválido' }
+                        ]}
+                    >
+                        <Input placeholder="Email" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="senha"
+                        label="Senha"
+                        rules={[
+                            { required: true, message: 'Informe a senha' },
+                            { min: 6, message: 'Senha deve ter ao menos 6 caracteres' }
+                        ]}
+                    >
+                        <Input.Password placeholder="Senha" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="dataNascimento"
+                        label="Data de Nascimento"
+                    >
+                        <DatePicker style={{ width: '100%' }} format="YYYY-MM-DD" />
+                    </Form.Item>
+
+                    <Form.Item
+                        name="materia1Id"
+                        label="Matéria Principal"
+                        rules={[{ required: true, message: 'Informe a matéria principal' }]}
+                    >
+                        <Select placeholder="-- Selecionar --">
                             {materiasList.map((m) => (
-                                <option key={m.id} value={m.id}>{m.nome}</option>
+                                <Select.Option key={m.id} value={m.id}>{m.nome}</Select.Option>
                             ))}
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label>Matéria Secundária (Opcional)</label>
-                        <select value={professor.materia2Id} onChange={(e) => setProfessor({ ...professor, materia2Id: e.target.value })}>
-                            <option value="">-- Selecionar --</option>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="materia2Id"
+                        label="Matéria Secundária (Opcional)"
+                    >
+                        <Select placeholder="-- Selecionar --">
                             {materiasList.map((m) => (
-                                <option key={m.id} value={m.id}>{m.nome}</option>
+                                <Select.Option key={m.id} value={m.id}>{m.nome}</Select.Option>
                             ))}
-                        </select>
-                    </div>
-                    <button type="submit" disabled={loading} className="submit-btn">{loading ? 'Criando...' : 'Criar Professor'}</button>
-                </form>
-            </div>
-        </div>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit" loading={loading}>
+                            Criar Professor
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Card>
+        </Card >
     );
 };
 
