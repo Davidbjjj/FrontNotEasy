@@ -7,7 +7,8 @@ import {
   ClipboardList,
   Book,
   Settings,
-  Calendar
+  Calendar,
+  Building2
 } from "lucide-react";
 import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.viewmodel";
 import { VerticalNavbarProps } from "../../model/VerticalNavbar.types";
@@ -22,6 +23,7 @@ const BottomNavbarComponent: React.FC<Partial<VerticalNavbarProps>> = ({ items, 
     "atividades": <Calendar className="bottom-navbar__icon" />,
     "simulados": <ClipboardList className="bottom-navbar__icon" />,
     "disciplinas": <Book className="bottom-navbar__icon" />,
+    "instituicao": <Building2 className="bottom-navbar__icon" />,
     "config": <Settings className="bottom-navbar__icon" />,
   };
 
