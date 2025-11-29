@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { instituicaoService } from '../../services/api/instituicao.service';
 import { disciplinaService } from '../../../disciplinas/services/api/disciplina.service';
+import materiaService, { Materia } from '../../services/api/materia.service';
 import './InstituicaoPage.css';
 
 const InstituicaoPage: React.FC = () => {
@@ -9,10 +10,11 @@ const InstituicaoPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [emailResult, setEmailResult] = useState<any>(null);
   const [permittedEmails, setPermittedEmails] = useState<string[]>([]);
-  const [professor, setProfessor] = useState({ nome: '', email: '', senha: '', dataNascimento: '', materia1: '', materia2: '' });
+  const [professor, setProfessor] = useState({ nome: '', email: '', senha: '', dataNascimento: '', materia1Id: '', materia2Id: '' });
   const [disciplina, setDisciplina] = useState({ nome: '', professorId: '' });
   const [estudante, setEstudante] = useState({ nome: '', email: '', senha: '', dataNascimento: '' });
   const [disciplinasList, setDisciplinasList] = useState<any[]>([]);
+  const [materiasList, setMateriasList] = useState<Materia[]>([]);
 
   // derive professor options from disciplinas (backend may return professor id or name)
   const professorOptions = React.useMemo(() => {
@@ -71,6 +73,22 @@ const InstituicaoPage: React.FC = () => {
     return () => { mounted = false; };
   }, [instituicaoId]);
 
+  // load materias for professor form
+  React.useEffect(() => {
+    let mounted = true;
+    async function loadMaterias() {
+      try {
+        if (!instituicaoId) return;
+        const list = await materiaService.getMaterias(instituicaoId);
+        if (mounted) setMateriasList(list || []);
+      } catch (e) {
+        console.error('Erro ao carregar matérias:', e);
+      }
+    }
+    loadMaterias();
+    return () => { mounted = false; };
+  }, [instituicaoId]);
+
   const handleAddEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
@@ -104,7 +122,7 @@ const InstituicaoPage: React.FC = () => {
     if (!professor.email) return setMessage('Informe o email do professor');
     if (!isEmailValid(professor.email)) return setMessage('Email do professor inválido');
     if (!professor.senha || professor.senha.length < 6) return setMessage('Senha deve ter ao menos 6 caracteres');
-    if (!professor.materia1) return setMessage('Informe a matéria principal');
+    if (!professor.materia1Id) return setMessage('Informe a matéria principal');
     if (professor.dataNascimento && !isDateValid(professor.dataNascimento)) return setMessage('Formato de data inválido (YYYY-MM-DD)');
 
     setLoadingCreateProfessor(true);
@@ -114,13 +132,13 @@ const InstituicaoPage: React.FC = () => {
         dataNascimento: professor.dataNascimento || '',
         email: professor.email,
         senha: professor.senha,
-        materia1: professor.materia1 || '',
-        materia2: professor.materia2 || '',
+        materia1Id: professor.materia1Id || '',
+        materia2Id: professor.materia2Id || '',
         instituicaoId,
       };
       await instituicaoService.registerProfessor(payload);
       setMessage('Professor criado com sucesso');
-      setProfessor({ nome: '', email: '', senha: '', dataNascimento: '', materia1: '', materia2: '' } as any);
+      setProfessor({ nome: '', email: '', senha: '', dataNascimento: '', materia1Id: '', materia2Id: '' } as any);
     } catch (err: any) {
       const msg = err?.response?.data || String(err);
       // If backend says email not authorized, offer to add
@@ -281,8 +299,18 @@ const InstituicaoPage: React.FC = () => {
           <input placeholder="Email" value={professor.email} onChange={(e) => setProfessor({ ...professor, email: e.target.value })} />
           <input placeholder="Senha" value={professor.senha} onChange={(e) => setProfessor({ ...professor, senha: e.target.value })} />
           <input type="date" placeholder="Data nascimento (YYYY-MM-DD)" value={professor.dataNascimento} onChange={(e) => setProfessor({ ...professor, dataNascimento: e.target.value })} />
-          <input placeholder="Matéria principal" value={professor.materia1} onChange={(e) => setProfessor({ ...professor, materia1: e.target.value })} />
-          <input placeholder="Matéria secundária (opcional)" value={professor.materia2} onChange={(e) => setProfessor({ ...professor, materia2: e.target.value })} />
+          <select value={professor.materia1Id} onChange={(e) => setProfessor({ ...professor, materia1Id: e.target.value })} required>
+            <option value="">-- Selecionar matéria principal --</option>
+            {materiasList.map((m) => (
+              <option key={m.id} value={m.id}>{m.nome}</option>
+            ))}
+          </select>
+          <select value={professor.materia2Id} onChange={(e) => setProfessor({ ...professor, materia2Id: e.target.value })}>
+            <option value="">-- Selecionar matéria secundária (opcional) --</option>
+            {materiasList.map((m) => (
+              <option key={m.id} value={m.id}>{m.nome}</option>
+            ))}
+          </select>
           <button type="submit" disabled={loadingCreateProfessor}>{loadingCreateProfessor ? 'Criando...' : 'Criar professor'}</button>
         </form>
       </section>

@@ -47,8 +47,8 @@ class InstituicaoService {
   // Professor registration (public endpoint)
   async registerProfessor(payload: any) {
     // Enviar apenas os campos necessários
-    const { nome, dataNascimento, email, senha, materia1, materia2, instituicaoId } = payload || {};
-    const body = { nome, dataNascimento, email, senha, materia1, materia2, instituicaoId };
+    const { nome, dataNascimento, email, senha, materia1Id, materia2Id, instituicaoId } = payload || {};
+    const body = { nome, dataNascimento, email, senha, materia1Id, materia2Id, instituicaoId };
     const resp = await plainApi.post('/professor/registrar', body);
     return resp.data;
   }

@@ -8,7 +8,8 @@ import {
   ClipboardList, 
   Settings,
   Book,
-  Calendar // Ícone para atividades
+  Calendar, // Ícone para atividades
+  Building2 // Ícone para instituição
 } from "lucide-react";
 import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.viewmodel";
 import { VerticalNavbarProps } from "../../model/VerticalNavbar.types";
@@ -28,6 +29,7 @@ const VerticalNavbarComponent: React.FC<VerticalNavbarProps> = ({
     "atividades": <Calendar className="vertical-navbar__icon" />,
     "simulados": <ClipboardList className="vertical-navbar__icon" />,
     "disciplinas": <Book className="vertical-navbar__icon" />,
+    "instituicao": <Building2 className="vertical-navbar__icon" />,
     "config": <Settings className="vertical-navbar__icon" />,
   };
 
