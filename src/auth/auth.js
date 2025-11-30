@@ -105,7 +105,7 @@ export async function logoutServer() {
     return { status: res.status || 0, ok: false };
   } catch (err) {
     // Network error: clear storage and propagate minimal info
-    try { logout(); } catch (e) {}
+    try { logout(); } catch (e) { }
     return { status: 0, ok: false };
   }
 }

@@ -3,11 +3,13 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
 .question-list__header-actions {
   display: flex;
   align-items: center;
   gap: 16px;
-  justify-content: center; /* centraliza o botão */
+  justify-content: center;
+  /* centraliza o botão */
   margin-bottom: 20px;
 }
 
@@ -18,9 +20,11 @@
   align-items: center;
   margin-bottom: 30px;
 }
+
 .list-card__actions {
   display: flex;
   gap: 8px;
+  align-items: center;
   /* manter z-index baixo para não competir com modais (modais tem z-index muito maior) */
 
 }
@@ -197,33 +201,21 @@
 }
 
 /* Loading overlay shown when a card is clicked and navigation is pending */
-.list-card__loading-overlay{
-  position:absolute;
-  inset:0;
-  background: rgba(255,255,255,0.6);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:12px;
+.list-card__loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
   z-index: 5;
 }
 
-.list-card__spinner{
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  border:4px solid rgba(59,130,246,0.15);
-  border-top-color: #3b82f6;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin{
-  to { transform: rotate(360deg); }
-}
-
-.list-card__header {
-  display: flex;
-  justify-content: space-between;
+.list-card__spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
   align-items: flex-start;
   margin-bottom: 12px;
 }
@@ -417,21 +409,49 @@
   cursor: not-allowed;
 }
 
+/* Botão de deletar */
+.icon-btn-danger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  background-color: #fee2e2;
+  color: #ef4444;
+  border: 1px solid #fecaca;
+  cursor: pointer;
+}
+
+.icon-btn-danger:hover {
+  background-color: #fecaca;
+  border-color: #fca5a5;
+  transform: scale(1.05);
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+}
+
+.icon-btn-danger:active {
+  transform: scale(0.95);
+  background-color: #fca5a5;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .question-list-page {
     padding: 15px;
   }
-  
+
   .lists-view__grid {
     grid-template-columns: 1fr;
   }
-  
+
   .sort-section__options {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
+
   .list-card__inner {
     flex-direction: column;
     align-items: stretch;
