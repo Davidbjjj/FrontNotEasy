@@ -24,20 +24,15 @@ const InstituicaoPage: React.FC = () => {
   const [disciplinasList, setDisciplinasList] = useState<any[]>([]);
   const [materiasList, setMateriasList] = useState<Materia[]>([]);
   const [permittedEmails, setPermittedEmails] = useState<string[]>([]);
+  const [professoresList, setProfessoresList] = useState<any[]>([]);
 
   // Derived state
   const professorOptions = React.useMemo(() => {
-    const map = new Map<string, { id: string; nome: string }>();
-    disciplinasList.forEach((d) => {
-      const id = d.professorId || d.professor?.id || d.professorId || d.professorId === 0 ? String(d.professorId) : (d.professor?.id || '');
-      const nome = d.nomeProfessor || (d.professor && d.professor.nome) || d.professorNome || '';
-      if (id || nome) {
-        const key = id || nome;
-        if (!map.has(key)) map.set(key, { id: key, nome: nome || key });
-      }
-    });
-    return Array.from(map.values());
-  }, [disciplinasList]);
+    return professoresList.map(p => ({
+      id: p.id,
+      nome: p.nome
+    }));
+  }, [professoresList]);
 
   // Data fetching
   const loadDisciplinas = async () => {
@@ -57,6 +52,16 @@ const InstituicaoPage: React.FC = () => {
       setMateriasList(list || []);
     } catch (e) {
       console.error('Erro ao carregar matérias', e);
+    }
+  };
+
+  const loadProfessores = async () => {
+    try {
+      if (!instituicaoId) return;
+      const list = await instituicaoService.listProfessores(instituicaoId);
+      setProfessoresList(list || []);
+    } catch (e) {
+      console.error('Erro ao carregar professores', e);
     }
   };
 
@@ -88,6 +93,7 @@ const InstituicaoPage: React.FC = () => {
     if (instituicaoId) {
       loadDisciplinas();
       loadMaterias();
+      loadProfessores();
       loadPermittedEmails();
     }
   }, [instituicaoId]);
