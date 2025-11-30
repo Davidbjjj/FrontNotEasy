@@ -11,18 +11,20 @@
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.12);
-  --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
   /* Layout tokens */
-  --topbar-height: 70px;
-  --mobile-topbar-height: 56px;
+  --topbar-height: 20px;
+  --mobile-topbar-height: 10px;
   --sidebar-width: 100px;
   --sidebar-expanded-width: 220px;
   --bottombar-height: 64px;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -33,7 +35,9 @@ body {
 }
 
 /* Ensure anchor targets account for fixed header */
-section[id] { scroll-margin-top: 80px; }
+section[id] {
+  scroll-margin-top: 80px;
+}
 
 /* Utility containers */
 .container {
@@ -59,6 +63,7 @@ section[id] { scroll-margin-top: 80px; }
   margin-left: -12px;
   margin-right: -12px;
 }
+
 .col {
   padding-left: 12px;
   padding-right: 12px;
@@ -67,7 +72,9 @@ section[id] { scroll-margin-top: 80px; }
 
 /* container padding adjustments for small screens */
 @media (max-width: 480px) {
-  .container { padding: 0 12px; }
+  .container {
+    padding: 0 12px;
+  }
 }
 
 /* utility to visually limit content on large screens */
@@ -86,15 +93,32 @@ section[id] { scroll-margin-top: 80px; }
 }
 
 /* helpers to hide / show by breakpoint */
-.hide-mobile { display: none; }
-.show-mobile { display: block; }
+.hide-mobile {
+  display: none;
+}
+
+.show-mobile {
+  display: block;
+}
+
 @media (min-width: 769px) {
-  .hide-mobile { display: block; }
-  .show-mobile { display: none; }
+  .hide-mobile {
+    display: block;
+  }
+
+  .show-mobile {
+    display: none;
+  }
 }
 
 /* ensure main top spacing respects header + mobile bottom bar */
-main { padding-top: var(--topbar-height); }
+main {
+  padding-top: var(--topbar-height);
+}
+
 @media (max-width: 768px) {
-  main { padding-top: var(--mobile-topbar-height); padding-bottom: var(--bottombar-height); }
+  main {
+    padding-top: var(--mobile-topbar-height);
+    padding-bottom: var(--bottombar-height);
+  }
 }

@@ -9,7 +9,7 @@ export const useVerticalNavbarViewModel = (
 ): VerticalNavbarViewModel => {
   const location = useLocation();
 
-  const defaultItems: NavItem[] = [
+  let defaultItems: NavItem[] = [
     { id: 'questoes', label: 'Questões', isActive: false, path: '/questoes' },
     { id: 'listas', label: 'Listas', isActive: false, path: '/listas' },
     { id: 'atividades', label: 'Atividades', isActive: false, path: '/atividades' },
@@ -17,11 +17,13 @@ export const useVerticalNavbarViewModel = (
     { id: 'config', label: 'Configuração', isActive: false, path: '/config' },
   ];
 
-  // If the current user is an institution, add an 'Instituição' area
+  // If the current user is an institution, customize navigation items
   try {
     const roleRaw = (localStorage.getItem('role') || '').toString().toUpperCase();
     if (roleRaw === 'INSTITUICAO') {
-      // put institution first so it's easy to find
+      // Remove 'questões' for institution users
+      defaultItems = defaultItems.filter(item => item.id !== 'questoes');
+      // Add institution area first
       defaultItems.unshift({ id: 'instituicao', label: 'Instituição', isActive: false, path: '/instituicao' });
     }
   } catch (e) {

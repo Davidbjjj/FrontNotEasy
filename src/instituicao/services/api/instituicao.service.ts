@@ -58,7 +58,7 @@ class InstituicaoService {
     // Enviar apenas os campos necessários ao backend
     const { nome, instituicaoId, professorId } = payload || {};
     const body = { nome, instituicaoId, professorId };
-    const resp = await api.post('/disciplina/criar', body);
+    const resp = await api.post('/disciplinas', body);
     return resp.data;
   }
 
