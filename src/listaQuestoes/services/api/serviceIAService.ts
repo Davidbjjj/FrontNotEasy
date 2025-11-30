@@ -7,14 +7,40 @@ export const serviceIAService = {
     const formData = new FormData();
     formData.append('file', file);
 
+    // Get token from localStorage (saved during login)
+    const token = localStorage.getItem('token');
+
+    // DEBUG: Log para verificar se o token existe
+    console.log('🔑 Token exists:', !!token);
+    console.log('🔑 Token (first 50 chars):', token ? token.substring(0, 50) + '...' : 'NO TOKEN');
+
+    if (!token) {
+      console.error('❌ Token não encontrado no localStorage');
+      throw new Error('Token de autenticação não encontrado. Faça login novamente.');
+    }
+
+    console.log('📤 Sending request to:', `${API_BASE_URL}/serviceIA/${listaId}/processar-pdf-com-imagens`);
+    console.log('📤 Headers:', {
+      'Authorization': `Bearer ${token.substring(0, 20)}...`,
+      'Accept': 'application/json',
+    });
+
     const response = await fetch(`${API_BASE_URL}/serviceIA/${listaId}/processar-pdf-com-imagens`, {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json',
+      },
       body: formData,
       // Não definir Content-Type manualmente - o browser vai definir automaticamente com boundary
     });
 
+    console.log('📥 Response status:', response.status);
+    console.log('📥 Response OK:', response.ok);
+
     if (!response.ok) {
       const errorText = await response.text();
+      console.error('❌ Error response:', errorText);
       throw new Error(errorText || 'Erro ao processar PDF');
     }
 

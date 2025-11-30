@@ -5,8 +5,9 @@ import styles from '../components/Disciplinas.module.css';
 import layoutStyles from './DisciplinaAnalytics.module.css';
 import AdicionarAlunoModal from '../components/AdicionarAlunoModal';
 import Toast from '../../../components/Toast';
-import { RefreshCw, UserPlus, BookOpen } from 'lucide-react';
+import { RefreshCw, UserPlus, BookOpen, Lightbulb, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { instituicaoService } from '../../../instituicao/services/api/instituicao.service';
 
 const DisciplinaAnalyticsPage: React.FC = () => {
   const { disciplinaId } = useParams();
@@ -18,10 +19,29 @@ const DisciplinaAnalyticsPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
+  const [loadingSuggestions, setLoadingSuggestions] = React.useState(false);
+  const [iaSuggestions, setIaSuggestions] = React.useState<any>(null);
 
   const handleAlunoAdded = (updated: any) => {
     reload();
     setToastMessage('Aluno adicionado com sucesso');
+  };
+
+  const handleGetSuggestions = async () => {
+    if (!disciplinaId) return;
+    setLoadingSuggestions(true);
+    try {
+      const result = await instituicaoService.getSugestoesIADisciplina(disciplinaId);
+      setIaSuggestions(result);
+      setToastMessage('Sugestões de IA carregadas com sucesso!');
+    } catch (err: any) {
+      const errorData = err?.response?.data;
+      const errorMsg = typeof errorData === 'string' ? errorData : (errorData?.error || errorData?.message || 'Erro ao carregar sugestões');
+      setToastMessage(`Erro: ${errorMsg}`);
+      setIaSuggestions(null);
+    } finally {
+      setLoadingSuggestions(false);
+    }
   };
 
   if (!disciplinaId) return <div className={styles.container}><p>Disciplina inválida</p></div>;
@@ -38,13 +58,67 @@ const DisciplinaAnalyticsPage: React.FC = () => {
         <div className={layoutStyles.actions}>
           <button className={`${layoutStyles.btn} ${layoutStyles.btnGhost} iconBtn`} onClick={() => reload()}><RefreshCw size={16}/> Recarregar</button>
           {(currentRole === 'PROFESSOR' || currentRole === 'INSTITUICAO' || currentRole === 'TEACHER') && (
-            <button className={`${layoutStyles.btn} ${layoutStyles.btnPrimary} iconBtn`} onClick={() => setShowAddModal(true)}><UserPlus size={16}/> Adicionar Aluno</button>
+            <>
+              <button 
+                className={`${layoutStyles.btn} ${layoutStyles.btnSecondary} iconBtn`} 
+                onClick={handleGetSuggestions}
+                disabled={loadingSuggestions}
+              >
+                <Lightbulb size={16}/> {loadingSuggestions ? 'Carregando...' : 'Sugestões IA'}
+              </button>
+              <button className={`${layoutStyles.btn} ${layoutStyles.btnPrimary} iconBtn`} onClick={() => setShowAddModal(true)}><UserPlus size={16}/> Adicionar Aluno</button>
+            </>
           )}
         </div>
       </div>
 
       {showAddModal && disciplinaId && (currentRole === 'PROFESSOR' || currentRole === 'INSTITUICAO' || currentRole === 'TEACHER') && (
         <AdicionarAlunoModal disciplinaId={disciplinaId} onClose={() => setShowAddModal(false)} onSuccess={handleAlunoAdded} />
+      )}
+
+      {/* Dashboard de Sugestões da IA */}
+      {iaSuggestions && (
+        <div className={layoutStyles.iaDashboard}>
+          <div className={layoutStyles.iaDashboardHeader}>
+            <div>
+              <h2>🤖 Sugestões de IA - Lacunas e Melhorias</h2>
+              <p className={layoutStyles.iaDashboardSubtitle}>Análise baseada no desempenho dos alunos</p>
+            </div>
+            <button 
+              className={layoutStyles.closeIABtn} 
+              onClick={() => setIaSuggestions(null)}
+              title="Fechar sugestões"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <div className={layoutStyles.iaDashboardContent}>
+            {iaSuggestions.sugestao && (
+              <div className={layoutStyles.iaCard}>
+                <h3 className={layoutStyles.iaCardTitle}>💡 Sugestão Geral</h3>
+                <p className={layoutStyles.iaCardText}>{iaSuggestions.sugestao}</p>
+              </div>
+            )}
+            {iaSuggestions.pontosPrincipais && iaSuggestions.pontosPrincipais.length > 0 && (
+              <div className={layoutStyles.iaCard}>
+                <h3 className={layoutStyles.iaCardTitle}>📊 Pontos Principais</h3>
+                <ul className={layoutStyles.iaList}>
+                  {iaSuggestions.pontosPrincipais.map((ponto: string, idx: number) => {
+                    const isLacuna = ponto.toLowerCase().includes('lacuna');
+                    return (
+                      <li key={idx} className={layoutStyles.iaListItem}>
+                        <span className={isLacuna ? layoutStyles.iaIconError : layoutStyles.iaIconSuccess}>
+                          {isLacuna ? '⚠️' : '✅'}
+                        </span>
+                        <div>{ponto}</div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
       {isLoading ? (

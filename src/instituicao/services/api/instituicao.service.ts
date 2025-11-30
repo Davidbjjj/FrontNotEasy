@@ -119,6 +119,25 @@ class InstituicaoService {
     const resp = await api.put(`/disciplina/${disciplinaId}/professor/${professorId}`);
     return resp.data;
   }
+
+  // Get IA analysis for disciplina (upload files)
+  async getAnaliseIADisciplina(disciplinaId: string, pdfFile: File, imagensFiles: File[]) {
+    const formData = new FormData();
+    formData.append('pdf', pdfFile);
+    imagensFiles.forEach((img, idx) => {
+      formData.append(`imagens`, img);
+    });
+    const resp = await api.post(`/listas/disciplina/${disciplinaId}/analise-ia`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
+    return resp.data;
+  }
+
+  // Get IA suggestions for disciplina (no upload)
+  async getSugestoesIADisciplina(disciplinaId: string) {
+    const resp = await api.post(`/listas/disciplina/${disciplinaId}/analise-ia`);
+    return resp.data;
+  }
 }
 
 export const instituicaoService = new InstituicaoService();

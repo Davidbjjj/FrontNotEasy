@@ -26,6 +26,11 @@ api.interceptors.request.use((config) => {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // If sending FormData, remove the default Content-Type to let browser set it with boundary
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
   } catch (err) {
     // ignore
   }
@@ -39,7 +44,7 @@ api.interceptors.response.use(
     if (err && err.response && err.response.status === 401) {
       try {
         authLogout();
-      } catch (e) {}
+      } catch (e) { }
     }
     return Promise.reject(err);
   }

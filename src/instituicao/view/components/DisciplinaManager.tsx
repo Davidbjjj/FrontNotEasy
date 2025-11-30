@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Input, Button, Select, Card, Table, message, Row, Col, Modal, Tabs, Popconfirm } from 'antd';
 import { PlusOutlined, UnorderedListOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { instituicaoService } from '../../services/api/instituicao.service';
@@ -21,11 +21,7 @@ const DisciplinaManager: React.FC<DisciplinaManagerProps> = ({ instituicaoId, pr
     const [editingDisciplina, setEditingDisciplina] = useState<any>(null);
     const [editModalVisible, setEditModalVisible] = useState(false);
 
-    useEffect(() => {
-        loadEstudantes();
-    }, [instituicaoId]);
-
-    const loadEstudantes = async () => {
+    const loadEstudantes = useCallback(async () => {
         try {
             if (!instituicaoId) return;
             // Busca estudantes da instituição usando o serviço de instituição
@@ -34,7 +30,11 @@ const DisciplinaManager: React.FC<DisciplinaManagerProps> = ({ instituicaoId, pr
         } catch (err) {
             console.error('Erro ao carregar estudantes:', err);
         }
-    };
+    }, [instituicaoId]);
+
+    useEffect(() => {
+        loadEstudantes();
+    }, [loadEstudantes]);
 
     const handleAddStudentToDisciplina = async (values: any) => {
         setAddingStudent(true);
