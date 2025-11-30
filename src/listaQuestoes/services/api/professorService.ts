@@ -14,10 +14,10 @@ export const professorService = {
       ? `${API_BASE_URL}/listas/instituicao/${effectiveUserId}/disciplinas`
       : `${API_BASE_URL}/listas/professor/${effectiveUserId}/disciplinas`;
 
-    try { console.debug('[professorService.getDisciplinasByProfessor] role=', rawRole, 'userId=', effectiveUserId, 'endpoint=', endpoint); } catch (e) {}
+    try { console.debug('[professorService.getDisciplinasByProfessor] role=', rawRole, 'userId=', effectiveUserId, 'endpoint=', endpoint); } catch (e) { }
 
     const response = await fetch(endpoint);
-    
+
     if (!response.ok) {
       throw new Error('Erro ao carregar disciplinas');
     }

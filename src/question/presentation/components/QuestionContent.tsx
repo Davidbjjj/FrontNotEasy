@@ -44,17 +44,16 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
         {options.map((option) => (
           <div
             key={option.id}
-            className={`question-option ${
-              selectedAnswer === option.id ? 'question-option--selected' : ''
-            } ${isAnswered ? 'question-option--disabled' : ''}`}
-                      onClick={() => {
-                        if (isAnswered || isSubmitting) return;
-                        onAnswerSelect(option.id);
-                        if (onOptionSelect) {
-                          const alternativaIndex = option.label.charCodeAt(0) - 65;
-                          onOptionSelect(questionId ?? '', option.id, alternativaIndex);
-                        }
-                      }}
+            className={`question-option ${selectedAnswer === option.id ? 'question-option--selected' : ''
+              } ${isAnswered ? 'question-option--disabled' : ''}`}
+            onClick={() => {
+              if (isAnswered || isSubmitting) return;
+              onAnswerSelect(option.id);
+              if (onOptionSelect) {
+                const alternativaIndex = option.label.charCodeAt(0) - 65;
+                onOptionSelect(questionId ?? '', option.id, alternativaIndex);
+              }
+            }}
             role="button"
             tabIndex={0}
             onKeyPress={(e) => { if (!isAnswered && !isSubmitting && (e.key === 'Enter' || e.key === ' ')) onAnswerSelect(option.id); }}

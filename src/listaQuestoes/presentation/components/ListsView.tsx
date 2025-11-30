@@ -2,11 +2,13 @@ import React from 'react';
 import { ListsViewProps, QuestionList } from '../../model/QuestionList.types';
 import AddQuestionsButton from './AddQuestionsButton/AddQuestionsButton';
 import AddListButton from './AddListButton/AddListButton';
-import { ArrowRight, Clock, Book, FileText } from 'lucide-react';
+import { ArrowRight, Clock, Book, FileText, Trash2, Loader2 } from 'lucide-react';
 import './QuestionList.css';
 import { formatDateTime } from '../../../utils/date';
 import { respostaService } from '../../../question/service/api/respostaService';
+import { listaService } from '../../services/api/listaService';
 import { useEffect, useState } from 'react';
+import { Popconfirm, message } from 'antd';
 
 const getPreferredTeacherName = (fallbackName?: string) => {
   try {
@@ -37,6 +39,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
 
   const [studentAnswered, setStudentAnswered] = useState<number | null>(null);
   const [studentTotal, setStudentTotal] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -62,6 +65,22 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
 
   const handleAddQuestionsClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Impede que o clique propague para o card
+  };
+
+  const handleDeleteList = async () => {
+    setIsDeleting(true);
+    const hide = message.loading('Deletando lista...', 0);
+    try {
+      await listaService.deleteLista(list.id);
+      message.success('Lista deletada com sucesso');
+      if (onQuestionsAdded) onQuestionsAdded();
+    } catch (err) {
+      console.error(err);
+      message.error('Erro ao deletar lista');
+    } finally {
+      hide();
+      setIsDeleting(false);
+    }
   };
 
   const progressColor = progress >= 70 ? '#10b981' : progress >= 40 ? '#f59e0b' : '#ef4444';
@@ -95,10 +114,29 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
             </div>
             <div className="list-card__actions" onClick={handleAddQuestionsClick}>
               {isProfessor && (
-                <AddQuestionsButton 
-                  listaId={list.id}
-                  onQuestionsAdded={onQuestionsAdded}
-                />
+                <>
+                  <Popconfirm
+                    title="Deletar Lista"
+                    description="Tem certeza que deseja deletar esta lista?"
+                    onConfirm={handleDeleteList}
+                    okText="Sim"
+                    cancelText="Não"
+                    disabled={isDeleting}
+                  >
+                    <button
+                      className="icon-btn-danger"
+                      title="Deletar Lista"
+                      disabled={isDeleting}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {isDeleting ? <Loader2 size={18} className="animate-spin" /> : <Trash2 size={18} />}
+                    </button>
+                  </Popconfirm>
+                  <AddQuestionsButton
+                    listaId={list.id}
+                    onQuestionsAdded={onQuestionsAdded}
+                  />
+                </>
               )}
             </div>
           </div>
@@ -116,7 +154,7 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
 
           <div className="list-card__bottom-row">
             <div className="list-card__tags">
-              {list.tags?.slice(0,3).map((tag, idx) => (
+              {list.tags?.slice(0, 3).map((tag, idx) => (
                 <span key={idx} className="list-card__tag">{tag}</span>
               ))}
             </div>
@@ -146,36 +184,36 @@ export const ListsView: React.FC<
   className = '',
 }) => {
 
-  if (lists.length === 0) {
+    if (lists.length === 0) {
+      return (
+        <div className="question-list__empty">
+          <FileText size={64} className="question-list__empty-icon" />
+          <h3 className="question-list__empty-title">Nenhuma lista encontrada</h3>
+          <p className="question-list__empty-desc">Parece que ainda não há listas de questões. Crie sua primeira lista para começar a organizar as avaliações.</p>
+          <div className="question-list__empty-actions">
+            {/* Usamos o AddListButton para abrir o modal de criação de lista */}
+            <AddListButton className="add-list-button--empty" professorId={localStorage.getItem('userId') || ''} onCreated={() => onQuestionsAdded && onQuestionsAdded()} />
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="question-list__empty">
-        <FileText size={64} className="question-list__empty-icon" />
-        <h3 className="question-list__empty-title">Nenhuma lista encontrada</h3>
-        <p className="question-list__empty-desc">Parece que ainda não há listas de questões. Crie sua primeira lista para começar a organizar as avaliações.</p>
-        <div className="question-list__empty-actions">
-          {/* Usamos o AddListButton para abrir o modal de criação de lista */}
-          <AddListButton className="add-list-button--empty" professorId={localStorage.getItem('userId') || ''} onCreated={() => onQuestionsAdded && onQuestionsAdded()} />
+      <div className={`lists-view ${className}`}>
+        <div className={viewMode === 'grid' ? 'lists-view__grid' : 'lists-view__list'}>
+          {lists.map((list) => (
+            <ListCard
+              key={list.id}
+              list={list}
+              onClick={onListClick}
+              viewMode={viewMode}
+              onQuestionsAdded={onQuestionsAdded}
+              isLoading={Boolean(loadingListId && loadingListId === list.id)}
+            />
+          ))}
         </div>
       </div>
     );
-  }
-
-  return (
-    <div className={`lists-view ${className}`}>
-      <div className={viewMode === 'grid' ? 'lists-view__grid' : 'lists-view__list'}>
-        {lists.map((list) => (
-          <ListCard
-            key={list.id}
-            list={list}
-            onClick={onListClick}
-            viewMode={viewMode}
-            onQuestionsAdded={onQuestionsAdded}
-            isLoading={Boolean(loadingListId && loadingListId === list.id)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
+  };
 
 export default ListsView;

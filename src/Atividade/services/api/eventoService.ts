@@ -96,9 +96,18 @@ function normalizeResumo(raw: EventoResumoRaw): EventoResumo {
 
 export const eventoService = {
   async criarEvento(payload: CriarEventoPayload): Promise<EventoResponse> {
+    // Get token from localStorage (saved during login)
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado. Faça login novamente.');
+    }
+
     const response = await fetch(`${API_BASE_URL}/eventos`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
       body: JSON.stringify(payload),
     });
     if (!response.ok) {
@@ -153,7 +162,7 @@ export const eventoService = {
     }
     return response.json();
   }
-,
+  ,
 
   /**
    * Entrega um evento/atividade para um estudante.

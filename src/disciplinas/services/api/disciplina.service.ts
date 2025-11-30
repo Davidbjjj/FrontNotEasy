@@ -20,7 +20,7 @@ class DisciplinaService {
     }
 
     const normalizedRole = (role || '').toUpperCase();
-    
+
     let endpoint: string;
     if (normalizedRole === 'PROFESSOR') {
       endpoint = `${this.baseURL}/professor/${userId}`;
@@ -100,6 +100,20 @@ class DisciplinaService {
       return resp.data || [];
     } catch (err) {
       console.error('Erro ao buscar atividades da disciplina:', err);
+      throw err;
+    }
+  }
+
+  /**
+   * Deleta uma disciplina
+   * DELETE /disciplinas/{disciplinaId}
+   */
+  async deleteDisciplina(disciplinaId: string): Promise<void> {
+    if (!disciplinaId) throw new Error('disciplinaId é obrigatório');
+    try {
+      await api.delete(`${this.baseURL}/${disciplinaId}`);
+    } catch (err) {
+      console.error('Erro ao deletar disciplina:', err);
       throw err;
     }
   }

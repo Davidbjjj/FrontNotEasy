@@ -227,7 +227,7 @@ const QuestionPageProfessor: React.FC = () => {
       const updated = await questionService.updateQuestion(listaId, editingQuestion.id, body);
 
       // update local list
-        setQuestions((prev) => prev.map((p) => (String(p.id) === String(updated.id) ? {
+      setQuestions((prev) => prev.map((p) => (String(p.id) === String(updated.id) ? {
         ...p,
         id: String(updated.id),
         title: updated.cabecalho,
@@ -332,7 +332,7 @@ const QuestionPageProfessor: React.FC = () => {
 
             <div className="qpp-question-enunciado">{q.content}</div>
 
-            { (q.imagens && q.imagens.length > 0) && (
+            {(q.imagens && q.imagens.length > 0) && (
               <div className="qpp-images" style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
                 {q.imagens.map((img: any, i: number) => {
                   // Determine if image text (OCR) appears inside enunciado or any alternativa
@@ -425,7 +425,7 @@ const QuestionPageProfessor: React.FC = () => {
             </div>
           </div>
         </Modal>
-        )}
+      )}
 
       <div style={{ marginTop: 18 }}>
         <button className="qpp-btn" onClick={() => navigate('/listas')}>Voltar para Listas</button>
