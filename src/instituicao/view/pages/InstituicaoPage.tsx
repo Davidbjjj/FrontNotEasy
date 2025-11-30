@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Layout } from 'antd';
+import { Layout, Button } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 import { instituicaoService } from '../../services/api/instituicao.service';
 import { disciplinaService } from '../../../disciplinas/services/api/disciplina.service';
 import materiaService, { Materia } from '../../services/api/materia.service';
@@ -73,9 +74,8 @@ const InstituicaoPage: React.FC = () => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
-      if (mobile) {
-        setCollapsed(true);
-      }
+      // Em mobile, sempre começa colapsado (escondido)
+      setCollapsed(mobile);
     };
 
     window.addEventListener('resize', handleResize);
@@ -135,35 +135,71 @@ const InstituicaoPage: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      {/* Overlay escuro quando menu está aberto em mobile */}
+      {isMobile && !collapsed && (
+        <div
+          onClick={() => setCollapsed(true)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.45)',
+            zIndex: 999,
+          }}
+        />
+      )}
+      
       <Sider
         width={250}
         theme="light"
-        collapsible={isMobile}
-        collapsed={collapsed}
-        onCollapse={setCollapsed}
+        collapsible={false}
+        collapsed={false}
         breakpoint="md"
-        collapsedWidth={isMobile ? 0 : 80}
         style={{
           overflow: 'auto',
           height: '100vh',
           position: isMobile ? 'fixed' : 'relative',
-          left: 0,
+          left: isMobile && collapsed ? '-250px' : 0,
           top: 0,
           bottom: 0,
           zIndex: isMobile ? 1000 : 1,
+          transition: 'left 0.3s ease',
+          display: isMobile && collapsed ? 'none' : 'block',
         }}
       >
+        <div style={{
+          height: '64px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderBottom: '1px solid #f0f0f0',
+          padding: '0 16px',
+        }}>
+          <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>Instituição</h2>
+        </div>
         <Sidebar activeView={activeView} onNavigate={(view) => {
           setActiveView(view);
           if (isMobile) setCollapsed(true);
         }} />
       </Sider>
-      <Layout style={{ marginLeft: isMobile && !collapsed ? 250 : 0 }}>
+      <Layout style={{ marginLeft: 0 }}>
         <Content style={{ margin: isMobile ? '0 8px' : '0 16px', overflow: 'initial' }}>
           <div style={{ padding: isMobile ? 16 : 24, background: '#fff', minHeight: 360 }}>
-            <h1 style={{ marginTop: 0, marginBottom: '24px', fontSize: isMobile ? '20px' : '24px', fontWeight: 'bold' }}>
-              {activeView.charAt(0).toUpperCase() + activeView.slice(1)}
-            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+              <h1 style={{ margin: 0, fontSize: isMobile ? '20px' : '24px', fontWeight: 'bold' }}>
+                {activeView.charAt(0).toUpperCase() + activeView.slice(1)}
+              </h1>
+              {isMobile && (
+                <Button
+                  type="text"
+                  icon={<MenuOutlined style={{ fontSize: '20px' }} />}
+                  onClick={() => setCollapsed(!collapsed)}
+                  style={{ padding: '4px 8px' }}
+                />
+              )}
+            </div>
             {renderContent()}
           </div>
         </Content>

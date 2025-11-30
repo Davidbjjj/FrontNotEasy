@@ -23,13 +23,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate }) => {
   ];
 
   return (
-    <Menu
-      mode="inline"
-      selectedKeys={[activeView]}
-      style={{ height: '100%', borderRight: 0 }}
-      items={items}
-      onClick={(e) => onNavigate(e.key)}
-    />
+    <div style={{ padding: '8px 0' }}>
+      <Menu
+        mode="inline"
+        selectedKeys={[activeView]}
+        style={{ borderRight: 0, backgroundColor: 'transparent' }}
+        items={items}
+        onClick={(e) => onNavigate(e.key)}
+      />
+    </div>
   );
 };
 
