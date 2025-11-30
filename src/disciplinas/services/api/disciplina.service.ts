@@ -60,12 +60,12 @@ class DisciplinaService {
 
   /**
    * Adiciona um estudante à disciplina
-   * POST /disciplinas/{disciplinaId}/adicionar-estudante/{estudanteId}
+   * POST /disciplinas/{disciplinaId}/estudantes/{estudanteId}
    */
   async addStudentToDisciplina(disciplinaId: string, estudanteId: string): Promise<any> {
     if (!disciplinaId || !estudanteId) throw new Error('disciplinaId e estudanteId são obrigatórios');
     try {
-      const resp = await api.post(`${this.baseURL}/${disciplinaId}/adicionar-estudante/${estudanteId}`);
+      const resp = await api.post(`${this.baseURL}/${disciplinaId}/estudantes/${estudanteId}`);
       return resp.data;
     } catch (err: any) {
       const message = err?.response?.data?.message || err.message || 'Erro ao adicionar estudante';

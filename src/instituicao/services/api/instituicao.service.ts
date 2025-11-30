@@ -53,6 +53,26 @@ class InstituicaoService {
     return resp.data;
   }
 
+  // Update professor information
+  async updateProfessor(professorId: string, payload: any) {
+    const { nome, dataNascimento, materia1Id, materia2Id, instituicaoId } = payload || {};
+    const body = { nome, dataNascimento, materia1Id, materia2Id, instituicaoId };
+    const resp = await api.put(`/professor/${professorId}`, body);
+    return resp.data;
+  }
+
+  // List professors from institution
+  async listProfessores(instituicaoId: string) {
+    const resp = await api.get(`/professor/instituicao/${instituicaoId}`);
+    return resp.data;
+  }
+
+  // Delete professor
+  async deleteProfessor(professorId: string) {
+    const resp = await api.delete(`/professor/deletar/${professorId}`);
+    return resp.data;
+  }
+
   // Disciplina creation
   async createDisciplina(payload: any) {
     // Enviar apenas os campos necessários ao backend
@@ -62,9 +82,29 @@ class InstituicaoService {
     return resp.data;
   }
 
+  // Update disciplina
+  async updateDisciplina(disciplinaId: string, payload: any) {
+    const { nome, professorId, instituicaoId } = payload || {};
+    const body = { nome, professorId, instituicaoId };
+    const resp = await api.put(`/disciplinas/${disciplinaId}`, body);
+    return resp.data;
+  }
+
+  // Delete disciplina
+  async deleteDisciplina(disciplinaId: string) {
+    const resp = await api.delete(`/disciplinas/${disciplinaId}`);
+    return resp.data;
+  }
+
   // Student registration
   async registerEstudante(payload: any) {
     const resp = await api.post('/estudante/registrar', payload);
+    return resp.data;
+  }
+
+  // List students from institution
+  async listEstudantes(instituicaoId: string) {
+    const resp = await api.get(`/estudantes/instituicao/${instituicaoId}`);
     return resp.data;
   }
 
