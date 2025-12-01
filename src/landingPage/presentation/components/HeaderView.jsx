@@ -10,16 +10,14 @@
 
     const navigate = useNavigate();
 
-    const buttonRegister = async () => {
-      try{
-        navigate ("/cadastros");
-      }
-      catch (error){
-        message.error(error.message || "Erro ao redirecionar para cadastro.");
-      }
-    };
-
-    const buttonLogin = async () => {
+  const buttonRegister = async () => {
+    try{
+      navigate ("/cadastro-instituicao");
+    }
+    catch (error){
+      message.error(error.message || "Erro ao redirecionar para cadastro.");
+    }
+  };    const buttonLogin = async () => {
     try {
       navigate("/login");
       console.log ("hello");
