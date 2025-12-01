@@ -16,9 +16,12 @@ class QuestionListService {
       const userId = localStorage.getItem('userId') || '';
 
       let url = this.baseURL;
-      if ((role === 'PROFESSOR' || role === 'INSTITUICAO') && userId) {
+      if (role === 'PROFESSOR' && userId) {
         // Quando for professor, buscamos as listas do professor
         url = `${this.baseURL}/professor/${userId}`;
+      } else if (role === 'INSTITUICAO' && userId) {
+        // Quando for instituição, buscamos as listas da instituição
+        url = `${this.baseURL}/instituicao/${userId}`;
       } else if (userId) {
         // Por padrão, se existir userId, assumimos estudante
         url = `${this.baseURL}/estudante/${userId}`;

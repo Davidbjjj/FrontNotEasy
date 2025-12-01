@@ -11,6 +11,7 @@ const App = () => {
   const noLayoutPaths = [
     '/',
     '/login',
+    '/cadastro-instituicao',
     '/redefinir-senha',
     '/reset-password',
     '/validar-token'

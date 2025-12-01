@@ -190,7 +190,7 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
                     <Button
                       size="large"
                       className={styles.secondaryBtn}
-                      onClick={() => navigate("/Cadastros")}
+                      onClick={() => navigate("/cadastro-instituicao")}
                       block
                     >
                       REALIZAR CADASTRO

@@ -9,6 +9,7 @@ import QuestionListPage from './listaQuestoes/view/pages/QuestionListPage';
 import QuestionPageProfessor from './listaQuestoes/view/pages/QuestionPageProfessor';
 import QuestionPageEstudante from './question/view/pages/QuestionPageEstudante';
 import InstituicaoPage from './instituicao/view/pages/InstituicaoPage';
+import InstituicaoRegisterPage from './cadastroInstituicao/views/pages/InstituicaoRegisterPage';
 import RoleProtectedRoute from './auth/RoleProtectedRoute';
 
 import ActivityPage from './Atividade/view/pages/ActivityPage';
@@ -27,6 +28,7 @@ const RouterConfig = () => {
       {/* Public routes */}
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<LoginPage/>} />
+      <Route path="/cadastro-instituicao" element={<InstituicaoRegisterPage />} />
       <Route path="/redefinir-senha" element={<RedefinirSenha/>} />
       <Route path="/validar-token" element={<ValidateTokenPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />

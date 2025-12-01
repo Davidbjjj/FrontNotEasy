@@ -1,0 +1,142 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.wrapper {
+  min-height: 100vh;
+  margin: 0;
+}
+
+.leftCol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+}
+
+.leftSide {
+  width: 100%;
+  max-width: 600px;
+}
+
+.heroContainer {
+  position: relative;
+  width: 100%;
+}
+
+.heroImage {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.logoOverlay {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 10;
+}
+
+.logoOverlay img {
+  max-width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.bubbleText {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  font-size: 1rem;
+  line-height: 1.5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.rightCol {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 2rem;
+}
+
+.formHolder {
+  width: 100%;
+  max-width: 480px;
+}
+
+.card {
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 2rem;
+}
+
+.cardTitle {
+  text-align: center;
+  margin-bottom: 2rem !important;
+  color: #333;
+  font-weight: 600;
+}
+
+.primaryBtn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  height: 48px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+}
+
+.primaryBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.secondaryBtn {
+  border: 2px solid #667eea;
+  color: #667eea;
+  border-radius: 8px;
+  height: 48px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.secondaryBtn:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.loginHint {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.loginHint span {
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .leftCol {
+    display: none;
+  }
+
+  .rightCol {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+}
