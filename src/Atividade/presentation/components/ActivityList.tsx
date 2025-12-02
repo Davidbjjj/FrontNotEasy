@@ -6,6 +6,8 @@ import './ActivityList.css';
 import CreateActivityModal from './CreateActivityModal';
 import { useNavigate } from 'react-router-dom';
 import { eventoService } from '../../services/api/eventoService';
+import { message, Popconfirm, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
 
 export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggleActivity, onCreateActivity }) => {
@@ -13,6 +15,21 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
   const [filter, setFilter] = useState<'all' | 'urgent' | 'overdue' | 'upcoming'>('all');
   const [query, setQuery] = useState<string>('');
   const navigate = useNavigate();
+
+  const handleDeleteEvento = async (eventoId: string) => {
+    try {
+      await eventoService.deleteEvento(eventoId);
+      message.success('Evento deletado com sucesso!');
+      // Recarregar a página ou atualizar a lista
+      window.location.reload();
+    } catch (err: any) {
+      const errorMessage = err?.message || 'Erro ao deletar evento';
+      message.error(errorMessage);
+    }
+  };
+
+  const userRole = (localStorage.getItem('role') || '').toUpperCase();
+  const canDelete = userRole === 'PROFESSOR' || userRole === 'TEACHER' || userRole === 'INSTITUICAO';
   // NOTE: helper functions moved inside useMemo to satisfy react-hooks/exhaustive-deps
 
   // apply search + filter, then sort by due date ascending (nearest first)
@@ -118,7 +135,30 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
                       </div>
                         <div className="activity-meta">
                         <div className="deadline">{formatDateTime(activity.deadline)}</div>
-                        <div className="activity-card-action">›</div>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          {canDelete && (
+                            <Popconfirm
+                              title="Deletar Evento"
+                              description="Tem certeza que deseja deletar este evento?"
+                              onConfirm={(e) => {
+                                e?.stopPropagation();
+                                handleDeleteEvento(activity.id);
+                              }}
+                              onCancel={(e) => e?.stopPropagation()}
+                              okText="Sim"
+                              cancelText="Não"
+                              okButtonProps={{ danger: true }}
+                            >
+                              <Button
+                                danger
+                                icon={<DeleteOutlined />}
+                                size="small"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            </Popconfirm>
+                          )}
+                          <div className="activity-card-action">›</div>
+                        </div>
                       </div>
                     </div>
                   </div>

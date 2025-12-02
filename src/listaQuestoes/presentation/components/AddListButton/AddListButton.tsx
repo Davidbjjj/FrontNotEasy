@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useAddListButtonViewModel } from '../../../viewmodels/AddListButton.viewmodel';
 import { getCurrentUser } from '../../../../auth/auth';
 import type { AddListButtonProps } from '../../../model/AddListButton.types';
 import CreateListModal from './CreateListModal';
+import CreateActivityConfirmModal from './CreateActivityConfirmModal';
 import './AddListButton.css';
 
 export const AddListButton: React.FC<AddListButtonProps> = ({
@@ -25,6 +26,10 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
     setSelectedDisciplinaId,
     handleCreateList
   } = useAddListButtonViewModel({ professorId, className });
+
+  const [showActivityModal, setShowActivityModal] = useState(false);
+  const [createdListData, setCreatedListData] = useState<any>(null);
+  const [savedDisciplinaId, setSavedDisciplinaId] = useState<string>('');
 
   // Ler role do token ou localStorage e normalizar para evitar exibição indevida
   const rawRole = getCurrentUser()?.role || localStorage.getItem('role') || '';
@@ -50,12 +55,19 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={async () => {
+          // Salvar disciplinaId antes de criar (antes do closeModal resetar)
+          const currentDisciplinaId = selectedDisciplinaId;
           const created = await handleCreateList();
-          if (created && onCreated) {
-            try {
-              onCreated(created);
-            } catch (e) {
-              console.error('onCreated callback error', e);
+          if (created) {
+            setCreatedListData(created);
+            setSavedDisciplinaId(currentDisciplinaId);
+            setShowActivityModal(true);
+            if (onCreated) {
+              try {
+                onCreated(created);
+              } catch (e) {
+                console.error('onCreated callback error', e);
+              }
             }
           }
         }}
@@ -67,6 +79,17 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
         disciplinas={disciplinas}
         selectedDisciplinaId={selectedDisciplinaId}
         onDisciplinaChange={setSelectedDisciplinaId}
+      />
+
+      <CreateActivityConfirmModal
+        isOpen={showActivityModal}
+        onClose={() => {
+          setShowActivityModal(false);
+          setSavedDisciplinaId('');
+        }}
+        listData={createdListData}
+        disciplinas={disciplinas}
+        disciplinaId={savedDisciplinaId}
       />
     </>
   );
