@@ -59,10 +59,11 @@ export default function DisciplinasPage() {
                             <p className={styles.cardSubtitle}>
                                 Professor(a): {(() => {
                                     try {
-                                        const raw = localStorage.getItem('teacher');
-                                        if (raw) {
-                                            const parsed = JSON.parse(raw);
-                                            if (parsed && parsed.name) return parsed.name;
+                                        const token = localStorage.getItem('token');
+                                        if (token) {
+                                            const { decodeJwt } = require('../../../auth/jwt');
+                                            const payload = decodeJwt(token);
+                                            if (payload && payload.nome) return payload.nome;
                                         }
                                     } catch (err) {
                                         // ignore
