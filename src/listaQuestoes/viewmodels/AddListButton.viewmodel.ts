@@ -72,6 +72,27 @@ export const useAddListButtonViewModel = (props: AddListButtonProps) => {
 
       const response = await listaService.criarListaComDisciplina(createListRequest);
 
+      // Enriquecer resposta com nome da disciplina selecionada
+      const selectedDisciplina = disciplinas.find(d => d.id === selectedDisciplinaId);
+      if (selectedDisciplina) {
+        response.disciplinaNome = selectedDisciplina.nome;
+        response.disciplinaId = selectedDisciplinaId;
+        
+        // Salvar em localStorage temporariamente para usar no próximo carregamento
+        try {
+          const listaDisciplinas = JSON.parse(localStorage.getItem('listaDisciplinas') || '{}');
+          listaDisciplinas[response.id] = {
+            disciplinaNome: selectedDisciplina.nome,
+            disciplinaId: selectedDisciplinaId
+          };
+          localStorage.setItem('listaDisciplinas', JSON.stringify(listaDisciplinas));
+        } catch (e) {
+          console.error('Erro ao salvar disciplina da lista:', e);
+        }
+      }
+      
+      console.log('Lista criada com disciplina:', response);
+
       // Nota: anteriormente criávamos um evento automaticamente para professores aqui.
       // Agora a criação automática foi movida para a camada de apresentação (AddListButton)
       // para perguntar ao usuário se deseja criar uma atividade associada à lista.

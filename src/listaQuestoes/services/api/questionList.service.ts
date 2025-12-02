@@ -4,6 +4,10 @@ export interface ListaResponseDTO {
   id: number;
   titulo: string;
   professorNome: string;
+  disciplinaNome?: string;
+  disciplinaId?: string;
+  totalQuestoes?: number;
+  questoesRespondidas?: number;
 }
 
 class QuestionListService {
@@ -44,21 +48,37 @@ class QuestionListService {
   }
 
   private transformDTOToQuestionList(dto: ListaResponseDTO): QuestionList {
-    // Mapeamento básico - você precisará ajustar conforme os campos reais do seu backend
+    // Tentar obter disciplina do localStorage se não vier do backend
+    let disciplinaNome = dto.disciplinaNome;
+    let disciplinaId = dto.disciplinaId;
+    
+    if (!disciplinaNome) {
+      try {
+        const listaDisciplinas = JSON.parse(localStorage.getItem('listaDisciplinas') || '{}');
+        const disciplinaInfo = listaDisciplinas[dto.id];
+        if (disciplinaInfo) {
+          disciplinaNome = disciplinaInfo.disciplinaNome;
+          disciplinaId = disciplinaInfo.disciplinaId;
+        }
+      } catch (e) {
+        console.error('Erro ao recuperar disciplina da lista:', e);
+      }
+    }
+    
     return {
       id: dto.id.toString(),
       title: dto.titulo,
       professor: {
-        id: '1', // Você precisará obter isso do backend
+        id: '1',
         name: dto.professorNome
       },
       subject: {
-        id: 'default', // Você precisará obter isso do backend
-        name: 'Disciplina Padrão' // Você precisará obter isso do backend
+        id: disciplinaId || 'default',
+        name: disciplinaNome || 'Sem disciplina'
       },
-      questionsCompleted: 0, // Você precisará calcular isso
-      totalQuestions: 0, // Você precisará obter isso do backend
-      tags: [], // Você precisará obter isso do backend
+      questionsCompleted: dto.questoesRespondidas || 0,
+      totalQuestions: dto.totalQuestoes || 0,
+      tags: [],
       createdAt: new Date(),
       updatedAt: new Date()
     };
