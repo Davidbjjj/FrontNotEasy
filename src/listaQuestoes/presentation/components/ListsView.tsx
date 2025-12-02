@@ -9,13 +9,14 @@ import { respostaService } from '../../../question/service/api/respostaService';
 import { listaService } from '../../services/api/listaService';
 import { useEffect, useState } from 'react';
 import { Popconfirm, message } from 'antd';
+import { decodeJwt } from '../../../auth/jwt';
 
 const getPreferredTeacherName = (fallbackName?: string) => {
   try {
-    const raw = localStorage.getItem('teacher');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && parsed.name) return parsed.name;
+    const token = localStorage.getItem('token');
+    if (token) {
+      const payload = decodeJwt(token);
+      if (payload && payload.nome) return payload.nome;
     }
   } catch (err) {
     // ignore

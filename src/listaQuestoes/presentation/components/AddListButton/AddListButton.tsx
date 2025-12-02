@@ -55,10 +55,20 @@ export const AddListButton: React.FC<AddListButtonProps> = ({
         isOpen={isModalOpen}
         onClose={closeModal}
         onSubmit={async () => {
-          // Salvar disciplinaId antes de criar (antes do closeModal resetar)
+          // Salvar disciplinaId e nome antes de criar (antes do closeModal resetar)
           const currentDisciplinaId = selectedDisciplinaId;
+          const selectedDisciplina = disciplinas.find(d => d.id === currentDisciplinaId);
+          
           const created = await handleCreateList();
           if (created) {
+            // Garantir que disciplinaNome esteja presente
+            if (selectedDisciplina) {
+              created.disciplinaNome = selectedDisciplina.nome;
+              created.disciplinaId = currentDisciplinaId;
+            }
+            
+            console.log('Lista criada (AddListButton):', created, 'Disciplina:', selectedDisciplina);
+            
             setCreatedListData(created);
             setSavedDisciplinaId(currentDisciplinaId);
             setShowActivityModal(true);
