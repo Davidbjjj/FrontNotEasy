@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { UserInfo, Notification, TopBarViewModel } from '../model/TopBar.types';
+import { decodeJwt } from '../../auth/jwt';
 
 export const useTopBarViewModel = (
   initialUserInfo?: UserInfo,
@@ -8,14 +9,14 @@ export const useTopBarViewModel = (
   onSupportClick?: () => void,
   onLogoutClick?: () => void
 ): TopBarViewModel => {
-  // Prefer Google account name (stored under 'teacher') when available
-  let initialName = 'David Pontes';
+  // Get name from JWT token
+  let initialName = 'Usuário';
   try {
-    const teacherRaw = localStorage.getItem('teacher');
-    if (teacherRaw) {
-      const teacher = JSON.parse(teacherRaw);
-      if (teacher && teacher.name) {
-        initialName = teacher.name;
+    const token = localStorage.getItem('token');
+    if (token) {
+      const payload = decodeJwt(token);
+      if (payload && payload.nome) {
+        initialName = payload.nome;
       }
     }
   } catch (err) {

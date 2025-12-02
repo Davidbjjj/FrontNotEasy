@@ -10,7 +10,14 @@ export function decodeJwt(token) {
     // add padding
     const pad = base64.length % 4;
     const padded = base64 + (pad ? '='.repeat(4 - pad) : '');
-    const json = atob(padded);
+    
+    // Decode base64 and handle UTF-8 characters properly
+    const binaryString = atob(padded);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const json = new TextDecoder('utf-8').decode(bytes);
     return JSON.parse(json);
   } catch (err) {
     console.error('decodeJwt error', err);
