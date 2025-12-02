@@ -16,9 +16,6 @@ const QuestionPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [visao, setVisao] = useState<any | null>(null);
   const [isRespondida, setIsRespondida] = useState<boolean>(false);
-  const [resultData, setResultData] = useState<any | null>(null);
-  const [loadingResult, setLoadingResult] = useState(false);
-  const [resultError, setResultError] = useState<string | null>(null);
   const [, setPendingAnswers] = useState<Record<string, number>>({});
   const [initialAnswers, setInitialAnswers] = useState<Record<string, string>>({});
 
@@ -226,65 +223,6 @@ const QuestionPage: React.FC = () => {
               <div className="value">{visao.questoesCorretas ?? visao.corretas ?? '—'}</div>
             </div>
           </div>
-
-          <div style={{ marginTop: 12 }}>
-            <button
-              className="btn btn-secondary"
-              onClick={async () => {
-                if (!listaId) return;
-                setLoadingResult(true);
-                setResultError(null);
-                try {
-                  const estudante = estudanteId || localStorage.getItem('userId') || '';
-                  const res = await respostaService.calcularResultadoFinal(listaId, estudante);
-                  setResultData(res);
-                } catch (err: any) {
-                  console.error('Erro ao buscar resultado com nota:', err);
-                  setResultError('Erro ao buscar resultado detalhado.');
-                } finally {
-                  setLoadingResult(false);
-                }
-              }}
-            >
-              {loadingResult ? 'Buscando resultados...' : 'Ver resultados detalhados'}
-            </button>
-          </div>
-
-          {resultError && <p className="error">{resultError}</p>}
-
-          {resultData && (
-            <div className="result-card">
-              <h3 style={{ margin: 0 }}>Resultado detalhado</h3>
-              <div style={{ display: 'flex', gap: 16, marginTop: 8, flexWrap: 'wrap' }}>
-                <div><strong>Nota:</strong> {resultData.nota ?? resultData.score ?? '—'}</div>
-                <div><strong>Porcentagem:</strong> {resultData.porcentagemAcertos ?? resultData.porcentagem ?? '—'}%</div>
-                <div><strong>Total:</strong> {resultData.totalQuestoes ?? resultData.total ?? '—'}</div>
-              </div>
-
-              {Array.isArray(resultData.respostas) && (
-                <table className="respostas-table">
-                  <thead>
-                    <tr>
-                      <th>Questão</th>
-                      <th>Alternativa dada</th>
-                      <th>Correta</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {resultData.respostas.map((r: any, idx: number) => (
-                      <tr key={idx}>
-                        <td>{r.questaoId ?? r.questao?.id ?? idx}</td>
-                        <td>{String(r.alternativa ?? r.resposta ?? '—')}</td>
-                        <td>{r.correta ? 'Sim' : 'Não'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-
-              
-            </div>
-          )}
         </div>
       ) : (
         <>

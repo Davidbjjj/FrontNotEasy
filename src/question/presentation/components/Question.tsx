@@ -31,7 +31,6 @@ export const Question: React.FC<QuestionProps> = (props) => {
     isAnswered,
     handleNavigate,
     handleFinish,
-    handleShowResults,
   } = useQuestionViewModel(questions, listaId, estudanteId, onAnswerSelect, onNavigate, onFinish, initialAnswers);
 
   // Se estiver mostrando resultados, exibe o componente de resultados
@@ -92,15 +91,6 @@ export const Question: React.FC<QuestionProps> = (props) => {
         onNavigate={handleNavigate}
         onFinish={handleFinish}
       />
-
-      {/* Botão para ver resultados (opcional - pode remover) */}
-      {navigation.current === navigation.total && (
-        <div className="quick-results-button">
-          <button onClick={handleShowResults} className="btn-show-results">
-            Ver Resultados
-          </button>
-        </div>
-      )}
     </div>
   );
 };

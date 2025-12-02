@@ -161,8 +161,25 @@ export const eventoService = {
       throw new Error(text || 'Erro ao buscar detalhes do evento');
     }
     return response.json();
-  }
-  ,
+  },
+
+  async deleteEvento(eventoId: string | number): Promise<void> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token de autenticação não encontrado. Faça login novamente.');
+    }
+
+    const response = await fetch(`${API_BASE_URL}/eventos/${eventoId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || 'Erro ao deletar evento');
+    }
+  },
 
   /**
    * Entrega um evento/atividade para um estudante.
