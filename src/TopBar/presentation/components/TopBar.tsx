@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { HelpCircle, LogOut } from "lucide-react";
+import GlobalSearch from "../../../busca/GlobalSearch";
 import NotificationBell from "../../../notifications/NotificationBell";
 import { useTopBarViewModel } from "../../viewmodels/TopBar.viewmodel";
 import { requestTourRestart } from "../../../onboarding/onboardingStorage";
@@ -64,6 +65,9 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
         <span className="top-bar__user-name">{currentUserInfo.name}</span>
       </div>
+
+      {/* Busca global (FE-007) */}
+      <GlobalSearch />
 
       {/* Ações no lado direito */}
       <div className="top-bar__actions">
