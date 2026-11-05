@@ -35,6 +35,7 @@ const BottomNavbarComponent: React.FC<Partial<VerticalNavbarProps>> = ({ items, 
             <Link
               to={item.path || '#'}
               className={`bottom-navbar__link ${item.isActive ? 'bottom-navbar__link--active' : ''}`}
+              data-tour={`nav-${item.id}`}
               onClick={() => handleItemClick(item)}
               aria-current={item.isActive ? 'page' : undefined}
             >

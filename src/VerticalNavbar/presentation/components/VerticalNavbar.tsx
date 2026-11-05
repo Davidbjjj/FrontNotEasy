@@ -43,6 +43,7 @@ const VerticalNavbarComponent: React.FC<VerticalNavbarProps> = ({
               className={`vertical-navbar__button ${
                 item.isActive ? "vertical-navbar__button--active" : ""
               }`}
+              data-tour={`nav-${item.id}`}
               onClick={() => handleItemClick(item)}
               aria-current={item.isActive ? "page" : undefined}
             >

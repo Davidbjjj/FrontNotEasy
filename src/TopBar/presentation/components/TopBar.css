@@ -88,3 +88,39 @@
   border-radius: 50%;
   object-fit: cover;
 }
+
+.top-bar__help {
+  position: relative;
+}
+
+.top-bar__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 190px;
+  background: #fff;
+  border: 1px solid #e9ecef;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1002;
+}
+
+.top-bar__menu-item {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #343a40;
+  font-weight: 500;
+}
+
+.top-bar__menu-item:hover,
+.top-bar__menu-item:focus-visible {
+  background-color: #f8f9fa;
+  color: #c1121f;
+}

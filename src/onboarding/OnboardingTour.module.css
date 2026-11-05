@@ -1,0 +1,98 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+}
+
+.blocker {
+  position: absolute;
+  inset: 0;
+}
+
+.spotlight {
+  position: absolute;
+  border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.dim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.popover {
+  position: absolute;
+  width: 320px;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+  background: #fff;
+  color: #212529;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+.popover:focus {
+  outline: none;
+}
+
+.title {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.body {
+  margin: 0 0 14px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: #495057;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.counter {
+  font-size: 0.85rem;
+  color: #595959;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  border: 1px solid #c1121f;
+  background: #fff;
+  color: #c1121f;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnPrimary {
+  background: #c1121f;
+  color: #fff;
+}
+
+.btnLink {
+  border-color: transparent;
+  color: #595959;
+  background: transparent;
+  padding: 6px 4px;
+  text-decoration: underline;
+}
+
+.btn:focus-visible {
+  outline: 2px solid #0958d9;
+  outline-offset: 2px;
+}

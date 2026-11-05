@@ -166,12 +166,16 @@
   text-align: center;
   border: 2px solid #ccc;
   border-radius: 8px;
-  outline: none;
   transition: border 0.3s;
 }
 
 .token-input-box:focus {
   border-color: #C40000;
+}
+
+.token-input-box:focus-visible {
+  outline: 2px solid var(--color-focus, #1d4ed8);
+  outline-offset: 2px;
 }
 
 .timer-text {
@@ -197,8 +201,8 @@
 }
 
 .support-text a {
-  color: #0077cc;
-  text-decoration: none;
+  color: #0366b0;
+  text-decoration: underline;
   display: block;
   margin-top: 5px;
 }

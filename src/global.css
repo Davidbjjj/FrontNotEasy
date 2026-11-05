@@ -73,6 +73,20 @@
   outline-offset: 2px;
 }
 
+/* antd zera o outline dos campos; mantém um anel de foco visível (WCAG 2.4.7) */
+.ant-input:focus-visible,
+.ant-input-number-input:focus-visible,
+.ant-select-selection-search-input:focus-visible {
+  outline: 2px solid var(--color-focus) !important;
+  outline-offset: 2px;
+}
+
+.ant-input-affix-wrapper-focused,
+.ant-select-focused:not(.ant-select-disabled) .ant-select-selector {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
