@@ -31,7 +31,11 @@ export const TopBar: React.FC<TopBarProps> = ({
       {/* Perfil do usuário no lado esquerdo */}
       <div className="top-bar__user-info">
         <div className="top-bar__user-avatar">
-          {getUserInitials(currentUserInfo.name)}
+          {currentUserInfo.avatar ? (
+            <img src={currentUserInfo.avatar} alt="" className="top-bar__user-photo" />
+          ) : (
+            getUserInitials(currentUserInfo.name)
+          )}
         </div>
         <span className="top-bar__user-name">{currentUserInfo.name}</span>
       </div>
