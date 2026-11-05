@@ -31,3 +31,5 @@ git push origin nova-feature;
 git checkout master
 git merge nova-feature;
 git push origin master
+# storybook
+/storybook-static

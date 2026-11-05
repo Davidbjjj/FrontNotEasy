@@ -4,6 +4,7 @@ import React from 'react';
 import { QuestaoEstudante } from '../../../model/Question.types';
 import QuestaoCard from './QuestoesCard';
 import './Questoes.css';
+import { EmptyState } from '../../../../ui/EmptyState/EmptyState';
 
 interface QuestoesListProps {
   questoes: QuestaoEstudante[];
@@ -18,10 +19,10 @@ export const QuestoesList: React.FC<QuestoesListProps> = ({
 }) => {
   if (questoes.length === 0) {
     return (
-      <div className="questoes-empty">
-        <h3>Nenhuma questão disponível</h3>
-        <p>Você não tem questões para responder no momento.</p>
-      </div>
+      <EmptyState
+        title="Nenhuma questão disponível"
+        description="Você não tem questões para responder no momento. Quando um professor publicar uma lista, ela aparece aqui."
+      />
     );
   }
 

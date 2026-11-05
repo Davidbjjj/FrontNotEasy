@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Form, Input, Button, Select, Card, Table, message, Row, Col, Modal, Tabs, Popconfirm } from 'antd';
+import { Form, Input, Button, Card, Table, message, Row, Col, Modal, Tabs, Popconfirm } from 'antd';
+import { Select } from '../../../ui/AccessibleSelect/AccessibleSelect';
 import { PlusOutlined, UnorderedListOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { instituicaoService } from '../../services/api/instituicao.service';
 import { disciplinaService } from '../../../disciplinas/services/api/disciplina.service';

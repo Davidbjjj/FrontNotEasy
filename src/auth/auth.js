@@ -5,7 +5,7 @@ const STORAGE_ROLE_KEY = 'role';
 const STORAGE_USERID_KEY = 'userId';
 
 // Backend API base used for logout call
-const API_BASE = 'https://backnoteasy-production.up.railway.app';
+const API_BASE = ' ';
 // Fill localStorage based only on token decoding
 export function loginFromResponse(response) {
   if (!response) {

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://backnoteasy-production.up.railway.app';
+const API_BASE_URL = 'http://localhost:8080';
 
 export interface CriarEventoPayload {
   titulo: string;

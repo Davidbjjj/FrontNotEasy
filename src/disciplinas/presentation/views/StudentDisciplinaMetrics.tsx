@@ -188,6 +188,7 @@ export default function StudentDisciplinaMetrics(): JSX.Element {
             <div style={{ marginTop: 16 }}>
               <div className={styles.statLabel}>Taxa de Entrega</div>
               <Progress 
+                aria-label="Taxa de entrega"
                 percent={Number(metrics.taxaEntrega ?? 0)} 
                 status={Number(metrics.taxaEntrega ?? 0) >= 70 ? 'normal' : 'exception'} 
                 strokeColor={{ 

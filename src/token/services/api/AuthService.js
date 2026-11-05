@@ -1,4 +1,4 @@
-const API_URL = "https://backnoteasy-production.up.railway.app/auth";
+const API_URL = "http://localhost:8080/auth";
 
 export const AuthService = {
   validateToken: async (token) => {

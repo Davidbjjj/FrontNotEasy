@@ -20,6 +20,69 @@
   --sidebar-width: 100px;
   --sidebar-expanded-width: 220px;
   --bottombar-height: 64px;
+
+  /* ---- Design tokens (FE-001): componentes em src/ui só usam estes valores ---- */
+  /* Cores semânticas (texto sobre o fundo correspondente >= 4.5:1, AA) */
+  --color-success: #15803d;
+  --color-success-bg: #f0fdf4;
+  --color-warning: #a16207;
+  --color-warning-bg: #fffbeb;
+  --color-danger: #b91c1c;
+  --color-danger-bg: #fef2f2;
+  --color-info: #0369a1;
+  --color-info-bg: #f0f9ff;
+  --color-on-primary: #ffffff;
+  --color-overlay: rgba(15, 23, 42, 0.55);
+  --color-focus: #1d4ed8;
+  /* Espaçamento */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  /* Tipografia */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.75rem;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  /* Camadas, movimento, foco, tamanhos */
+  --z-dropdown: 1000;
+  --z-modal: 2000;
+  --z-toast: 3000;
+  --transition-fast: 150ms ease;
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--color-focus);
+  --tap-target: 44px;
+  --badge-size: 18px;
+  --popover-width: 380px;
+  --radius-full: 999px;
+  --chart-1: #2563eb;
+  --chart-2: #00b3a4;
+  --chart-3: #a16207;
+  --chart-4: #b91c1c;
+  --chart-5: #7c3aed;
+}
+
+/* Foco visível global para quem navega por teclado */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 html {
@@ -121,4 +184,33 @@ main {
     padding-top: var(--mobile-topbar-height);
     padding-bottom: var(--bottombar-height);
   }
+}
+/*
+ * Abas do antd no celular: em vez de rolar e criar o botão "…" (que o axe
+ * reprova dentro do tablist), as abas quebram de linha e o destaque da aba
+ * ativa passa a ser uma borda inferior.
+ */
+@media (max-width: 768px) {
+  .ant-tabs-top > .ant-tabs-nav .ant-tabs-nav-list {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar {
+    display: none;
+  }
+  .ant-tabs-top > .ant-tabs-nav .ant-tabs-tab {
+    border-bottom: 2px solid transparent;
+  }
+  .ant-tabs-top > .ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active {
+    border-bottom-color: var(--color-focus);
+  }
+}
+
+/* Textos de "vazio" do antd (Table/List) usam colorTextDisabled (contraste < 4.5:1).
+   Seletores com mais especificidade que o CSS-in-JS do antd, que é injetado depois. */
+.ant-table-wrapper .ant-table-placeholder,
+.ant-table-wrapper .ant-table-placeholder .ant-table-expanded-row-fixed,
+.ant-table-wrapper .ant-table-placeholder .ant-empty-description,
+.ant-list .ant-list-empty-text {
+  color: #595959;
 }

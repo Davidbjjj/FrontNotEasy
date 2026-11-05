@@ -142,7 +142,7 @@ export const StudentNotasList: React.FC<StudentNotasListProps> = ({
   }
 
   if (!notas || notas.length === 0) {
-    return <EmptyState message="Nenhuma nota registrada ainda." />;
+    return <EmptyState message="Nenhuma nota registrada ainda." description="As notas aparecem aqui assim que os alunos responderem e as respostas forem corrigidas." />;
   }
 
   // Calcula estatísticas

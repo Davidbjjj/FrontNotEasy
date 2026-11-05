@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { logout as authLogout } from '../auth/auth';
+import { notifySessionExpired } from '../auth/session';
 
-const API_BASE = 'https://backnoteasy-production.up.railway.app';
+export const NETWORK_ERROR_EVENT = 'api-network-error';
+export const API_BASE = 'http://localhost:8080';
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -42,9 +44,15 @@ api.interceptors.response.use(
   (res) => res,
   (err) => {
     if (err && err.response && err.response.status === 401) {
+      // Só é "sessão expirada" se havia uma sessão; 401 sem token é credencial inválida
+      const hadSession = !!localStorage.getItem('token');
       try {
         authLogout();
       } catch (e) { }
+      if (hadSession) notifySessionExpired();
+    } else if (err && !err.response && err.request) {
+      // Sem resposta do servidor: o ConnectionBanner cuida do aviso e das novas tentativas
+      window.dispatchEvent(new CustomEvent(NETWORK_ERROR_EVENT));
     }
     return Promise.reject(err);
   }

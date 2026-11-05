@@ -11,10 +11,6 @@ interface MainLayoutProps {
 }
 
 const MainLayoutComponent: React.FC<MainLayoutProps> = ({ children }) => {
-  const handleNotificationClick = (notification: any) => {
-    console.log('Notificação clicada:', notification);
-  };
-
   const handleSupportClick = () => {
     console.log('Suporte clicado');
   };
@@ -39,7 +35,6 @@ const MainLayoutComponent: React.FC<MainLayoutProps> = ({ children }) => {
     <div className="main-layout">
       {/* Barra superior ocupa toda a largura */}
       <TopBar
-        onNotificationClick={handleNotificationClick}
         onSupportClick={handleSupportClick}
         onLogoutClick={handleLogoutClick}
       />

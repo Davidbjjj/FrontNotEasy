@@ -64,6 +64,8 @@ export const QuestionList: React.FC<QuestionListProps> = ({
             }`}
             onClick={() => handleViewModeChange('list')}
             type="button"
+            aria-label="Ver em lista"
+            aria-pressed={viewMode === 'list'}
           >
             <List size={18} />
           </button>
@@ -73,6 +75,8 @@ export const QuestionList: React.FC<QuestionListProps> = ({
             }`}
             onClick={() => handleViewModeChange('grid')}
             type="button"
+            aria-label="Ver em grade"
+            aria-pressed={viewMode === 'grid'}
           >
             <Grid size={18} />
           </button>

@@ -54,7 +54,7 @@ export const SortSection: React.FC<SortSectionProps> = ({
       <div className="sort-section__filters">
         <div className="sort-section__filter">
           <span>Filtro por data:</span>
-          <select className="sort-section__select">
+          <select className="sort-section__select" aria-label="Filtro por data">
             <option>selecionar</option>
             <option>Última semana</option>
             <option>Último mês</option>
@@ -64,7 +64,7 @@ export const SortSection: React.FC<SortSectionProps> = ({
         
         <div className="sort-section__filter">
           <span>Filtro por evolução:</span>
-          <select className="sort-section__select">
+          <select className="sort-section__select" aria-label="Filtro por evolução">
             <option>selecionar</option>
             <option>Não iniciadas</option>
             <option>Em andamento</option>

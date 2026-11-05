@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useDisciplinaViewModel } from "../../viewmodels/useDisciplinaViewModel";
 import styles from "../components/Disciplinas.module.css";
+import { EmptyState } from "../../../ui/EmptyState/EmptyState";
 
 export default function DisciplinasPage() {
     const navigate = useNavigate();
@@ -80,7 +81,10 @@ export default function DisciplinasPage() {
                         </div>
                     ))
                 ) : (
-                    <p className={styles.emptyText}>Nenhuma disciplina encontrada.</p>
+                    <EmptyState
+                        title="Nenhuma disciplina encontrada"
+                        description="Você ainda não está vinculado a nenhuma disciplina. Peça à sua instituição para adicioná-lo ou limpe a busca."
+                    />
                 )}
             </div>
         </div>

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, DatePicker, Select, Card, message, Modal, Table, Tabs, Popconfirm } from 'antd';
+import { Form, Input, Button, DatePicker, Card, message, Modal, Table, Tabs, Popconfirm } from 'antd';
+import { Select } from '../../../ui/AccessibleSelect/AccessibleSelect';
 import { EditOutlined, PlusOutlined, UnorderedListOutlined, DeleteOutlined } from '@ant-design/icons';
 import { instituicaoService } from '../../services/api/instituicao.service';
 import { Materia } from '../../services/api/materia.service';
 import dayjs from 'dayjs';
+import { DataTable, Column } from '../../../ui/DataTable/DataTable';
+import { FilterBar } from '../../../ui/FilterBar/FilterBar';
 
 interface ProfessorManagerProps {
     instituicaoId: string;
@@ -18,6 +21,8 @@ const ProfessorManager: React.FC<ProfessorManagerProps> = ({ instituicaoId, mate
     const [professoresList, setProfessoresList] = useState<any[]>([]);
     const [editingProfessor, setEditingProfessor] = useState<any>(null);
     const [editModalVisible, setEditModalVisible] = useState(false);
+    const [activeTab, setActiveTab] = useState('criar');
+    const [filters, setFilters] = useState<Record<string, string>>({ busca: '' });
 
     useEffect(() => {
         loadProfessores();
@@ -123,27 +128,20 @@ const ProfessorManager: React.FC<ProfessorManagerProps> = ({ instituicaoId, mate
         }
     };
 
-    const columns = [
+    const columns: Column<any>[] = [
+        { key: 'nome', header: 'Nome', sortable: true },
+        { key: 'email', header: 'Email', sortable: true },
         {
-            title: 'Nome',
-            dataIndex: 'nome',
-            key: 'nome',
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Data Nascimento',
-            dataIndex: 'dataNascimento',
             key: 'dataNascimento',
-            render: (date: string) => date ? dayjs(date).format('DD/MM/YYYY') : '-',
+            header: 'Data Nascimento',
+            sortable: true,
+            accessor: (row) => row.dataNascimento || null,
+            render: (row) => row.dataNascimento ? dayjs(row.dataNascimento).format('DD/MM/YYYY') : '-',
         },
         {
-            title: 'Ações',
             key: 'actions',
-            render: (text: any, record: any) => (
+            header: 'Ações',
+            render: (record: any) => (
                 <div style={{ display: 'flex', gap: '8px' }}>
                     <Button
                         type="link"
@@ -171,6 +169,11 @@ const ProfessorManager: React.FC<ProfessorManagerProps> = ({ instituicaoId, mate
             ),
         },
     ];
+
+    const termo = (filters.busca || '').trim().toLowerCase();
+    const professoresFiltrados = termo
+        ? professoresList.filter((p) => `${p.nome ?? ''} ${p.email ?? ''}`.toLowerCase().includes(termo))
+        : professoresList;
 
     const tabItems = [
         {
@@ -265,13 +268,23 @@ const ProfessorManager: React.FC<ProfessorManagerProps> = ({ instituicaoId, mate
             ),
             children: (
                 <Card type="inner" title="Professores Cadastrados" style={{ background: 'transparent' }} bodyStyle={{ padding: 0 }}>
-                    <Table
-                        dataSource={professoresList}
-                        columns={columns}
-                        rowKey="id"
-                        locale={{ emptyText: 'Nenhum professor encontrado' }}
-                        scroll={{ x: 'max-content' }}
-                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', padding: 'var(--space-3)' }}>
+                        <FilterBar
+                            fields={[{ type: 'search', name: 'busca', label: 'Buscar professor', placeholder: 'Nome ou email' }]}
+                            values={filters}
+                            onChange={(name, value) => setFilters((f) => ({ ...f, [name]: value }))}
+                            onClear={() => setFilters({ busca: '' })}
+                        />
+                        <DataTable
+                            caption="Professores cadastrados"
+                            columns={columns}
+                            rows={professoresFiltrados}
+                            rowKey={(row) => row.id}
+                            emptyTitle={termo ? 'Nenhum professor encontrado' : 'Nenhum professor cadastrado'}
+                            emptyDescription={termo ? 'Ajuste a busca ou limpe os filtros.' : 'Cadastre o primeiro professor da instituição para começar.'}
+                            emptyAction={!termo && <Button type="primary" onClick={() => setActiveTab('criar')}>Cadastrar professor</Button>}
+                        />
+                    </div>
                 </Card>
             ),
         },
@@ -279,7 +292,7 @@ const ProfessorManager: React.FC<ProfessorManagerProps> = ({ instituicaoId, mate
 
     return (
         <Card title="Gerenciar Professores" bordered={false}>
-            <Tabs defaultActiveKey="criar" items={tabItems} />
+            <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabItems} />
 
             <Modal
                 title="Editar Professor"
