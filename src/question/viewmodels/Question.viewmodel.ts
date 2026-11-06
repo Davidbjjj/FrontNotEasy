@@ -1,6 +1,10 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Question, QuestionNavigation, QuizResult, RespostaEstudanteQuestaoDTO } from '../model/Question.types';
 import { respostaService } from '../service/api/respostaService'; // Importação correta
+import { loadAttempt, saveAttempt, lastAnsweredIndex, AttemptState } from '../storage/attemptStorage';
+import type { SaveState } from '../presentation/components/SaveStatus';
+
+const isNetworkError = (e: any) => !e?.response;
 
 interface UseQuestionViewModelReturn {
   currentQuestion: Question;
@@ -19,6 +23,10 @@ interface UseQuestionViewModelReturn {
   currentIndex: number;
   handleFinish: () => void;
   handleShowResults: () => void;
+  saveState: SaveState;
+  savedAt: number | null;
+  pendingCount: number;
+  retrySync: () => void;
 }
 
 export const useQuestionViewModel = (
@@ -38,8 +46,29 @@ export const useQuestionViewModel = (
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   // respostas enviadas nesta sessão (questionId -> letra); evita perder o estado ao navegar
   const [sessionAnswers, setSessionAnswers] = useState<Record<string, string>>({});
+  // FE-104: respostas ainda não confirmadas pelo servidor + rascunhos, guardados no aparelho
+  const [attempt, setAttempt] = useState<AttemptState>(() => loadAttempt(estudanteId, listaId));
+  const [saveState, setSaveState] = useState<SaveState>('idle');
+  const [savedAt, setSavedAt] = useState<number | null>(null);
+  const attemptRef = useRef(attempt);
+  const syncing = useRef(false);
+  const userMoved = useRef(false);
+  const resumed = useRef(false);
 
-  const answers = useMemo(() => ({ ...(initialAnswers || {}), ...sessionAnswers }), [initialAnswers, sessionAnswers]);
+  const updateAttempt = useCallback(
+    (fn: (a: AttemptState) => AttemptState) => {
+      const next = fn(attemptRef.current);
+      attemptRef.current = next;
+      saveAttempt(estudanteId, listaId, next);
+      setAttempt(next);
+    },
+    [estudanteId, listaId]
+  );
+
+  const answers = useMemo(
+    () => ({ ...(initialAnswers || {}), ...attempt.pending, ...sessionAnswers }),
+    [initialAnswers, attempt.pending, sessionAnswers]
+  );
   const answeredIds = useMemo(
     () => new Set(Object.keys(answers).filter((k) => Boolean(answers[k]))),
     [answers]
@@ -52,7 +81,7 @@ export const useQuestionViewModel = (
     const qid = currentQuestion?.id;
     if (!qid) return;
     const letter = answers[qid];
-    setSelectedAnswer(letter ?? null);
+    setSelectedAnswer(letter ?? attemptRef.current.drafts[qid] ?? null);
     setIsAnswered(Boolean(letter));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestionIndex, currentQuestion?.id]);
@@ -66,6 +95,70 @@ export const useQuestionViewModel = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialAnswers]);
 
+  // Ao reabrir, volta para a última questão respondida (uma vez, se o aluno ainda não navegou)
+  useEffect(() => {
+    if (resumed.current || userMoved.current || questions.length === 0) return;
+    if (answeredIds.size === 0) return;
+    resumed.current = true;
+    const idx = lastAnsweredIndex(questions.map((q) => q.id), answeredIds);
+    if (idx > 0) setCurrentQuestionIndex(idx);
+  }, [questions, answeredIds]);
+
+  const pendingCount = Object.keys(attempt.pending).length;
+
+  // Envia ao servidor o que ficou guardado localmente (offline / falha de rede)
+  const syncPending = useCallback(async () => {
+    if (syncing.current) return;
+    const entries = Object.entries(attemptRef.current.pending);
+    if (entries.length === 0) return;
+    if (!navigator.onLine) { setSaveState('offline'); return; }
+    syncing.current = true;
+    setSaveState('saving');
+    try {
+      for (const [qid, letter] of entries) {
+        const alternativa = respostaService.converterLetraParaIndice(letter);
+        try {
+          await respostaService.enviarResposta({ estudanteId, questaoId: parseInt(qid), alternativa, listaId });
+        } catch (e) {
+          setSaveState(isNetworkError(e) ? 'offline' : 'error');
+          return;
+        }
+        updateAttempt((a) => {
+          const pending = { ...a.pending };
+          delete pending[qid];
+          return { ...a, pending };
+        });
+        setSessionAnswers((prev) => ({ ...prev, [qid]: letter }));
+        onAnswerSelect?.(qid, letter, alternativa);
+      }
+      setSavedAt(Date.now());
+      setSaveState('saved');
+    } finally {
+      syncing.current = false;
+    }
+  }, [estudanteId, listaId, onAnswerSelect, updateAttempt]);
+
+  // Sincroniza ao abrir (sobras de outra sessão) e ao reconectar
+  useEffect(() => {
+    void syncPending();
+    const onOnline = () => void syncPending();
+    window.addEventListener('online', onOnline);
+    return () => window.removeEventListener('online', onOnline);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Aviso ao fechar/recarregar com respostas não confirmadas ou alternativa marcada e não enviada
+  const unsaved = pendingCount > 0 || (Boolean(selectedAnswer) && !isAnswered);
+  useEffect(() => {
+    if (!unsaved) return undefined;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+    };
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [unsaved]);
+
   const navigation: QuestionNavigation = {
     current: currentQuestionIndex + 1,
     total: questions.length,
@@ -76,39 +169,58 @@ export const useQuestionViewModel = (
   // Select an answer locally; submission happens when the student clicks "Enviar resposta"
   const handleAnswerSelect = useCallback((answerId: string) => {
     setSelectedAnswer(answerId);
-  }, []);
+    const qid = questions[currentQuestionIndex]?.id;
+    if (qid) updateAttempt((a) => ({ ...a, drafts: { ...a.drafts, [qid]: answerId } }));
+  }, [questions, currentQuestionIndex, updateAttempt]);
 
   const handleSubmitAnswer = useCallback(async () => {
     if (!selectedAnswer) return;
 
     setIsSubmitting(true);
+    setSaveState('saving');
+    const qid = currentQuestion.id;
+    const letter = selectedAnswer;
+    const alternativaIndex = respostaService.converterLetraParaIndice(letter);
+    const withoutDraft = (a: AttemptState) => {
+      const drafts = { ...a.drafts };
+      delete drafts[qid];
+      return drafts;
+    };
     try {
-      const alternativaIndex = respostaService.converterLetraParaIndice(selectedAnswer);
-
       await respostaService.enviarResposta({
         estudanteId: estudanteId,
-        questaoId: parseInt(currentQuestion.id),
+        questaoId: parseInt(qid),
         alternativa: alternativaIndex,
         listaId: listaId,
       });
 
       setIsAnswered(true);
-      setSessionAnswers((prev) => ({ ...prev, [currentQuestion.id]: selectedAnswer }));
+      setSessionAnswers((prev) => ({ ...prev, [qid]: letter }));
+      updateAttempt((a) => ({ ...a, drafts: withoutDraft(a) }));
+      setSavedAt(Date.now());
+      setSaveState('saved');
 
       if (onAnswerSelect) {
-        onAnswerSelect(currentQuestion.id, selectedAnswer, alternativaIndex);
+        onAnswerSelect(qid, letter, alternativaIndex);
       }
-
-      console.log(`Resposta ${selectedAnswer} enviada para questão ${currentQuestion.id}`);
     } catch (error) {
       console.error('Erro ao enviar resposta:', error);
-      // keep selection so student can retry; do not clear selectedAnswer
+      if (isNetworkError(error)) {
+        // Sem rede: guarda no aparelho, conta como respondida e sincroniza ao reconectar
+        updateAttempt((a) => ({ pending: { ...a.pending, [qid]: letter }, drafts: withoutDraft(a) }));
+        setIsAnswered(true);
+        setSaveState('offline');
+      } else {
+        // erro do servidor: mantém a seleção para o aluno tentar de novo
+        setSaveState('error');
+      }
     } finally {
       setIsSubmitting(false);
     }
-  }, [selectedAnswer, estudanteId, listaId, currentQuestion.id, onAnswerSelect]);
+  }, [selectedAnswer, estudanteId, listaId, currentQuestion.id, onAnswerSelect, updateAttempt]);
 
   const handleNavigate = useCallback((direction: 'previous' | 'next') => {
+    userMoved.current = true;
     if (direction === 'previous' && navigation.hasPrevious) {
       setCurrentQuestionIndex(prev => prev - 1);
     } else if (direction === 'next' && navigation.hasNext) {
@@ -122,12 +234,14 @@ export const useQuestionViewModel = (
 
   const handleGoTo = useCallback((index: number) => {
     if (index < 0 || index >= questions.length) return;
+    userMoved.current = true;
     setCurrentQuestionIndex(index);
   }, [questions.length]);
 
   const handleFinish = useCallback(async () => {
     try {
       console.log('Finalizando questionário...');
+      await syncPending(); // não finaliza sem enviar o que ficou guardado
 
       // Ensure backend marks the lista as finalized for this estudante
       try {
@@ -163,7 +277,7 @@ export const useQuestionViewModel = (
       // Mesmo com erro, mostra que finalizou
       setShowResults(true);
     }
-  }, [onFinish, listaId, estudanteId]);
+  }, [onFinish, listaId, estudanteId, syncPending]);
 
   const handleShowResults = useCallback(async () => {
     try {
@@ -200,5 +314,9 @@ export const useQuestionViewModel = (
     currentIndex: currentQuestionIndex,
     handleFinish,
     handleShowResults,
+    saveState,
+    savedAt,
+    pendingCount,
+    retrySync: () => void syncPending(),
   };
 };

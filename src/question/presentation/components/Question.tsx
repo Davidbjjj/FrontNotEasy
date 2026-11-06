@@ -6,6 +6,8 @@ import QuestionContent from './QuestionContent';
 import QuestionNavigation from './QuestionNavigation';
 import QuestionResults from './QuestionResults';
 import QuestionMap from './QuestionMap';
+import SaveStatus from './SaveStatus';
+import CountdownTimer from './CountdownTimer';
 import './Question.css';
 
 export const Question: React.FC<QuestionProps> = (props) => {
@@ -18,6 +20,7 @@ export const Question: React.FC<QuestionProps> = (props) => {
     onFinish,
     onOptionSelect,
     initialAnswers,
+    deadline,
     className = '',
   } = props;
   const {
@@ -35,6 +38,10 @@ export const Question: React.FC<QuestionProps> = (props) => {
     answeredIds,
     currentIndex,
     handleFinish,
+    saveState,
+    savedAt,
+    pendingCount,
+    retrySync,
   } = useQuestionViewModel(questions, listaId, estudanteId, onAnswerSelect, onNavigate, onFinish, initialAnswers);
 
   // Se estiver mostrando resultados, exibe o componente de resultados
@@ -56,6 +63,11 @@ export const Question: React.FC<QuestionProps> = (props) => {
         subject={currentQuestion.subject}
         progress={currentQuestion.progress}
       />
+
+      <div className="question-status-row">
+        <SaveStatus state={saveState} savedAt={savedAt} pendingCount={pendingCount} onRetry={retrySync} />
+        <CountdownTimer deadline={deadline} />
+      </div>
 
       <hr style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '20px 0' }} />
 
