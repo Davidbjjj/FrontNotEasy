@@ -259,3 +259,67 @@
 .question-images{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap }
 .question-image{ max-width:160px; height:auto; border-radius:8px; box-shadow:0 6px 18px rgba(15,23,42,0.04); object-fit:cover }
 .question-image--large{ max-width:420px; }
+
+/* ===== Mapa de questões ===== */
+.question-map{ margin-bottom:16px }
+.question-map__summary{ margin:0 0 8px; font-size:.9rem; color:#4b5563 }
+.question-map__grid{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px }
+.question-map__item{
+  min-width:44px; min-height:44px; padding:0 8px;
+  border:2px solid #d1d5db; border-radius:8px; background:#fff; color:#374151;
+  font-size:1rem; font-weight:600; cursor:pointer; touch-action:manipulation;
+}
+.question-map__item--answered{ background:#d1fae5; border-color:#10b981; color:#065f46 }
+.question-map__item--current{ border-color:#2563eb; box-shadow:0 0 0 2px #bfdbfe; }
+.question-map__item:focus-visible{ outline:3px solid #2563eb; outline-offset:2px }
+
+/* ===== Enunciado, fórmulas e imagens legíveis ===== */
+.question-content__text,
+.question-option__text{ overflow-wrap:anywhere; max-width:100% }
+.question-content__text{ overflow-x:auto }
+.question-image-btn{ padding:0; border:0; background:none; cursor:zoom-in; max-width:100%; touch-action:manipulation }
+.question-image{ max-width:100% }
+.question-image--large{ max-width:100% }
+
+.image-zoom{
+  position:fixed; inset:0; z-index:2000; background:rgba(0,0,0,.92);
+  display:flex; flex-direction:column;
+}
+.image-zoom__close{
+  align-self:flex-end; margin:max(12px, env(safe-area-inset-top)) 12px 8px;
+  min-height:48px; padding:0 18px; border:0; border-radius:8px;
+  background:#fff; color:#111827; font-size:1rem; font-weight:700; cursor:pointer;
+}
+.image-zoom__scroller{
+  flex:1; overflow:auto; -webkit-overflow-scrolling:touch;
+  touch-action:pan-x pan-y pinch-zoom; display:flex; align-items:flex-start; justify-content:center;
+}
+.image-zoom__img{ max-width:none; width:100%; height:auto; min-width:100%; box-shadow:none; border-radius:0; object-fit:contain }
+.image-zoom__hint{ margin:0; padding:8px 12px calc(8px + env(safe-area-inset-bottom)); color:#e5e7eb; text-align:center; font-size:.85rem }
+
+/* ===== Celular ===== */
+@media (max-width: 768px){
+  /* >=16px evita o zoom automático do iOS ao focar campos */
+  .question-page{ padding:12px 12px 0; min-height:100dvh; }
+  .question-content__text{ font-size:1.0625rem }
+
+  .question-option{ min-height:56px; padding:14px; align-items:center; touch-action:manipulation }
+  .question-option__text{ font-size:1.0625rem }
+
+  .btn-submit-answer{ width:100%; min-height:52px; font-size:1.0625rem }
+  .question-submit{ margin-top:12px }
+
+  /* Barra de navegação fixa no rodapé, acima da barra do sistema (iOS/Android) */
+  .question-navigation{
+    position:sticky; bottom:0; z-index:20;
+    margin:24px -12px 0; padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    background:#fff; border-top:1px solid #e5e7eb; box-shadow:0 -4px 12px rgba(15,23,42,.06);
+    gap:8px;
+  }
+  .question-navigation__counter{ text-align:center }
+  .question-navigation__btn{ min-height:52px; font-size:1.0625rem; touch-action:manipulation }
+
+  /* Se o teclado abrir (ex.: campo de resposta), a barra deixa de ficar fixa e não cobre o campo */
+  .question-page input:focus,
+  .question-page textarea:focus{ scroll-margin-bottom:96px; font-size:16px }
+}

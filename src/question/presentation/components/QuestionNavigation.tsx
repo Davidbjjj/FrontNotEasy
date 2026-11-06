@@ -9,7 +9,7 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
   className = '',
 }) => {
   return (
-    <div className={`question-navigation ${className}`}>
+    <div className={`question-navigation ${className}`} role="group" aria-label="Navegação entre questões">
       <div className="question-navigation__counter">
         {navigation.current} de {navigation.total}
       </div>
@@ -21,7 +21,7 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
           disabled={!navigation.hasPrevious}
           type="button"
         >
-          ANTERIOR
+          ← Anterior
         </button>
 
         {navigation.hasNext ? (
@@ -30,7 +30,7 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
             onClick={() => onNavigate('next')}
             type="button"
           >
-            PRÓXIMA
+            Próxima →
           </button>
         ) : (
           <button
@@ -38,7 +38,7 @@ export const QuestionNavigation: React.FC<QuestionNavigationProps> = ({
             onClick={onFinish}
             type="button"
           >
-            FINALIZAR
+            Finalizar
           </button>
         )}
       </div>

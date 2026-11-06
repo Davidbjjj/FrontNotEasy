@@ -1,7 +1,7 @@
 import React from 'react';
 import { QuestionContentProps } from '../../model/Question.types';
 import './Question.css';
-import ImageWithAuth from '../../../components/ImageWithAuth';
+import ZoomableImage from './ZoomableImage';
 import api from '../../../services/apiClient';
 
 export const QuestionContent: React.FC<QuestionContentProps> = ({
@@ -35,7 +35,7 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
             const rawSrc = img.urlPublica || img.url || img.src || '';
             const base = (api && (api.defaults && api.defaults.baseURL)) || 'http://localhost:8080';
             const normalized = rawSrc.startsWith('/') ? `${base}${rawSrc}` : rawSrc;
-            return <ImageWithAuth key={i} src={normalized} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />;
+            return <ZoomableImage key={i} src={normalized} alt={img.nomeArquivo || `imagem-${i}`} className={imgClass} />;
           })}
         </div>
       )}
@@ -56,7 +56,8 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
             }}
             role="button"
             tabIndex={0}
-            onKeyPress={(e) => { if (!isAnswered && !isSubmitting && (e.key === 'Enter' || e.key === ' ')) onAnswerSelect(option.id); }}
+            onKeyDown={(e) => { if (!isAnswered && !isSubmitting && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onAnswerSelect(option.id); } }}
+            aria-pressed={selectedAnswer === option.id}
           >
             <span className="question-option__label">{option.label}</span>
             <span className="question-option__text">{option.text}</span>
@@ -64,7 +65,7 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
         ))}
       </div>
 
-      <div style={{ marginTop: 12 }}>
+      <div className="question-submit">
         <button
           className="btn-submit-answer"
           onClick={() => onSubmitAnswer && onSubmitAnswer()}
