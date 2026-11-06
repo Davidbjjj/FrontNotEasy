@@ -20,6 +20,9 @@ export const useVerticalNavbarViewModel = (
   // If the current user is an institution, customize navigation items
   try {
     const roleRaw = (localStorage.getItem('role') || '').toString().toUpperCase();
+    if (roleRaw === 'ALUNO') {
+      defaultItems.unshift({ id: 'inicio', label: 'Início', isActive: false, path: '/inicio' });
+    }
     if (roleRaw === 'INSTITUICAO') {
       // Remove 'questões' for institution users
       defaultItems = defaultItems.filter(item => item.id !== 'questoes');

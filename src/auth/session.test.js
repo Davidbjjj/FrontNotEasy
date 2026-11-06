@@ -5,7 +5,7 @@ afterEach(() => sessionStorage.clear());
 test('getHomeForRole leva cada papel ao seu início', () => {
   expect(getHomeForRole('INSTITUICAO')).toBe('/instituicao');
   expect(getHomeForRole('PROFESSOR')).toBe('/disciplinas');
-  expect(getHomeForRole('ALUNO')).toBe('/disciplinas');
+  expect(getHomeForRole('ALUNO')).toBe('/inicio');
   expect(getHomeForRole(undefined)).toBe('/');
 });
 

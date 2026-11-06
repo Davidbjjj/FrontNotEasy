@@ -8,8 +8,9 @@ export function getHomeForRole(role) {
   switch (role) {
     case 'INSTITUICAO':
       return '/instituicao';
-    case 'PROFESSOR':
     case 'ALUNO':
+      return '/inicio';
+    case 'PROFESSOR':
       return '/disciplinas';
     default:
       return '/';
@@ -27,6 +28,17 @@ export function notifySessionExpired(returnTo) {
     // sessionStorage indisponível: segue sem retorno
   }
   window.dispatchEvent(new CustomEvent(SESSION_EXPIRED_EVENT, { detail: { returnTo: target } }));
+}
+
+/** Destino padrão logo após o login: o aluno cai no dashboard; os demais, nas listas. */
+export function landingFallback() {
+  let role = '';
+  try {
+    role = String(localStorage.getItem('role') || '').toUpperCase();
+  } catch (e) {
+    // ignore
+  }
+  return role === 'ALUNO' ? '/inicio' : '/listas';
 }
 
 /** Lê (e apaga) a página de retorno guardada; usada logo após um login bem-sucedido. */
