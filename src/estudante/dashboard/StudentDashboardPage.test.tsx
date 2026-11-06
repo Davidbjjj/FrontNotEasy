@@ -57,7 +57,7 @@ test('últimas notas com link de revisão', async () => {
   renderPage(base);
   const region = await screen.findByRole('region', { name: 'Últimas notas' });
   expect(within(region).getByText('8 / 10')).toBeInTheDocument();
-  expect(within(region).getByRole('link', { name: /Revisar Lista X/ })).toHaveAttribute('href', '/listas/x/questoes');
+  expect(within(region).getByRole('link', { name: /Revisar Lista X/ })).toHaveAttribute('href', '/listas/x/revisao');
 });
 
 test('sequência e atalho continuar', async () => {

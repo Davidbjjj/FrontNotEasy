@@ -47,10 +47,8 @@ fim do dia no fuso do aluno (ISO 8601 com offset), para o corte de 48 h ser corr
 
 ## Revisão da lista
 
-Ainda não há tela de revisão questão a questão. Os links "Revisar" abrem
-`/listas/{listaId}/questoes`, que para lista já finalizada mostra nota, acertos e
-progresso. Quando a revisão existir, trocar `revisaoPath` em
-`StudentDashboardPage.tsx`.
+Os links "Revisar" abrem `/listas/{listaId}/revisao` (FE-102, contrato em
+`docs/review-api.md`).
 
 ## Back-end
 

@@ -23,6 +23,7 @@ import NotFoundPage from './errors/NotFoundPage';
 import ProfilePage from './perfil/ProfilePage';
 import SearchPage from './busca/SearchPage';
 import StudentDashboardPage from './estudante/dashboard/StudentDashboardPage';
+import RevisaoPage from './estudante/revisao/RevisaoPage';
 
 
 
@@ -55,7 +56,8 @@ const RouterConfig = () => {
       <Route path="/instituicao" element={<RoleProtectedRoute allowedRoles={["INSTITUICAO"]}><InstituicaoPage /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes/professor" element={<RoleProtectedRoute allowedRoles={["PROFESSOR"]}><QuestionPageProfessor /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><QuestionPageEstudante /></RoleProtectedRoute>} />
-      <Route path="/config" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+      <Route path="/listas/:listaId/revisao" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><RevisaoPage /></RoleProtectedRoute>} />
+      <Route path="/config"element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       <Route path="/busca" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

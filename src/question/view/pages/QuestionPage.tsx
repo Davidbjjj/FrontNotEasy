@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Question } from '../../presentation/components/Question';
 import { questionService } from '../../service/api/question.service';
 import { respostaService } from '../../service/api/respostaService';
@@ -204,6 +204,11 @@ const QuestionPage: React.FC = () => {
       {isRespondida && visao ? (
         <div className="student-view-card">
           <h2>Visão da lista (Finalizada)</h2>
+          {!isProfessor && (
+            <Link to={`/listas/${listaId}/revisao`} className="btn btn-secondary">
+              Ver gabarito e explicações
+            </Link>
+          )}
 
           <div className="result-metrics">
             <div className="metric">
