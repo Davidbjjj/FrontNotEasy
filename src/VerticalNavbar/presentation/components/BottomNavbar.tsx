@@ -10,6 +10,7 @@ import {
   Calendar,
   Building2,
   Home,
+  CalendarDays,
   TrendingUp
 } from "lucide-react";
 import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.viewmodel";
@@ -21,6 +22,7 @@ const BottomNavbarComponent: React.FC<Partial<VerticalNavbarProps>> = ({ items, 
 
   const icons: Record<string, JSX.Element> = {
     "inicio": <Home className="bottom-navbar__icon" />,
+    "calendario": <CalendarDays className="bottom-navbar__icon" />,
     "evolucao": <TrendingUp className="bottom-navbar__icon" />,
     "questoes": <FileText className="bottom-navbar__icon" />,
     "listas": <List className="bottom-navbar__icon" />,
