@@ -22,6 +22,7 @@ import ProtectedRoute from './auth/ProtectedRoute';
 import NotFoundPage from './errors/NotFoundPage';
 import ProfilePage from './perfil/ProfilePage';
 import SearchPage from './busca/SearchPage';
+import StudentDashboardPage from './estudante/dashboard/StudentDashboardPage';
 
 
 
@@ -38,6 +39,7 @@ const RouterConfig = () => {
       <Route path="/access-denied" element={<AccessDenied />} />
 
       {/* Protected routes - require authentication */}
+      <Route path="/inicio" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><StudentDashboardPage /></RoleProtectedRoute>} />
       <Route path="/atividades" element={<ProtectedRoute><ActivityPage /></ProtectedRoute>} />
       <Route path="/atividades/:id" element={<ProtectedRoute><ActivityDetailPage /></ProtectedRoute>} />
       {/* Sample route with fictitious id for design preview */}

@@ -10,8 +10,9 @@ export interface TourStep {
 export const TOURS: Record<TourRole, TourStep[]> = {
   ALUNO: [
     {
-      title: 'Bem-vindo ao NotEasy!',
-      body: 'Em poucos passos mostramos onde encontrar o que você precisa para estudar.',
+      target: 'nav-inicio',
+      title: 'Bem-vindo ao NotEasy! Este é o seu início',
+      body: 'Aqui você vê o que fazer agora: próximas listas e prazos, últimas notas, sua sequência de estudo e o atalho para continuar de onde parou.',
     },
     {
       target: 'nav-disciplinas',

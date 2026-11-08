@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { consumeReturnTo } from "../../../auth/session";
+import { consumeReturnTo, landingFallback } from "../../../auth/session";
 import {
   Row,
   Col,
@@ -63,7 +63,7 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
 
       await authService.login(loginData);
       message.success("Login realizado com sucesso!");
-      navigate(consumeReturnTo("/listas"));
+      navigate(consumeReturnTo(landingFallback()));
     } catch (error) {
       message.error(error.message || "Erro ao fazer login. Tente novamente.");
     } finally {
@@ -83,7 +83,7 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
     authService.loginWithGoogle(token)
       .then(() => {
         message.success({ content: 'Login com Google realizado!', key: 'social-login' });
-        navigate(consumeReturnTo("/listas"));
+        navigate(consumeReturnTo(landingFallback()));
       })
       .catch(error => {
         message.error({ 
