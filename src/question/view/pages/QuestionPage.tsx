@@ -6,6 +6,7 @@ import { respostaService } from '../../service/api/respostaService';
 import AddQuestionsButton from '../../../listaQuestoes/presentation/components/AddQuestionsButton/AddQuestionsButton';
 import { FileText } from 'lucide-react';
 import './QuestionPage.css';
+import { EmptyState } from '../../../ui/EmptyState/EmptyState';
 
 
 const QuestionPage: React.FC = () => {
@@ -181,17 +182,19 @@ const QuestionPage: React.FC = () => {
   if (questions.length === 0 && !(isRespondida && visao)) {
     return (
       <div className="question-page-empty-wrap">
-        <div className="question-page-empty-card">
-          <div className="question-page-empty-illustration">
-            <FileText size={48} />
-          </div>
-          <h2 className="question-page-empty-title">Nenhuma questão encontrada</h2>
-          <p className="question-page-empty-text">Esta lista ainda não possui questões. Você pode adicionar questões via PDF ou criar manualmente.</p>
-          <div className="question-page-empty-actions">
-            {isProfessor && <AddQuestionsButton listaId={listaId ?? ''} />}
-            <button className="btn btn-secondary" onClick={() => navigate('/listas')}>Voltar para listas</button>
-          </div>
-        </div>
+        <EmptyState
+          icon={<FileText size={48} />}
+          title="Nenhuma questão encontrada"
+          description={isProfessor
+            ? 'Esta lista ainda não possui questões. Você pode adicionar questões via PDF ou criar manualmente.'
+            : 'Esta lista ainda não possui questões. Volte mais tarde ou fale com o professor.'}
+          action={
+            <>
+              {isProfessor && <AddQuestionsButton listaId={listaId ?? ''} />}
+              <button className="btn btn-secondary" onClick={() => navigate('/listas')}>Voltar para listas</button>
+            </>
+          }
+        />
       </div>
     );
   }

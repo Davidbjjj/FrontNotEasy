@@ -140,12 +140,12 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 }
 
 .btn-primary {
-  background: #3b82f6;
+  background: #1d4ed8;
   color: white;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #2563eb;
+  background: #1e40af;
 }
 
 .btn-primary:disabled {

@@ -206,6 +206,9 @@ const PlanCarousel = () => {
             key={index}
             className={`indicator ${index === currentSlide ? 'active' : ''}`}
             onClick={() => goToSlide(index)}
+            type="button"
+            aria-label={`Ir para o plano ${index + 1}`}
+            aria-current={index === currentSlide ? 'true' : undefined}
           />
         ))}
       </div>

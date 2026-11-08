@@ -10,6 +10,7 @@ import { listaService } from '../../services/api/listaService';
 import { useEffect, useState } from 'react';
 import { Popconfirm, message } from 'antd';
 import { decodeJwt } from '../../../auth/jwt';
+import { EmptyState } from '../../../ui/EmptyState/EmptyState';
 
 const getPreferredTeacherName = (fallbackName?: string) => {
   try {
@@ -187,15 +188,15 @@ export const ListsView: React.FC<
 
     if (lists.length === 0) {
       return (
-        <div className="question-list__empty">
-          <FileText size={64} className="question-list__empty-icon" />
-          <h3 className="question-list__empty-title">Nenhuma lista encontrada</h3>
-          <p className="question-list__empty-desc">Parece que ainda não há listas de questões. Crie sua primeira lista para começar a organizar as avaliações.</p>
-          <div className="question-list__empty-actions">
-            {/* Usamos o AddListButton para abrir o modal de criação de lista */}
+        <EmptyState
+          icon={<FileText size={48} />}
+          title="Nenhuma lista encontrada"
+          description="Parece que ainda não há listas de questões. Crie sua primeira lista para começar a organizar as avaliações."
+          action={
+            /* Usamos o AddListButton para abrir o modal de criação de lista */
             <AddListButton className="add-list-button--empty" professorId={localStorage.getItem('userId') || ''} onCreated={() => onQuestionsAdded && onQuestionsAdded()} />
-          </div>
-        </div>
+          }
+        />
       );
     }
 

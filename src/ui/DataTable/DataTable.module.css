@@ -1,0 +1,87 @@
+.wrapper {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  color: var(--text-dark);
+}
+.table th,
+.table td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.table th {
+  background: var(--bg-alt);
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+.table tbody tr:last-child td { border-bottom: none; }
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: var(--tap-target);
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  font-weight: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+}
+.sortButton:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.sortIcon { color: var(--text-light); font-size: var(--font-size-xs); }
+.clickable { cursor: pointer; }
+.clickable:hover { background: var(--bg-alt); }
+.clickable:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--color-focus); }
+.loading {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-light);
+  background: var(--bg-alt);
+  border-radius: var(--radius-md);
+}
+
+/* Celular: tabela vira lista de cards */
+@media (max-width: 768px) {
+  .wrapper { border: none; background: transparent; overflow: visible; }
+  .table, .table tbody, .table tr, .table td { display: block; width: 100%; }
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+  .table tr {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-3);
+    padding: var(--space-2) 0;
+  }
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-3);
+    border-bottom: none;
+    padding: var(--space-2) var(--space-4);
+    text-align: right !important;
+  }
+  .table td::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-light);
+    text-align: left;
+    flex-shrink: 0;
+  }
+}

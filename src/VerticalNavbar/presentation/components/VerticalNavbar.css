@@ -80,7 +80,9 @@
 
 /* Evita que o foco padrão do navegador quebre o visual ao clicar */
 .vertical-navbar__button:focus-visible {
-  outline: none;
+  outline: 3px solid #fff;
+  outline-offset: -5px;
+  box-shadow: 0 0 0 2px #1d4ed8;
 }
 
 .vertical-navbar__icon {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Select, Card, message, Row, Col } from 'antd';
+import { Form, Input, Button, Card, message, Row, Col } from 'antd';
+import { Select } from '../../../ui/AccessibleSelect/AccessibleSelect';
 import { instituicaoService } from '../../services/api/instituicao.service';
 
 interface AssociacaoManagerProps {

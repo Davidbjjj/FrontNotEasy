@@ -47,7 +47,7 @@
   color: var(--primary-blue);
   border: 1px solid var(--primary-blue);
 }
-.save-badge { margin-left: 6px; font-size: .85rem; color: #059669; font-weight: 700; }
+.save-badge { margin-left: 6px; font-size: .85rem; color: #047857; font-weight: 700; }
 
 .carousel-container {
   position: relative;
@@ -185,7 +185,7 @@
 }
 
 .feature-name.excluded {
-  color: #999;
+  color: #6b7280;
   text-decoration: line-through;
 }
 

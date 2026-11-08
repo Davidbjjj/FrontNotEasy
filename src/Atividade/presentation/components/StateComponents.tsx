@@ -1,4 +1,5 @@
 import React from 'react';
+import { EmptyState as UiEmptyState } from '../../../ui/EmptyState/EmptyState';
 
 interface StateComponentProps {
   message: string;
@@ -29,8 +30,6 @@ export const ErrorState: React.FC<StateComponentProps> = ({ message }) => (
  * Componente de estado vazio
  * Exibe quando não há dados para mostrar
  */
-export const EmptyState: React.FC<StateComponentProps> = ({ message }) => (
-  <div className="empty-state" role="status">
-    <p>{message}</p>
-  </div>
+export const EmptyState: React.FC<StateComponentProps & { description?: string }> = ({ message, description }) => (
+  <UiEmptyState compact title={message} description={description} />
 );

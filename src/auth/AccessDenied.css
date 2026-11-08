@@ -159,3 +159,7 @@
     flex: 1;
   }
 }
+
+/* Garante o azul AA mesmo que outro CSS global defina .btn-primary */
+.access-denied .btn-primary { background: #1d4ed8; color: #fff; }
+.access-denied .btn-primary:hover { background: #1e40af; }

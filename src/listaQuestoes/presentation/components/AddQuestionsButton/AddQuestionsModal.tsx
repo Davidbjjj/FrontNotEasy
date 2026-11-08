@@ -73,7 +73,7 @@ const AddQuestionsModal: React.FC<AddQuestionsModalProps> = ({
   };
 
   const modalContent = (
-    <div className="modal-overlay" onClick={() => { if (!isLoading) onClose(); }}>
+    <div className="modal-overlay add-questions-modal" onClick={() => { if (!isLoading) onClose(); }}>
       <div
         className="modal-content"
         onClick={(e) => e.stopPropagation()}

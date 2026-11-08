@@ -1,6 +1,6 @@
 import type { ProcessarPDFResponse } from '../../model/AddQuestionsButton.types';
 
-const API_BASE_URL = 'https://backnoteasy-production.up.railway.app';
+const API_BASE_URL = 'http://localhost:8080';
 
 export const serviceIAService = {
   async processarPDF(listaId: string, file: File): Promise<ProcessarPDFResponse> {

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { message, Spin } from 'antd';
 import { authService } from '../../services/api/authService';
+import { consumeReturnTo } from '../../../auth/session';
 
 /**
  * Página de callback para autenticação GitHub OAuth
@@ -32,7 +33,7 @@ const GitHubCallbackPage = () => {
         // Faz login com GitHub usando o código
         await authService.loginWithGithub(code);
         message.success('Login com GitHub realizado com sucesso!');
-        navigate('/listas');
+        navigate(consumeReturnTo('/listas'));
       } catch (error) {
         console.error('GitHub callback error:', error);
         message.error(error.message || 'Erro ao autenticar com GitHub');

@@ -3,7 +3,7 @@
 import { QuestaoEstudante } from '../../model/Question.types';
 
 export class QuestoesService {
-  private baseUrl = 'https://backnoteasy-production.up.railway.app';
+  private baseUrl = 'http://localhost:8080';
 
   async getQuestoesPorEstudante(estudanteId: string): Promise<QuestaoEstudante[]> {
     const response = await fetch(`${this.baseUrl}/listas/estudante/${estudanteId}/questoes`);

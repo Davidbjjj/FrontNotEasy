@@ -224,9 +224,9 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
   cursor: not-allowed !important;
 }
 
-.btn-primary {
+.add-questions-modal .btn-primary {
   padding: 10px 20px !important;
-  background: #10b981 !important;
+  background: #047857 !important;
   color: white !important;
   border: none !important;
   border-radius: 6px !important;
@@ -236,7 +236,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 }
 
 
-.btn-primary:disabled {
+.add-questions-modal .btn-primary:disabled {
   background: #9ca3af !important;
   cursor: not-allowed !important;
 }

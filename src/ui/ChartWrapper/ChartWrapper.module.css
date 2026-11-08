@@ -1,0 +1,5 @@
+.root { margin: 0; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); min-width: 0; }
+.title { font-size: var(--font-size-md); font-weight: var(--font-weight-bold); color: var(--text-dark); margin-bottom: var(--space-3); }
+.loading { display: flex; align-items: center; justify-content: center; color: var(--text-light); background: var(--bg-alt); border-radius: var(--radius-sm); }
+.error { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3); color: var(--color-danger); background: var(--color-danger-bg); border-radius: var(--radius-sm); }
+.error p { margin: 0; }

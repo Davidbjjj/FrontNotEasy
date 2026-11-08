@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { ActivityCardProps } from '../../model/ActivityCard.types';
 import { formatDateTime } from '../../../utils/date';
 import './ActivityCard.css';
+import { EmptyState } from '../../../ui/EmptyState/EmptyState';
 
 export const ActivityCard: React.FC<ActivityCardProps> = ({ activities }) => {
   const { markAsCompleted } = useActivityCardViewModel(activities);
@@ -65,11 +66,11 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({ activities }) => {
           Adicionar Nova Atividade
         </button>
         
-        <div className="activity-empty-state">
-          <div className="activity-empty-icon">📚</div>
-          <h2 className="activity-empty-title">Nenhuma atividade encontrada</h2>
-          <p>Comece adicionando sua primeira atividade!</p>
-        </div>
+        <EmptyState
+          icon={<span style={{ fontSize: 40 }}>📚</span>}
+          title="Nenhuma atividade encontrada"
+          description='Comece adicionando sua primeira atividade com o botão "Adicionar Nova Atividade".'
+        />
       </div>
     );
   }
