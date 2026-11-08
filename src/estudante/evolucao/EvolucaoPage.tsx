@@ -12,6 +12,7 @@ import {
   erradasPath, filtrarNotas, formatData, formatNotaEscala, notaNormalizada,
   ordenarAssuntos, percentual, resumoAssuntos, resumoNotas,
 } from './evolucaoLogic';
+import { planoPath } from '../plano/planoLogic';
 import type { DesempenhoAssunto, Evolucao, NotaPonto } from './types';
 import styles from './Evolucao.module.css';
 
@@ -169,7 +170,9 @@ const EvolucaoPage: React.FC = () => {
   return (
     <main className={styles.page} aria-labelledby="evolucao-titulo" aria-busy={loading || undefined}>
       <h1 id="evolucao-titulo" className={styles.title}>Evolução e desempenho</h1>
-      <p className={styles.muted}>Veja como sua nota evolui e em quais assuntos você mais precisa estudar.</p>
+      <p className={styles.muted}>Veja como sua nota evolui e em quais assuntos você mais precisa estudar.{' '}
+        <Link to={planoPath} className={styles.link}>Ver plano de revisão</Link>
+      </p>
 
       {loading && <p role="status" className={styles.muted}>Carregando sua evolução…</p>}
 
