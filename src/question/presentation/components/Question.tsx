@@ -5,6 +5,7 @@ import QuestionHeader from './QuestionHeader';
 import QuestionContent from './QuestionContent';
 import QuestionNavigation from './QuestionNavigation';
 import QuestionResults from './QuestionResults';
+import QuestionMap from './QuestionMap';
 import './Question.css';
 
 export const Question: React.FC<QuestionProps> = (props) => {
@@ -30,6 +31,9 @@ export const Question: React.FC<QuestionProps> = (props) => {
     isSubmitting,
     isAnswered,
     handleNavigate,
+    handleGoTo,
+    answeredIds,
+    currentIndex,
     handleFinish,
   } = useQuestionViewModel(questions, listaId, estudanteId, onAnswerSelect, onNavigate, onFinish, initialAnswers);
 
@@ -54,6 +58,13 @@ export const Question: React.FC<QuestionProps> = (props) => {
       />
 
       <hr style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '20px 0' }} />
+
+      <QuestionMap
+        total={questions.length}
+        currentIndex={currentIndex}
+        answeredIndexes={new Set(questions.map((q, i) => (answeredIds.has(q.id) ? i : -1)).filter((i) => i >= 0))}
+        onSelect={handleGoTo}
+      />
 
       <div className="question-content__number">
         QUESTÃO {currentQuestion.currentQuestion}

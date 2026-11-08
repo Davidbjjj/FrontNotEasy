@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Question, QuestionNavigation, QuizResult, RespostaEstudanteQuestaoDTO } from '../model/Question.types';
 import { respostaService } from '../service/api/respostaService'; // Importação correta
 
@@ -13,6 +13,10 @@ interface UseQuestionViewModelReturn {
   handleAnswerSelect: (answerId: string) => void;
   handleSubmitAnswer: () => Promise<void>;
   handleNavigate: (direction: 'previous' | 'next') => void;
+  handleGoTo: (index: number) => void;
+  /** ids das questões já respondidas (servidor + enviadas nesta sessão) */
+  answeredIds: Set<string>;
+  currentIndex: number;
   handleFinish: () => void;
   handleShowResults: () => void;
 }
@@ -32,27 +36,35 @@ export const useQuestionViewModel = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  // respostas enviadas nesta sessão (questionId -> letra); evita perder o estado ao navegar
+  const [sessionAnswers, setSessionAnswers] = useState<Record<string, string>>({});
+
+  const answers = useMemo(() => ({ ...(initialAnswers || {}), ...sessionAnswers }), [initialAnswers, sessionAnswers]);
+  const answeredIds = useMemo(
+    () => new Set(Object.keys(answers).filter((k) => Boolean(answers[k]))),
+    [answers]
+  );
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  // If the parent provided initialAnswers (from visao/buscarRespostas), initialize selection when question changes
+  // Ao trocar de questão, restaura a resposta já enviada (servidor ou sessão)
   useEffect(() => {
-    try {
-      const qid = currentQuestion?.id;
-      if (!qid) return;
-      if (initialAnswers && Object.prototype.hasOwnProperty.call(initialAnswers, qid)) {
-        const letter = initialAnswers[qid];
-        setSelectedAnswer(letter ?? null);
-        setIsAnswered(Boolean(letter));
-      } else {
-        // clear selection when no initial answer exists
-        setSelectedAnswer(null);
-        setIsAnswered(false);
-      }
-    } catch (e) {
-      // ignore
-    }
-  }, [currentQuestionIndex, currentQuestion?.id, initialAnswers]);
+    const qid = currentQuestion?.id;
+    if (!qid) return;
+    const letter = answers[qid];
+    setSelectedAnswer(letter ?? null);
+    setIsAnswered(Boolean(letter));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentQuestionIndex, currentQuestion?.id]);
+
+  // Respostas do servidor que chegam depois do primeiro render
+  useEffect(() => {
+    const qid = currentQuestion?.id;
+    if (!qid || !initialAnswers || !initialAnswers[qid]) return;
+    setSelectedAnswer((prev) => prev ?? initialAnswers[qid]);
+    setIsAnswered(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialAnswers]);
 
   const navigation: QuestionNavigation = {
     current: currentQuestionIndex + 1,
@@ -81,6 +93,7 @@ export const useQuestionViewModel = (
       });
 
       setIsAnswered(true);
+      setSessionAnswers((prev) => ({ ...prev, [currentQuestion.id]: selectedAnswer }));
 
       if (onAnswerSelect) {
         onAnswerSelect(currentQuestion.id, selectedAnswer, alternativaIndex);
@@ -98,18 +111,19 @@ export const useQuestionViewModel = (
   const handleNavigate = useCallback((direction: 'previous' | 'next') => {
     if (direction === 'previous' && navigation.hasPrevious) {
       setCurrentQuestionIndex(prev => prev - 1);
-      setSelectedAnswer(null);
-      setIsAnswered(false);
     } else if (direction === 'next' && navigation.hasNext) {
       setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedAnswer(null);
-      setIsAnswered(false);
     }
-    
+
     if (onNavigate) {
       onNavigate(direction);
     }
   }, [navigation.hasPrevious, navigation.hasNext, onNavigate]);
+
+  const handleGoTo = useCallback((index: number) => {
+    if (index < 0 || index >= questions.length) return;
+    setCurrentQuestionIndex(index);
+  }, [questions.length]);
 
   const handleFinish = useCallback(async () => {
     try {
@@ -181,6 +195,9 @@ export const useQuestionViewModel = (
     handleAnswerSelect,
     handleSubmitAnswer,
     handleNavigate,
+    handleGoTo,
+    answeredIds,
+    currentIndex: currentQuestionIndex,
     handleFinish,
     handleShowResults,
   };
