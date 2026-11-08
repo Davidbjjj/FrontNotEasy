@@ -16,24 +16,25 @@ const { chromium } = require('playwright');
 
 const APP_URL = process.env.APP_URL || 'http://localhost:3000';
 const axeSource = fs.readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8');
-const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
+const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
 const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url');
 const fakeJwt = (role) =>
   `${b64({ alg: 'none' })}.${b64({ role, userId: '1', nome: 'Maria Teste', exp: 4102444800 })}.x`;
 
 const PAGES = [
-  { role: null, paths: ['/', '/login', '/cadastro-instituicao', '/redefinir-senha', '/access-denied', '/rota-inexistente'] },
-  { role: 'ALUNO', paths: ['/disciplinas', '/atividades', '/listas', '/questoes', '/disciplinas/1'] },
-  { role: 'PROFESSOR', paths: ['/disciplinas', '/atividades', '/listas'] },
+  { role: null, paths: ['/', '/login', '/cadastro-instituicao', '/redefinir-senha', '/validar-token', '/reset-password', '/access-denied', '/rota-inexistente'] },
+  { role: 'ALUNO', paths: ['/disciplinas', '/atividades', '/atividades/1', '/listas', '/listas/1/questoes', '/questoes', '/disciplinas/1', '/config'] },
+  { role: 'PROFESSOR', paths: ['/disciplinas', '/atividades', '/listas', '/listas/1/questoes/professor', '/config'] },
   { role: 'INSTITUICAO', paths: ['/instituicao'] },
 ];
-const VIEWPORTS = { desktop: { width: 1280, height: 800 }, celular: { width: 375, height: 700 } };
+const VIEWPORTS = { desktop: { width: 1280, height: 800 }, celular: { width: 360, height: 640 } };
 
 async function run() {
   const browser = await chromium.launch();
   const results = [];
   const keyboard = [];
+  const overflow = [];
 
   for (const { role, paths } of PAGES) {
     for (const [vpName, viewport] of Object.entries(VIEWPORTS)) {
@@ -65,12 +66,35 @@ async function run() {
           );
           results.push({ label, violations: res.violations });
 
+          if (vpName === 'celular') {
+            // Reflow (WCAG 1.4.10): nada de rolagem horizontal na página a 360 px
+            const over = await page.evaluate(() => {
+              const w = document.documentElement.clientWidth;
+              const bad = [];
+              for (const el of document.querySelectorAll('body *')) {
+                const r = el.getBoundingClientRect();
+                const cs = getComputedStyle(el);
+                if (r.width && cs.position !== 'fixed' && (r.right > w + 1 || r.left < -1)) {
+                  let inScroller = false;
+                  for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+                    const o = getComputedStyle(a).overflowX;
+                    if (o === 'auto' || o === 'scroll' || o === 'hidden') { inScroller = true; break; }
+                  }
+                  if (!inScroller) bad.push(`${el.tagName.toLowerCase()}${typeof el.className === 'string' && el.className ? '.' + el.className.split(' ')[0] : ''} (${Math.round(r.left)}..${Math.round(r.right)})`);
+                }
+              }
+              return { page: document.documentElement.scrollWidth > w, bad: bad.slice(0, 5) };
+            });
+            overflow.push({ label, ...over });
+          }
+
           if (vpName === 'desktop') {
             // Teclado: Tab até 40x; todo elemento focado precisa ter indicador de foco visível
             let noIndicator = new Set();
             let reached = 0;
             for (let i = 0; i < 40; i++) {
               await page.keyboard.press('Tab');
+              await page.waitForTimeout(250); // espera a transição de foco do antd
               const info = await page.evaluate(() => {
                 const el = document.activeElement;
                 if (!el || el === document.body) return null;
@@ -122,7 +146,13 @@ async function run() {
   for (const k of keyboard) {
     console.log(`${k.label}: ${k.reached} elementos focados; sem indicador de foco: ${k.noIndicator.join(', ') || '—'}`);
   }
-  process.exit(Object.keys(byRule).length ? 1 : 0);
+  console.log('\n===== Reflow a 360 px =====');
+  let overflowFail = false;
+  for (const o of overflow) {
+    if (o.page || o.bad.length) overflowFail = true;
+    console.log(`${o.page || o.bad.length ? 'FAIL ' : 'ok   '}${o.label}${o.page ? ' [rolagem horizontal na página]' : ''} ${o.bad.join(', ')}`);
+  }
+  process.exit(Object.keys(byRule).length || overflowFail ? 1 : 0);
 }
 
 run().catch((e) => {

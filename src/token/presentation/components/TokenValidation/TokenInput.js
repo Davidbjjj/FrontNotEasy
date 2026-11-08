@@ -49,11 +49,14 @@ export default function TokenInput({ length, onChange, value }) {
   };
 
   return (
-    <div className="token-input-container">
+    <div className="token-input-container" role="group" aria-label="Código de verificação">
       {values.map((v, i) => (
         <input
           key={i}
           type="text"
+          inputMode="text"
+          autoComplete={i === 0 ? "one-time-code" : "off"}
+          aria-label={`Dígito ${i + 1} de ${length}`}
           maxLength={1}
           value={v}
           ref={(el) => (inputsRef.current[i] = el)}

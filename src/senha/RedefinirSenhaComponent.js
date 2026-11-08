@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./RedefinirSenha.module.css";
 
 export default function RedefinirSenha() {
   // Estados para armazenar as senhas digitadas
@@ -58,85 +59,73 @@ export default function RedefinirSenha() {
   const senhaValida =
     validarSenha(novaSenha).length === 0 && novaSenha === confirmarSenha;
 
+  const regras = [
+    { ok: novaSenha.length >= 8, texto: "Mínimo de 8 caracteres" },
+    { ok: /[A-Z]/.test(novaSenha), texto: "Pelo menos 1 letra maiúscula" },
+    { ok: /[a-z]/.test(novaSenha), texto: "Pelo menos 1 letra minúscula" },
+    { ok: /[0-9]/.test(novaSenha), texto: "Pelo menos 1 número" },
+    { ok: /[^A-Za-z0-9]/.test(novaSenha), texto: "Pelo menos 1 caractere especial" },
+  ];
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Lado esquerdo com imagem ilustrativa */}
-      <div className="hidden md:flex flex-1 items-center justify-center bg-white">
-        <img
-          src="/assets/redefinir-senha.png"
-          alt="GGE Noteasy"
-          className="max-w-md"
-        />
+    <main className={styles.page}>
+      {/* Lado esquerdo com imagem ilustrativa (decorativa) */}
+      <div className={styles.illustration}>
+        <img src="/assets/redefinir-senha.png" alt="" />
       </div>
 
       {/* Lado direito com formulário */}
-      <div className="flex flex-1 items-center justify-center">
-        <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Redefinir senha</h2>
+      <div className={styles.formSide}>
+        <div className={styles.card}>
+          <h1 className={styles.title}>Redefinir senha</h1>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Campo de nova senha */}
-            <div>
+          <form onSubmit={handleSubmit}>
+            <div className={styles.field}>
+              <label htmlFor="nova-senha" className={styles.label}>Nova senha</label>
               <input
+                id="nova-senha"
                 type="password"
-                placeholder="Nova Senha"
+                autoComplete="new-password"
+                aria-describedby="regras-senha"
                 value={novaSenha}
                 onChange={(e) => setNovaSenha(e.target.value)}
-                className="w-full border rounded p-2"
+                className={styles.input}
               />
             </div>
 
-            {/* Campo de confirmar senha */}
-            <div>
+            <div className={styles.field}>
+              <label htmlFor="confirmar-senha" className={styles.label}>Confirmar senha</label>
               <input
+                id="confirmar-senha"
                 type="password"
-                placeholder="Confirmar Senha"
+                autoComplete="new-password"
+                aria-invalid={confirmarSenha !== "" && confirmarSenha !== novaSenha}
                 value={confirmarSenha}
                 onChange={(e) => setConfirmarSenha(e.target.value)}
-                className="w-full border rounded p-2"
+                className={styles.input}
               />
             </div>
 
-            {/* Checklist de validação visual */}
-            <ul className="text-sm space-y-1">
-              <li className={novaSenha.length >= 8 ? "text-green-600" : "text-red-500"}>
-                • Mínimo de 8 caracteres
-              </li>
-              <li className={/[A-Z]/.test(novaSenha) ? "text-green-600" : "text-red-500"}>
-                • Pelo menos 1 letra maiúscula
-              </li>
-              <li className={/[a-z]/.test(novaSenha) ? "text-green-600" : "text-red-500"}>
-                • Pelo menos 1 letra minúscula
-              </li>
-              <li className={/[0-9]/.test(novaSenha) ? "text-green-600" : "text-red-500"}>
-                • Pelo menos 1 número
-              </li>
-              <li className={/[^A-Za-z0-9]/.test(novaSenha) ? "text-green-600" : "text-red-500"}>
-                • Pelo menos 1 caractere especial
-              </li>
+            {/* Checklist: estado dito em texto, não só por cor */}
+            <ul id="regras-senha" className={styles.rules}>
+              {regras.map((r) => (
+                <li key={r.texto} className={r.ok ? styles.ok : styles.pending}>
+                  <span aria-hidden="true">{r.ok ? "✓" : "•"}</span> {r.texto}
+                  <span className="sr-only">{r.ok ? " (atendido)" : " (pendente)"}</span>
+                </li>
+              ))}
             </ul>
 
-            {/* Botão de confirmar (só habilita se senha for válida) */}
-            <button
-              type="submit"
-              disabled={!senhaValida}
-              className={`w-full py-2 px-4 rounded text-white ${
-                senhaValida ? "bg-red-600 hover:bg-red-700" : "bg-gray-400"
-              }`}
-            >
+            <button type="submit" disabled={!senhaValida} className={styles.submit}>
               Confirmar
             </button>
           </form>
 
-          {/* Botão para voltar ao login */}
-          <button
-            onClick={() => navigate("/login")}
-            className="mt-4 text-sm text-red-600 hover:underline"
-          >
+          <button type="button" onClick={() => navigate("/login")} className={styles.back}>
             Voltar para login
           </button>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

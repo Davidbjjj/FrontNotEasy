@@ -1,0 +1,116 @@
+.page {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-alt);
+}
+
+.illustration {
+  display: none;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.illustration img {
+  max-width: 28rem;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .illustration {
+    display: flex;
+  }
+}
+
+.formSide {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+}
+
+.card {
+  width: 100%;
+  max-width: 28rem;
+  box-sizing: border-box;
+  padding: var(--space-5);
+  background: var(--bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--font-size-lg);
+  color: var(--color-danger);
+}
+
+.field {
+  margin-bottom: var(--space-4);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--space-1);
+  font-weight: var(--font-weight-medium);
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-md);
+  border: 1px solid var(--text-light);
+  border-radius: var(--radius-sm);
+}
+
+.rules {
+  margin: 0 0 var(--space-4);
+  padding: 0;
+  list-style: none;
+  font-size: var(--font-size-sm);
+}
+
+.rules li {
+  padding: var(--space-1) 0;
+}
+
+.ok {
+  color: var(--color-success);
+}
+
+.pending {
+  color: var(--color-danger);
+}
+
+.submit {
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-size-md);
+  color: var(--color-on-primary);
+  background: var(--color-danger);
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.submit:disabled {
+  background: var(--text-light);
+  cursor: not-allowed;
+}
+
+.back {
+  min-height: var(--tap-target);
+  margin-top: var(--space-3);
+  padding: 0 var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-danger);
+  text-decoration: underline;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}

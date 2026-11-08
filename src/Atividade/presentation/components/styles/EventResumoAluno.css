@@ -30,9 +30,9 @@
   font-size:0.85rem;
   display:inline-block;
 }
-.status-entregue{ background: var(--success-green, #10b981); }
-.status-pendente{ background: var(--error-red, #ef4444); }
-.status-default{ background: var(--text-muted, #9e9e9e); }
+.status-entregue{ background: var(--color-success, #15803d); }
+.status-pendente{ background: var(--color-danger, #b91c1c); }
+.status-default{ background: var(--text-light, #4b5563); }
 
 .resumo-grid{
   display:grid;

@@ -3,6 +3,7 @@ import React from 'react';
 import VerticalNavbar from '../../../VerticalNavbar/presentation/components/VerticalNavbar';
 import BottomNavbar from '../../../VerticalNavbar/presentation/components/BottomNavbar';
 import TopBar from '../../../TopBar/presentation/components/TopBar';
+import OnboardingTour from '../../../onboarding/OnboardingTour';
 import { useAuth } from '../../../auth/AuthProvider';
 import './MainLayout.css';
 
@@ -52,6 +53,9 @@ const MainLayoutComponent: React.FC<MainLayoutProps> = ({ children }) => {
 
       {/* Bottom navbar aparece somente em dispositivos móveis */}
       <BottomNavbar />
+
+      {/* Tour de primeiro acesso (FE-005) */}
+      <OnboardingTour />
     </div>
   );
 };
