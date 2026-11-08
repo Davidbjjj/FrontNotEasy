@@ -20,6 +20,7 @@ import RedefinirSenha from './senha/RedefinirSenhaComponent';
 import AccessDenied from './auth/AccessDenied';
 import ProtectedRoute from './auth/ProtectedRoute';
 import NotFoundPage from './errors/NotFoundPage';
+import ProfilePage from './perfil/ProfilePage';
 
 
 
@@ -51,6 +52,7 @@ const RouterConfig = () => {
       <Route path="/instituicao" element={<RoleProtectedRoute allowedRoles={["INSTITUICAO"]}><InstituicaoPage /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes/professor" element={<RoleProtectedRoute allowedRoles={["PROFESSOR"]}><QuestionPageProfessor /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><QuestionPageEstudante /></RoleProtectedRoute>} />
+      <Route path="/config" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
