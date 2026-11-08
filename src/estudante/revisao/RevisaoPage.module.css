@@ -1,0 +1,25 @@
+.page { padding: var(--space-4); max-width: 800px; margin: 0 auto; color: var(--text-dark); }
+.title { font-size: var(--font-size-xl); margin: 0 0 var(--space-1); }
+.muted { color: var(--text-light); font-size: var(--font-size-sm); margin: 0 0 var(--space-1); }
+.summary { display: flex; gap: var(--space-4); align-items: center; flex-wrap: wrap; margin: var(--space-3) 0; }
+.toggle { display: inline-flex; align-items: center; gap: var(--space-2); min-height: var(--tap-target); cursor: pointer; }
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+.card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4); box-shadow: var(--shadow-sm); }
+.errada { background: var(--color-danger-bg); border-color: var(--color-danger); }
+.head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-2); }
+.num { font-weight: var(--font-weight-bold); margin: 0; font-size: 1rem; }
+.badges { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.badge { font-size: var(--font-size-xs); font-weight: var(--font-weight-bold); padding: 2px var(--space-2); border-radius: var(--radius-full); border: 1px solid var(--border); color: var(--text-dark); }
+.badgeErro { color: var(--color-danger); border-color: var(--color-danger); }
+.badgeAcerto { color: var(--primary-dark); border-color: var(--primary-dark); }
+a.badge { text-decoration: underline; }
+.enunciado { margin: 0 0 var(--space-3); white-space: pre-wrap; }
+.answers { margin: 0; }
+.answers dt { font-weight: var(--font-weight-bold); font-size: var(--font-size-sm); }
+.answers dd { margin: 0 0 var(--space-2); }
+.explicacao { margin-top: var(--space-2); padding: var(--space-3); border-left: 4px solid var(--primary-blue); }
+.explicacao p { margin: 0; }
+.locked, .error { border-radius: var(--radius-md); padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3); align-items: flex-start; }
+.locked { border: 1px solid var(--border); }
+.error { background: var(--color-danger-bg); color: var(--color-danger); border: 1px solid var(--color-danger); }
+.error p, .locked p { margin: 0; }

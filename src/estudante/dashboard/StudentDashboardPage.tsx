@@ -12,12 +12,8 @@ const ROW_CLASS = { atrasada: styles.atrasada, urgente: styles.urgente, normal: 
 
 /** Lista em andamento/pendente: abre a lista para responder. */
 const listaPath = (listaId: string) => `/listas/${listaId}/questoes`;
-/**
- * Revisão de uma lista já corrigida. Hoje a própria página da lista, ao detectar
- * lista finalizada, mostra nota e acertos; quando existir uma tela de revisão
- * questão a questão, basta trocar a rota aqui.
- */
-const revisaoPath = (listaId: string) => `/listas/${listaId}/questoes`;
+/** Revisão questão a questão com gabarito (FE-102). */
+const revisaoPath = (listaId: string) => `/listas/${listaId}/revisao`;
 
 const pct = (done: number, total: number) => (total > 0 ? Math.round((done / total) * 100) : 0);
 
