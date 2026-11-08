@@ -71,7 +71,7 @@ function tokenName(): string {
 }
 
 let mockProfile: Profile = { nome: '', email: 'usuario@exemplo.com', fotoUrl: null, exclusaoAgendadaPara: null };
-let mockPrefs: NotificationPreferences = { LISTA_NOVA: true, PRAZO: true, NOTA_LANCADA: true, GERAL: true };
+let mockPrefs: NotificationPreferences = { LISTA_NOVA: true, PRAZO: true, NOTA_LANCADA: true, DUVIDA_RESPONDIDA: true, GERAL: true };
 let mockPhotoUrl: string | null = null;
 
 const wrongPassword = (message: string) =>

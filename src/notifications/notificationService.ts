@@ -90,4 +90,10 @@ const mockService: NotificationService = {
   },
 };
 
+/** Só para o mock: permite a outros mocks (ex.: dúvidas) gerarem uma notificação. */
+export function pushMockNotification(n: Pick<AppNotification, 'type' | 'title' | 'message' | 'link'>) {
+  if (!USE_MOCK) return;
+  getMockStore().unshift({ id: `m${Date.now()}`, ...n, read: false, createdAt: new Date().toISOString() });
+}
+
 export const notificationService: NotificationService = USE_MOCK ? mockService : httpService;

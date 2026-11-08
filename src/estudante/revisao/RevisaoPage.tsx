@@ -6,6 +6,11 @@ import { formatNota } from '../dashboard/dashboardLogic';
 import { useRevisao } from './useRevisao';
 import { contarErradas, errou, evolucaoPath, filtrarQuestoes, letra, mensagemBloqueio } from './revisaoLogic';
 import type { QuestaoRevisao, RevisaoLista } from './types';
+import { useDuvidas } from '../duvida/useDuvidas';
+import { DuvidaForm } from '../duvida/DuvidaForm';
+import { DuvidaStatus } from '../duvida/DuvidaStatus';
+import type { Duvida, NovaDuvida, TipoDuvida } from '../duvida/types';
+import duvidaStyles from '../duvida/Duvida.module.css';
 import styles from './RevisaoPage.module.css';
 
 const Assunto: React.FC<{ assunto: QuestaoRevisao['assunto'] }> = ({ assunto }) => {
@@ -18,7 +23,14 @@ const Assunto: React.FC<{ assunto: QuestaoRevisao['assunto'] }> = ({ assunto }) 
   );
 };
 
-const Questao: React.FC<{ q: QuestaoRevisao }> = ({ q }) => {
+interface DuvidaProps {
+  listaId: string;
+  duvidas: Duvida[];
+  onCriar: (nova: NovaDuvida) => Promise<unknown>;
+}
+
+const Questao: React.FC<{ q: QuestaoRevisao } & DuvidaProps> = ({ q, listaId, duvidas, onCriar }) => {
+  const [tipoForm, setTipoForm] = useState<TipoDuvida | null>(null);
   const wrong = errou(q);
   const titleId = `questao-${q.questaoId}`;
   return (
@@ -69,11 +81,28 @@ const Questao: React.FC<{ q: QuestaoRevisao }> = ({ q }) => {
           )}
         </dl>
       )}
+      <div className={duvidaStyles.actions}>
+        <Button variant="secondary" onClick={() => setTipoForm('DUVIDA')}>Tenho uma dúvida</Button>
+        <Button variant="secondary" onClick={() => setTipoForm('CONTESTACAO')}>Contestar correção</Button>
+      </div>
+      <DuvidaStatus duvidas={duvidas} />
+      {tipoForm && (
+        <DuvidaForm
+          open
+          tipo={tipoForm}
+          numeroQuestao={q.numero}
+          onClose={() => setTipoForm(null)}
+          onSubmit={async (texto, anexo) => {
+            await onCriar({ listaId, questaoId: q.questaoId, tipo: tipoForm, texto, anexo });
+          }}
+        />
+      )}
     </li>
   );
 };
 
 const Review: React.FC<{ data: RevisaoLista }> = ({ data }) => {
+  const { duvidas, criar } = useDuvidas(data.listaId, true);
   const [soErradas, setSoErradas] = useState(false);
   const erradas = contarErradas(data.questoes);
   const visiveis = filtrarQuestoes(data.questoes, soErradas);
@@ -92,7 +121,13 @@ const Review: React.FC<{ data: RevisaoLista }> = ({ data }) => {
         <p className={styles.muted} role="status">Você não errou nenhuma questão desta lista.</p>
       ) : (
         <ol className={styles.list}>
-          {visiveis.map((q) => <Questao key={q.questaoId} q={q} />)}
+          {visiveis.map((q) => <Questao
+            key={q.questaoId}
+            q={q}
+            listaId={data.listaId}
+            onCriar={criar}
+            duvidas={duvidas.filter((d) => d.questaoId === q.questaoId)}
+          />)}
         </ol>
       )}
     </>

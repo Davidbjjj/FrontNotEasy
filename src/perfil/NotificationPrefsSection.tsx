@@ -10,6 +10,7 @@ const OPTIONS: { type: NotificationType; label: string; description: string }[] 
   { type: 'LISTA_NOVA', label: 'Nova lista publicada', description: 'Quando uma lista de questões é liberada para você.' },
   { type: 'PRAZO', label: 'Prazos se aproximando', description: 'Lembretes de atividades perto do vencimento.' },
   { type: 'NOTA_LANCADA', label: 'Nota lançada', description: 'Quando uma nota ou correção é publicada.' },
+  { type: 'DUVIDA_RESPONDIDA', label: 'Dúvida respondida', description: 'Quando o professor responde uma dúvida ou contestação sua.' },
   { type: 'GERAL', label: 'Avisos gerais', description: 'Comunicados da instituição e novidades da plataforma.' },
 ];
 
