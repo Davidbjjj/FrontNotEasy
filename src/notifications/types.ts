@@ -1,4 +1,4 @@
-export type NotificationType = 'LISTA_NOVA' | 'PRAZO' | 'NOTA_LANCADA' | 'GERAL';
+export type NotificationType = 'LISTA_NOVA' | 'PRAZO' | 'NOTA_LANCADA' | 'DUVIDA_RESPONDIDA' | 'GERAL';
 
 export interface AppNotification {
   id: string;
