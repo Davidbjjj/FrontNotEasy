@@ -4,6 +4,7 @@ import { getCurrentUser } from '../../auth/auth';
 import { Button, EmptyState } from '../../ui';
 import { useStudentDashboard } from './useStudentDashboard';
 import { deadlineStatus, describeDeadline, formatNota, sortByDeadline } from './dashboardLogic';
+import { planoPath } from '../plano/planoLogic';
 import type { StudentDashboard } from './types';
 import styles from './StudentDashboard.module.css';
 
@@ -159,6 +160,11 @@ const StudentDashboardPage: React.FC = () => {
           <Streak s={data.sequencia} />
           <NextLists listas={data.proximasListas} />
           <LatestGrades notas={data.ultimasNotas} />
+          <section className={styles.card} aria-labelledby="plano-titulo">
+            <h2 id="plano-titulo" className={styles.cardTitle}>Plano de revisão</h2>
+            <p className={styles.muted}>Veja o que estudar com base nos seus erros.</p>
+            <Link className={styles.cta} to={planoPath}>Ver plano de revisão</Link>
+          </section>
         </div>
       )}
     </main>

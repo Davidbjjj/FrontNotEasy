@@ -26,6 +26,7 @@ import StudentDashboardPage from './estudante/dashboard/StudentDashboardPage';
 import RevisaoPage from './estudante/revisao/RevisaoPage';
 import EvolucaoPage from './estudante/evolucao/EvolucaoPage';
 import ErradasAssuntoPage from './estudante/evolucao/ErradasAssuntoPage';
+import PlanoRevisaoPage from './estudante/plano/PlanoRevisaoPage';
 
 
 
@@ -45,6 +46,7 @@ const RouterConfig = () => {
       <Route path="/inicio" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><StudentDashboardPage /></RoleProtectedRoute>} />
       <Route path="/evolucao" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><EvolucaoPage /></RoleProtectedRoute>} />
       <Route path="/evolucao/assuntos/:assuntoId" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><ErradasAssuntoPage /></RoleProtectedRoute>} />
+      <Route path="/plano-revisao" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><PlanoRevisaoPage /></RoleProtectedRoute>} />
       <Route path="/atividades" element={<ProtectedRoute><ActivityPage /></ProtectedRoute>} />
       <Route path="/atividades/:id" element={<ProtectedRoute><ActivityDetailPage /></ProtectedRoute>} />
       {/* Sample route with fictitious id for design preview */}
