@@ -7,10 +7,10 @@ import { studentDashboardService } from '../dashboard/dashboardService';
 import { useStudentResource } from '../evolucao/useStudentResource';
 import {
   DIAS_SEMANA, addDias, addMeses, agruparPorDia, chaveDia, contarListas, corPorDisciplina, diasDaSemana,
-  horaPrazo, listaPath, mesmoDia, rotuloDia, semanasDoMes, tituloMes, tituloSemana,
+  horaPrazo, atividadePath, mesmoDia, rotuloDia, semanasDoMes, tituloMes, tituloSemana,
 } from './calendarioLogic';
-import type { ListaNoCalendario, Visao } from './calendarioLogic';
-import type { ProximaLista } from '../dashboard/types';
+import type { EntregaCalendario, ListaNoCalendario, Visao } from './calendarioLogic';
+import type { StudentDashboard } from '../dashboard/types';
 import styles from './Calendario.module.css';
 
 type Cores = Map<string, string>;
@@ -32,16 +32,15 @@ const Legenda: React.FC<{ cores: Cores }> = ({ cores }) => (
   </section>
 );
 
-const Item: React.FC<{ l: ListaNoCalendario | ProximaLista; cores: Cores; agora: Date }> = ({ l, cores, agora }) => {
+const Item: React.FC<{ l: ListaNoCalendario | EntregaCalendario; cores: Cores; agora: Date }> = ({ l, cores, agora }) => {
   const atrasada = deadlineStatus(l.prazo, agora) === 'atrasada';
   const data = 'data' in l ? l.data : null;
   return (
     <li className={`${styles.item} ${atrasada ? styles.atrasada : ''}`} style={{ borderLeftColor: cores.get(l.disciplina) }}>
-      <Link to={listaPath(l.id)} className={styles.itemLink}>{l.titulo}</Link>
+      <Link to={atividadePath(l.id)} className={styles.itemLink}>{l.titulo}</Link>
       <Etiqueta nome={l.disciplina} cor={cores.get(l.disciplina) ?? 'currentColor'} />
       <span className={styles.muted}>
         {data && <>{horaPrazo(data)} · </>}
-        {l.respondidas}/{l.total} questões
         {atrasada && <strong className={styles.tagAtrasada}> · Atrasada</strong>}
       </span>
     </li>
@@ -50,7 +49,7 @@ const Item: React.FC<{ l: ListaNoCalendario | ProximaLista; cores: Cores; agora:
 
 const ListaDoDia: React.FC<{ itens: ListaNoCalendario[]; cores: Cores; agora: Date }> = ({ itens, cores, agora }) =>
   itens.length === 0 ? (
-    <p className={styles.muted}>Nenhuma lista com prazo neste dia.</p>
+    <p className={styles.muted}>Nenhuma entrega com prazo neste dia.</p>
   ) : (
     <ul className={styles.items}>
       {itens.map((l) => <Item key={l.id} l={l} cores={cores} agora={agora} />)}
@@ -76,7 +75,7 @@ const VisaoMes: React.FC<{
               type="button"
               className={`${styles.celula} ${fora ? styles.fora : ''} ${ativo ? styles.sel : ''} ${mesmoDia(d, agora) ? styles.hoje : ''}`}
               aria-pressed={ativo}
-              aria-label={`${rotuloDia(d)}, ${itens.length ? contarListas(itens.length) : 'sem listas'}`}
+              aria-label={`${rotuloDia(d)}, ${itens.length ? contarListas(itens.length) : 'sem entregas'}`}
               onClick={() => onSel(d)}
             >
               <span className={styles.num}>{d.getDate()}</span>
@@ -112,7 +111,7 @@ const VisaoSemana: React.FC<{
   </ol>
 );
 
-export const Calendario: React.FC<{ listas: ProximaLista[]; hoje?: Date }> = ({ listas, hoje }) => {
+export const Calendario: React.FC<{ listas: EntregaCalendario[]; hoje?: Date }> = ({ listas, hoje }) => {
   const agora = useMemo(() => hoje ?? new Date(), [hoje]);
   const [visao, setVisao] = useState<Visao>('mes');
   const [ref0, setRef0] = useState<Date>(agora);
@@ -162,6 +161,14 @@ export const Calendario: React.FC<{ listas: ProximaLista[]; hoje?: Date }> = ({ 
   );
 };
 
+const paraCalendario = (entregas: StudentDashboard['proximasEntregas']): EntregaCalendario[] =>
+  entregas.map((e) => ({
+    id: e.eventoId,
+    titulo: e.titulo,
+    disciplina: e.disciplinaNome ?? 'Sem disciplina',
+    prazo: e.prazo,
+  }));
+
 const CalendarioPage: React.FC = () => {
   const user = getCurrentUser();
   const estudanteId = (user?.userId as string) || localStorage.getItem('userId') || '';
@@ -182,15 +189,15 @@ const CalendarioPage: React.FC = () => {
           <Button variant="secondary" onClick={retry}>Tentar novamente</Button>
         </div>
       )}
-      {!loading && !error && data && data.proximasListas.length === 0 && (
+      {!loading && !error && data && (data.proximasEntregas ?? []).length === 0 && (
         <EmptyState
           icon={<span aria-hidden="true">📅</span>}
-          title="Nenhuma lista pendente"
-          description="Quando houver listas com prazo, elas aparecem aqui."
+          title="Nenhuma entrega pendente"
+          description="Quando houver entregas com prazo, elas aparecem aqui."
           action={<Link className={styles.link} to="/inicio">Voltar ao início</Link>}
         />
       )}
-      {!loading && !error && data && data.proximasListas.length > 0 && <Calendario listas={data.proximasListas} />}
+      {!loading && !error && data && (data.proximasEntregas ?? []).length > 0 && <Calendario listas={paraCalendario(data.proximasEntregas)} />}
     </main>
   );
 };

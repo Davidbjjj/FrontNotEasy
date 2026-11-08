@@ -1,8 +1,15 @@
-import type { ProximaLista } from '../dashboard/types';
+/** Entrega (atividade com prazo) exibida no calendário. */
+export interface EntregaCalendario {
+  id: string;
+  titulo: string;
+  disciplina: string;
+  /** ISO 8601 */
+  prazo: string | null;
+}
 
 export const calendarioPath = '/calendario';
-/** Abre a lista para responder (mesmo destino usado no painel do aluno). */
-export const listaPath = (listaId: string) => `/listas/${listaId}/questoes`;
+/** Abre a atividade (mesmo destino usado no painel do aluno). */
+export const atividadePath = (id: string) => `/atividades/${id}`;
 
 export type Visao = 'mes' | 'semana';
 
@@ -27,22 +34,22 @@ export const addMeses = (d: Date, n: number): Date => new Date(d.getFullYear(), 
 export const mesmoDia = (a: Date, b: Date) => chaveDia(a) === chaveDia(b);
 
 /** Cor por disciplina, estável para o mesmo conjunto de disciplinas (ordem alfabética). */
-export function corPorDisciplina(listas: Pick<ProximaLista, 'disciplina'>[]): Map<string, string> {
+export function corPorDisciplina(listas: Pick<EntregaCalendario, 'disciplina'>[]): Map<string, string> {
   const nomes = Array.from(new Set(listas.map((l) => l.disciplina))).sort((a, b) => a.localeCompare(b, 'pt-BR'));
   return new Map(nomes.map((n, i) => [n, PALETA[i % PALETA.length]]));
 }
 
-export interface ListaNoCalendario extends ProximaLista {
+export interface ListaNoCalendario extends EntregaCalendario {
   data: Date;
 }
 
 /** Separa listas com prazo válido (por dia, em ordem de horário) das sem prazo. */
-export function agruparPorDia(listas: ProximaLista[]): {
+export function agruparPorDia(listas: EntregaCalendario[]): {
   porDia: Map<string, ListaNoCalendario[]>;
-  semPrazo: ProximaLista[];
+  semPrazo: EntregaCalendario[];
 } {
   const porDia = new Map<string, ListaNoCalendario[]>();
-  const semPrazo: ProximaLista[] = [];
+  const semPrazo: EntregaCalendario[] = [];
   for (const l of listas) {
     const data = l.prazo ? new Date(l.prazo) : null;
     if (!data || Number.isNaN(data.getTime())) {
@@ -84,4 +91,4 @@ export function tituloSemana(ref: Date): string {
 export const rotuloDia = (d: Date) => d.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
 export const horaPrazo = (d: Date) => d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
-export const contarListas = (n: number) => `${n} ${n === 1 ? 'lista' : 'listas'}`;
+export const contarListas = (n: number) => `${n} ${n === 1 ? 'entrega' : 'entregas'}`;

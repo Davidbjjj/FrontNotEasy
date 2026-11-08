@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { getCurrentUser } from '../../auth/auth';
 import { Button, EmptyState } from '../../ui';
 import { useStudentDashboard } from './useStudentDashboard';
-import { deadlineStatus, describeDeadline, formatNota, sortByDeadline } from './dashboardLogic';
+import { ativoHoje, deadlineStatus, describeDeadline, formatNota, sortByDeadline } from './dashboardLogic';
 import { planoPath } from '../plano/planoLogic';
 import type { StudentDashboard } from './types';
 import styles from './StudentDashboard.module.css';
@@ -13,8 +13,10 @@ const ROW_CLASS = { atrasada: styles.atrasada, urgente: styles.urgente, normal: 
 
 /** Lista em andamento/pendente: abre a lista para responder. */
 const listaPath = (listaId: string) => `/listas/${listaId}/questoes`;
+/** Atividade (evento) que agrupa listas e tem o prazo. */
 /** Revisão questão a questão com gabarito (FE-102). */
 const revisaoPath = (listaId: string) => `/listas/${listaId}/revisao`;
+const atividadePath = (eventoId: string) => `/atividades/${eventoId}`;
 
 const pct = (done: number, total: number) => (total > 0 ? Math.round((done / total) * 100) : 0);
 
@@ -34,55 +36,76 @@ const Progress: React.FC<{ done: number; total: number }> = ({ done, total }) =>
   </div>
 );
 
-const ContinueCard: React.FC<{ item: NonNullable<StudentDashboard['emAndamento']> }> = ({ item }) => (
-  <section className={`${styles.card} ${styles.continue}`} aria-labelledby="continuar-titulo">
-    <h2 id="continuar-titulo" className={styles.cardTitle}>Continuar de onde parou</h2>
-    <p className={styles.itemTitle}>{item.titulo}</p>
-    <p className={styles.muted}>{item.disciplina}</p>
-    <Progress done={item.respondidas} total={item.total} />
-    <Link className={styles.cta} to={listaPath(item.listaId)}>
-      Continuar<span className="sr-only">: {item.titulo}</span>
-    </Link>
-  </section>
-);
+const ContinueCard: React.FC<{ itens: StudentDashboard['emAndamento'] }> = ({ itens }) => {
+  const [item, ...outras] = itens;
+  return (
+    <section className={`${styles.card} ${styles.continue}`} aria-labelledby="continuar-titulo">
+      <h2 id="continuar-titulo" className={styles.cardTitle}>Continuar de onde parou</h2>
+      <p className={styles.itemTitle}>{item.titulo}</p>
+      <p className={styles.muted}>{item.disciplinaNome}</p>
+      <Progress done={item.questoesRespondidas} total={item.totalQuestoes} />
+      <Link className={styles.cta} to={listaPath(item.listaId)}>
+        Continuar<span className="sr-only">: {item.titulo}</span>
+      </Link>
+      {outras.length > 0 && (
+        <>
+          <p className={styles.muted}>Também em andamento:</p>
+          <ul className={styles.list}>
+            {outras.map((o) => (
+              <li key={o.listaId} className={styles.row}>
+                <div className={styles.rowMain}>
+                  <Link to={listaPath(o.listaId)} className={styles.itemLink}>{o.titulo}</Link>
+                  <span className={styles.muted}>{o.disciplinaNome}</span>
+                </div>
+                <div className={styles.rowSide}>
+                  <span className={styles.deadline}>{o.questoesRespondidas}/{o.totalQuestoes}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </section>
+  );
+};
 
-const Streak: React.FC<{ s: StudentDashboard['sequencia'] }> = ({ s }) => {
-  const dias = (n: number) => `${n} ${n === 1 ? 'dia' : 'dias'}`;
+const Streak: React.FC<{ s: StudentDashboard['sequencia']; fuso: string }> = ({ s, fuso }) => {
+  const n = s.diasConsecutivos;
+  const dias = `${n} ${n === 1 ? 'dia' : 'dias'}`;
   let hint: string;
-  if (s.atual === 0) hint = 'Responda uma questão hoje para começar sua sequência.';
-  else if (!s.ativoHoje) hint = 'Estude hoje para não perder sua sequência!';
+  if (n === 0) hint = 'Responda uma questão hoje para começar sua sequência.';
+  else if (!ativoHoje(s.ultimaAtividadeEm, fuso)) hint = 'Estude hoje para não perder sua sequência!';
   else hint = 'Sequência garantida por hoje. Continue assim!';
   return (
     <section className={styles.card} aria-labelledby="sequencia-titulo">
       <h2 id="sequencia-titulo" className={styles.cardTitle}>Sequência de estudo</h2>
       <p className={styles.streakValue}>
         <span aria-hidden="true">🔥 </span>
-        {dias(s.atual)}
+        {dias}
         <span className="sr-only"> seguidos</span>
       </p>
       <p className={styles.muted}>{hint}</p>
-      <p className={styles.muted}>Recorde: {dias(Math.max(s.recorde, s.atual))}</p>
     </section>
   );
 };
 
-const NextLists: React.FC<{ listas: StudentDashboard['proximasListas'] }> = ({ listas }) => {
+const NextDeliveries: React.FC<{ entregas: StudentDashboard['proximasEntregas'] }> = ({ entregas }) => {
   const now = new Date();
-  const sorted = sortByDeadline(listas);
+  const sorted = sortByDeadline(entregas);
   return (
     <section className={styles.card} aria-labelledby="proximas-titulo">
-      <h2 id="proximas-titulo" className={styles.cardTitle}>Próximas listas</h2>
+      <h2 id="proximas-titulo" className={styles.cardTitle}>Próximas entregas</h2>
       {sorted.length === 0 ? (
-        <p className={styles.muted}>Nenhuma lista pendente. Aproveite para revisar suas notas!</p>
+        <p className={styles.muted}>Nenhuma entrega pendente. Aproveite para revisar o que já fez!</p>
       ) : (
         <ul className={styles.list}>
           {sorted.map((l) => {
             const status = deadlineStatus(l.prazo, now);
             return (
-              <li key={l.id} className={`${styles.row} ${ROW_CLASS[status]}`}>
+              <li key={l.eventoId} className={`${styles.row} ${ROW_CLASS[status]}`}>
                 <div className={styles.rowMain}>
-                  <Link to={listaPath(l.id)} className={styles.itemLink}>{l.titulo}</Link>
-                  <span className={styles.muted}>{l.disciplina}</span>
+                  <Link to={atividadePath(l.eventoId)} className={styles.itemLink}>{l.titulo}</Link>
+                  <span className={styles.muted}>{l.disciplinaNome}</span>
                 </div>
                 <div className={styles.rowSide}>
                   {STATUS_LABEL[status] && (
@@ -105,14 +128,14 @@ const LatestGrades: React.FC<{ notas: StudentDashboard['ultimasNotas'] }> = ({ n
   <section className={styles.card} aria-labelledby="notas-titulo">
     <h2 id="notas-titulo" className={styles.cardTitle}>Últimas notas</h2>
     {notas.length === 0 ? (
-      <p className={styles.muted}>Você ainda não tem notas. Elas aparecem aqui assim que forem lançadas.</p>
+      <p className={styles.muted}>Você ainda não tem notas. Elas aparecem aqui assim que você finalizar uma lista.</p>
     ) : (
       <ul className={styles.list}>
         {notas.map((n) => (
           <li key={n.listaId} className={styles.row}>
             <div className={styles.rowMain}>
               <span className={styles.itemTitle}>{n.titulo}</span>
-              <span className={styles.muted}>{n.disciplina}</span>
+              <span className={styles.muted}>{n.disciplinaNome}</span>
             </div>
             <div className={styles.rowSide}>
               <strong>{formatNota(n.nota, n.notaMaxima)}</strong>
@@ -156,10 +179,10 @@ const StudentDashboardPage: React.FC = () => {
 
       {!loading && !error && data && data.totalDisciplinas > 0 && (
         <div className={styles.grid}>
-          {data.emAndamento && <ContinueCard item={data.emAndamento} />}
-          <Streak s={data.sequencia} />
-          <NextLists listas={data.proximasListas} />
-          <LatestGrades notas={data.ultimasNotas} />
+          {(data.emAndamento?.length ?? 0) > 0 &&<ContinueCard itens={data.emAndamento} />}
+          <Streak s={data.sequencia} fuso={data.fusoHorario} />
+          <NextDeliveries entregas={data.proximasEntregas ?? []} />
+          <LatestGrades notas={data.ultimasNotas ?? []} />
           <section className={styles.card} aria-labelledby="plano-titulo">
             <h2 id="plano-titulo" className={styles.cardTitle}>Plano de revisão</h2>
             <p className={styles.muted}>Veja o que estudar com base nos seus erros.</p>

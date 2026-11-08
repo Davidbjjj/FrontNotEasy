@@ -1,4 +1,4 @@
-import type { ProximaLista } from './types';
+import type { ProximaEntrega } from './types';
 
 const HOUR = 3_600_000;
 export const URGENT_WINDOW_HOURS = 48;
@@ -15,12 +15,12 @@ export function deadlineStatus(prazo: string | null, now: Date = new Date()): De
 }
 
 /** Mais próximas primeiro; sem prazo (ou prazo inválido) no fim. Não altera o array recebido. */
-export function sortByDeadline(listas: ProximaLista[]): ProximaLista[] {
-  const key = (l: ProximaLista) => {
+export function sortByDeadline(entregas: ProximaEntrega[]): ProximaEntrega[] {
+  const key = (l: ProximaEntrega) => {
     const t = l.prazo ? new Date(l.prazo).getTime() : NaN;
     return Number.isNaN(t) ? Number.POSITIVE_INFINITY : t;
   };
-  return [...listas].sort((a, b) => key(a) - key(b));
+  return [...entregas].sort((a, b) => key(a) - key(b));
 }
 
 /** Texto curto e legível: "Vence em 5 h", "Vence amanhã", "Venceu há 2 dias"... */
@@ -44,4 +44,27 @@ export function describeDeadline(prazo: string | null, now: Date = new Date()): 
 export function formatNota(nota: number, max: number): string {
   const f = (n: number) => n.toLocaleString('pt-BR', { maximumFractionDigits: 1 });
   return `${f(nota)} / ${f(max)}`;
+}
+
+/** Data (YYYY-MM-DD) de um instante no fuso IANA informado; null se inválido. */
+function diaNoFuso(instante: Date, fuso: string): string | null {
+  try {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: fuso,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(instante);
+  } catch {
+    return null;
+  }
+}
+
+/** Houve atividade hoje (no fuso do aluno)? Se não, a sequência está "em risco". */
+export function ativoHoje(ultimaAtividadeEm: string | null, fuso: string, now: Date = new Date()): boolean {
+  if (!ultimaAtividadeEm) return false;
+  const ultima = new Date(ultimaAtividadeEm);
+  if (Number.isNaN(ultima.getTime())) return false;
+  const hoje = diaNoFuso(now, fuso);
+  return hoje !== null && hoje === diaNoFuso(ultima, fuso);
 }

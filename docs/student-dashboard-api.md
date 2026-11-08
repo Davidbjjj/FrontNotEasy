@@ -1,56 +1,49 @@
-# Contrato da API do dashboard do aluno (FE-101)
+# API do dashboard do aluno (FE-101)
 
-Proposta do front-end. Enquanto o back-end não implementa, o front usa um
-**mock** (`src/estudante/dashboard/dashboardService.ts`). Para a API real:
-`REACT_APP_STUDENT_DASHBOARD_MOCK=false`.
+Implementada no back-end; o front consome a API real
+(`src/estudante/dashboard/dashboardService.ts`), sem mock.
 
-## `GET /estudante/{estudanteId}/dashboard`
+## `GET /estudantes/{estudanteId}/dashboard`
 
-Só o próprio aluno (ou papéis autorizados) pode consultar. Datas em ISO 8601.
+Só o próprio aluno logado pode consultar (senão 403). Instantes em ISO 8601 com
+offset, no fuso do aluno. Fuso: header `X-Timezone` (IANA) > `Estudante.fusoHorario`
+> `America/Sao_Paulo`.
 
 ```json
 {
+  "estudanteId": "uuid",
+  "nome": "Ana",
+  "fusoHorario": "America/Sao_Paulo",
   "totalDisciplinas": 3,
-  "proximasListas": [
-    { "id": "l1", "titulo": "Lista 1 — Funções", "disciplina": "Matemática",
-      "prazo": "2026-01-12T20:00:00Z", "respondidas": 4, "total": 8 }
+  "sequencia": { "diasConsecutivos": 4, "ultimaAtividadeEm": "2026-11-08T21:30:00-03:00" },
+  "emAndamento": [
+    { "listaId": "uuid", "titulo": "Lista 1", "disciplinaId": "uuid", "disciplinaNome": "Matemática",
+      "questoesRespondidas": 4, "totalQuestoes": 8, "ultimaAtividadeEm": "2026-11-08T21:30:00-03:00" }
+  ],
+  "proximasEntregas": [
+    { "eventoId": "uuid", "titulo": "Atividade 1", "disciplinaId": "uuid",
+      "disciplinaNome": "Física", "prazo": "2026-11-12T23:59:00-03:00" }
   ],
   "ultimasNotas": [
-    { "listaId": "l0", "titulo": "Lista 0 — Revisão", "disciplina": "Matemática",
-      "nota": 8.5, "notaMaxima": 10, "corrigidaEm": "2026-01-09T14:00:00Z" }
-  ],
-  "sequencia": { "atual": 4, "recorde": 12, "ativoHoje": false },
-  "emAndamento": { "listaId": "l1", "titulo": "Lista 1 — Funções", "disciplina": "Matemática",
-                   "respondidas": 4, "total": 8 }
+    { "listaId": "uuid", "titulo": "Lista 0", "disciplinaId": "uuid", "disciplinaNome": "Matemática",
+      "nota": 8.5, "notaMaxima": 10, "corrigidaEm": "2026-11-08T21:30:00-03:00" }
+  ]
 }
 ```
 
-- `proximasListas`: listas **pendentes** (não finalizadas). O front reordena por
-  `prazo` (sem prazo por último) e destaca as que vencem em até 48 h; vencidas
-  aparecem como "Atrasada". Sugestão: limitar a ~10 itens.
-- `ultimasNotas`: mais recentes primeiro; sugestão de limite 5.
-- `sequencia.atual`: dias consecutivos com atividade, **no fuso do aluno**,
-  contando até hoje — ou até ontem se `ativoHoje` for `false` (sequência "em risco").
-  Definição de "atividade" (ex.: ao menos uma resposta enviada) fica a cargo do back-end.
-- `emAndamento`: lista com respostas parciais mais recente; `null` se não houver.
+- `emAndamento`: listas com respostas parciais, mais recente primeiro, até 10.
+  A primeira vira o cartão "Continuar de onde parou".
+- `proximasEntregas`: atividades (eventos) pendentes, até 5. Abrem em `/atividades/{eventoId}`.
+  O calendário (FE-107) usa esta mesma lista, então mostra no máximo 5 entregas.
+- `ultimasNotas`: listas **finalizadas** com nota (escala 0 a 10), mais recentes primeiro, até 5;
+  `corrigidaEm` é a última resposta da lista. Cada uma tem link "Revisar" para
+  `/listas/{listaId}/revisao` (FE-102, `docs/review-api.md`).
+- `sequencia.diasConsecutivos`: dias seguidos com resposta, contando até hoje ou até
+  ontem. O front calcula "ativo hoje" comparando `ultimaAtividadeEm` com a data de hoje
+  em `fusoHorario`.
 - `totalDisciplinas = 0` faz o front mostrar o estado vazio.
 
-## Origem do prazo
+## Não existe no endpoint
 
-No front atual o prazo pertence à **atividade** (evento, campo `prazo`,
-`YYYY-MM-DD`), que agrupa listas; a lista em si não tem prazo. Por isso
-`proximasListas[].prazo` deve ser o prazo da atividade que contém a lista.
-Lista fora de qualquer atividade vem com `prazo: null` (aparece no fim, "Sem prazo").
-Se estiver em mais de uma atividade, usar o prazo mais próximo ainda não vencido.
-Como o `prazo` da atividade pode vir só com a data, o back-end deve devolver o
-fim do dia no fuso do aluno (ISO 8601 com offset), para o corte de 48 h ser correto.
-
-## Revisão da lista
-
-Os links "Revisar" abrem `/listas/{listaId}/revisao` (FE-102, contrato em
-`docs/review-api.md`).
-
-## Back-end
-
-Endpoint **ainda não implementado**; até lá o front usa o mock. Ao implementar,
-ligar com `REACT_APP_STUDENT_DASHBOARD_MOCK=false` e validar com um aluno real.
+Recorde de sequência: a linha "Recorde" foi removida do painel. Se for necessária,
+o back precisa expor esse campo.

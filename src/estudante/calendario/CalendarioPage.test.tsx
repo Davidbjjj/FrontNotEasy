@@ -5,13 +5,14 @@ import { MemoryRouter } from 'react-router-dom';
 import CalendarioPage, { Calendario } from './CalendarioPage';
 import { studentDashboardService } from '../dashboard/dashboardService';
 import { agruparPorDia, corPorDisciplina, semanasDoMes } from './calendarioLogic';
-import type { ProximaLista, StudentDashboard } from '../dashboard/types';
+import type { EntregaCalendario } from './calendarioLogic';
+import type { StudentDashboard } from '../dashboard/types';
 
 jest.mock('../../services/apiClient', () => ({ __esModule: true, default: {} }));
 
 const hoje = new Date(2026, 10, 8, 10, 0); // domingo, 8/nov/2026
-const L = (id: string, disciplina: string, prazo: string | null): ProximaLista =>
-  ({ id, titulo: `Lista ${id}`, disciplina, prazo, respondidas: 1, total: 4 });
+const L = (id: string, disciplina: string, prazo: string | null): EntregaCalendario =>
+  ({ id, titulo: `Lista ${id}`, disciplina, prazo });
 
 const listas = [
   L('a', 'Matemática', new Date(2026, 10, 10, 20, 0).toISOString()),
@@ -39,11 +40,11 @@ test('lógica: cores distintas por disciplina e semanas do mês cobrem o mês', 
 
 test('mês: selecionar um dia mostra a lista dele com link para responder', () => {
   renderCal();
-  userEvent.click(screen.getByRole('button', { name: /10 de novembro, 2 listas/ }));
+  userEvent.click(screen.getByRole('button', { name: /10 de novembro, 2 entregas/ }));
   const secao = screen.getByRole('region', { name: /terça-feira, 10 de novembro/i });
   const links = within(secao).getAllByRole('link');
   expect(links.map((a) => a.textContent)).toEqual(['Lista b', 'Lista a']);
-  expect(links[0]).toHaveAttribute('href', '/listas/b/questoes');
+  expect(links[0]).toHaveAttribute('href', '/atividades/b');
 });
 
 test('legenda por disciplina e seção sem prazo', () => {
@@ -72,9 +73,9 @@ test('página: erro de carregamento oferece tentar novamente e depois mostra est
   render(<MemoryRouter><CalendarioPage /></MemoryRouter>);
   expect(await screen.findByRole('alert')).toHaveTextContent('boom');
   spy.mockResolvedValueOnce({
-    totalDisciplinas: 1, proximasListas: [], ultimasNotas: [],
-    sequencia: { atual: 0, recorde: 0, ativoHoje: false }, emAndamento: null,
+    estudanteId: 'u1', nome: 'Ana', fusoHorario: 'America/Sao_Paulo', totalDisciplinas: 1,
+    sequencia: { diasConsecutivos: 0, ultimaAtividadeEm: null }, emAndamento: [], proximasEntregas: [], ultimasNotas: [],
   } as StudentDashboard);
   userEvent.click(screen.getByRole('button', { name: 'Tentar novamente' }));
-  expect(await screen.findByText('Nenhuma lista pendente')).toBeInTheDocument();
+  expect(await screen.findByText('Nenhuma entrega pendente')).toBeInTheDocument();
 });
