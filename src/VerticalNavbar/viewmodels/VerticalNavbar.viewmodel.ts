@@ -22,6 +22,7 @@ export const useVerticalNavbarViewModel = (
     const roleRaw = (localStorage.getItem('role') || '').toString().toUpperCase();
     if (roleRaw === 'ALUNO') {
       defaultItems.unshift({ id: 'inicio', label: 'Início', isActive: false, path: '/inicio' });
+      defaultItems.splice(1, 0, { id: 'evolucao', label: 'Evolução', isActive: false, path: '/evolucao' });
     }
     if (roleRaw === 'INSTITUICAO') {
       // Remove 'questões' for institution users

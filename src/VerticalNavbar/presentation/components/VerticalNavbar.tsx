@@ -10,6 +10,7 @@ import {
   Book,
   Calendar, // Ícone para atividades
   Building2, // Ícone para instituição
+  TrendingUp,
   Home // Ícone para o início do aluno
 } from "lucide-react";
 import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.viewmodel";
@@ -26,6 +27,7 @@ const VerticalNavbarComponent: React.FC<VerticalNavbarProps> = ({
 
   const icons: Record<string, JSX.Element> = {
     "inicio": <Home className="vertical-navbar__icon" />,
+    "evolucao": <TrendingUp className="vertical-navbar__icon" />,
     "questoes": <FileText className="vertical-navbar__icon" />,
     "listas": <List className="vertical-navbar__icon" />,
     "atividades": <Calendar className="vertical-navbar__icon" />,

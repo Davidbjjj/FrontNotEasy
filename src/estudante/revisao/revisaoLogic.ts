@@ -1,4 +1,5 @@
 import type { QuestaoRevisao, RegraGabarito } from './types';
+import { erradasPath } from '../evolucao/evolucaoLogic';
 
 export const letra = (indice: number) => String.fromCharCode(65 + indice);
 
@@ -27,5 +28,5 @@ export function mensagemBloqueio(regra: RegraGabarito, liberadoEm: string | null
   return 'O gabarito ainda não está disponível. Finalize a lista para ver onde você errou.';
 }
 
-/** FE-105 (evolução por assunto) ainda não tem rota; troque aqui quando existir. */
-export const evolucaoPath = (_assuntoId: string): string | null => null;
+/** FE-105: o assunto leva às questões erradas dele. */
+export const evolucaoPath = (assuntoId: string): string | null => erradasPath(assuntoId);
