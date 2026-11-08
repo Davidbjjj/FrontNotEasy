@@ -48,6 +48,8 @@ export interface QuestionProps {
   estudanteId: string;
   /** Map of questionId -> selected answer letter (e.g. { '12': 'A' }) */
   initialAnswers?: Record<string, string>;
+  /** Instante final (epoch ms) quando a lista tem tempo limite (FE-205). */
+  deadline?: number;
   onAnswerSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   onOptionSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   onNavigate?: (direction: 'previous' | 'next') => void;

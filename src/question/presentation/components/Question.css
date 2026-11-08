@@ -323,3 +323,13 @@
   .question-page input:focus,
   .question-page textarea:focus{ scroll-margin-bottom:96px; font-size:16px }
 }
+
+/* ===== FE-104: salvamento e tempo ===== */
+.question-status-row{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; min-height:24px }
+.save-status{ font-size:.875rem; color:#4b5563; display:flex; align-items:center; gap:8px; flex-wrap:wrap }
+.save-status--saved{ color:#047857 }
+.save-status--offline{ color:#92400e; background:#fffbeb; border:1px solid #fcd34d; border-radius:8px; padding:6px 10px }
+.save-status--error{ color:#b91c1c }
+.save-status__retry{ min-height:36px; padding:0 12px; border:1px solid currentColor; border-radius:8px; background:transparent; color:inherit; font-weight:600; cursor:pointer }
+.countdown{ margin-left:auto; font-weight:700; font-variant-numeric:tabular-nums; color:#111827 }
+.countdown--urgent{ color:#b91c1c }
