@@ -23,6 +23,7 @@ export const useVerticalNavbarViewModel = (
     if (roleRaw === 'ALUNO') {
       defaultItems.unshift({ id: 'inicio', label: 'Início', isActive: false, path: '/inicio' });
       defaultItems.splice(1, 0, { id: 'evolucao', label: 'Evolução', isActive: false, path: '/evolucao' });
+      defaultItems.splice(2, 0, { id: 'calendario', label: 'Calendário', isActive: false, path: '/calendario' });
     }
     if (roleRaw === 'INSTITUICAO') {
       // Remove 'questões' for institution users
