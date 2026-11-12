@@ -27,8 +27,11 @@ export class RespostaService {
   async enviarResposta(resposta: {
     estudanteId: string;
     questaoId: number;
-    alternativa: number;
+    /** Questões objetivas: índice da alternativa (ordem original). */
+    alternativa?: number;
     listaId: string;
+    /** Questões abertas (FE-201): texto da resposta. */
+    textoResposta?: string;
   }): Promise<void> {
     try {
       await api.post('/enviaresposta', resposta);
@@ -122,6 +125,11 @@ export class RespostaService {
 
   async finalizarLista(listaId: string, estudanteId: string): Promise<void> {
     await api.post(`/listas/${listaId}/estudantes/${estudanteId}/finalizar`);
+  }
+
+  /** FE-205: apaga as respostas e abre outra tentativa, se a lista permitir. */
+  async novaTentativa(listaId: string, estudanteId: string): Promise<void> {
+    await api.post(`/listas/${listaId}/estudantes/${estudanteId}/nova-tentativa`);
   }
 
   /**

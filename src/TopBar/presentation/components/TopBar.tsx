@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { HelpCircle, LogOut } from "lucide-react";
 import GlobalSearch from "../../../busca/GlobalSearch";
 import NotificationBell from "../../../notifications/NotificationBell";
+import { BrandLogo } from "../../../branding/BrandingSync";
 import { useTopBarViewModel } from "../../viewmodels/TopBar.viewmodel";
 import { requestTourRestart } from "../../../onboarding/onboardingStorage";
 import { TopBarProps } from "../../model/TopBar.types";
@@ -56,6 +57,7 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header className={`top-bar ${className}`}>
       {/* Perfil do usuário no lado esquerdo */}
       <div className="top-bar__user-info">
+        <BrandLogo />
         <div className="top-bar__user-avatar">
           {currentUserInfo.avatar ? (
             <img src={currentUserInfo.avatar} alt="" className="top-bar__user-photo" />

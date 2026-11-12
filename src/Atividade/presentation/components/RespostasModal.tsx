@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { LoadingState, ErrorState } from './StateComponents';
 import {
   RespostaHeader,
@@ -49,7 +50,9 @@ export const RespostasModal: React.FC<RespostasModalProps> = ({
     };
   }, []);
 
-  return (
+  // Portal no <body>: dentro do layout o modal ficava preso ao contexto de empilhamento da página,
+  // então a barra superior e a navegação inferior (fixas) continuavam por cima dele.
+  return createPortal(
     <div className="respostas-modal-overlay" onClick={onClose} role="presentation">
       <div
         className="respostas-modal respostas-modal--premium"
@@ -128,5 +131,5 @@ export const RespostasModal: React.FC<RespostasModalProps> = ({
         </div>
       </div>
     </div>
-  );
+  , document.body);
 };

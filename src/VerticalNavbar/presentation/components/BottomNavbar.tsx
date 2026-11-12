@@ -11,7 +11,10 @@ import {
   Building2,
   Home,
   CalendarDays,
-  TrendingUp
+  TrendingUp,
+  ClipboardCheck,
+  Library,
+  AlertTriangle
 } from "lucide-react";
 import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.viewmodel";
 import { VerticalNavbarProps } from "../../model/VerticalNavbar.types";
@@ -30,6 +33,9 @@ const BottomNavbarComponent: React.FC<Partial<VerticalNavbarProps>> = ({ items, 
     "simulados": <ClipboardList className="bottom-navbar__icon" />,
     "disciplinas": <Book className="bottom-navbar__icon" />,
     "instituicao": <Building2 className="bottom-navbar__icon" />,
+    "correcao": <ClipboardCheck className="bottom-navbar__icon" />,
+    "banco": <Library className="bottom-navbar__icon" />,
+    "risco": <AlertTriangle className="bottom-navbar__icon" />,
     "config": <Settings className="bottom-navbar__icon" />,
   };
 

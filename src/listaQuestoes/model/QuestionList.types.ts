@@ -17,6 +17,8 @@ export interface QuestionList {
   questionsCompleted: number;
   totalQuestions: number;
   deadline?: string;
+  /** FE-206: rascunhos só o professor vê. Ausente = publicada. */
+  status?: 'RASCUNHO' | 'PUBLICADA';
   tags: string[];
   createdAt: Date;
   updatedAt: Date;

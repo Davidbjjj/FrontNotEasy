@@ -12,6 +12,9 @@ import {
   Building2, // Ícone para instituição
   TrendingUp,
   CalendarDays,
+  ClipboardCheck,
+  Library,
+  AlertTriangle,
   Home // Ícone para o início do aluno
 } from "lucide-react";
 import { useVerticalNavbarViewModel } from "../../viewmodels/VerticalNavbar.viewmodel";
@@ -36,6 +39,9 @@ const VerticalNavbarComponent: React.FC<VerticalNavbarProps> = ({
     "simulados": <ClipboardList className="vertical-navbar__icon" />,
     "disciplinas": <Book className="vertical-navbar__icon" />,
     "instituicao": <Building2 className="vertical-navbar__icon" />,
+    "correcao": <ClipboardCheck className="vertical-navbar__icon" />,
+    "banco": <Library className="vertical-navbar__icon" />,
+    "risco": <AlertTriangle className="vertical-navbar__icon" />,
     "config": <Settings className="vertical-navbar__icon" />,
   };
 

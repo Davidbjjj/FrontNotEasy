@@ -1,4 +1,5 @@
-export type RegraGabarito = 'APOS_ENTREGA' | 'APOS_PRAZO';
+/** MANUAL: o professor libera o gabarito da lista (PUT /listas/{id}/gabarito-liberado). */
+export type RegraGabarito = 'APOS_ENTREGA' | 'APOS_PRAZO' | 'MANUAL';
 
 export interface AssuntoRef {
   id: string;

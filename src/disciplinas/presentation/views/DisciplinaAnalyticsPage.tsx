@@ -5,8 +5,10 @@ import styles from '../components/Disciplinas.module.css';
 import layoutStyles from './DisciplinaAnalytics.module.css';
 import AdicionarAlunoModal from '../components/AdicionarAlunoModal';
 import Toast from '../../../components/Toast';
-import { RefreshCw, UserPlus, BookOpen, Lightbulb, X } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { RefreshCw, UserPlus, BookOpen, Lightbulb, X, LifeBuoy, Download, AlertTriangle } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { AvisarAlunosModal, ReabrirListaModal, ReforcoModal } from '../../../professor/acoes/AcoesModais';
+import MuralAvisos from '../../../mural/MuralAvisos';
 import { instituicaoService } from '../../../instituicao/services/api/instituicao.service';
 
 const DisciplinaAnalyticsPage: React.FC = () => {
@@ -17,6 +19,11 @@ const DisciplinaAnalyticsPage: React.FC = () => {
   const { medias, listas, atividades, atividadesList, disciplina, isLoading, error, reload } = useDisciplinaAnalyticsViewModel(disciplinaId, professorId);
   const [showAddModal, setShowAddModal] = React.useState(false);
   const navigate = useNavigate();
+  const isStaff = currentRole === 'PROFESSOR' || currentRole === 'INSTITUICAO' || currentRole === 'TEACHER';
+  // FE-203: ações a partir dos blocos de analytics
+  const [listaParaReabrir, setListaParaReabrir] = React.useState<{ id: string; titulo: string } | null>(null);
+  const [alunosParaAvisar, setAlunosParaAvisar] = React.useState<{ id: string; nome: string }[]>([]);
+  const [reforco, setReforco] = React.useState<{ id: string; nome: string }[] | null>(null);
 
   const [toastMessage, setToastMessage] = React.useState<string | null>(null);
   const [loadingSuggestions, setLoadingSuggestions] = React.useState(false);
@@ -66,6 +73,15 @@ const DisciplinaAnalyticsPage: React.FC = () => {
               >
                 <Lightbulb size={16} /> {loadingSuggestions ? 'Carregando...' : 'Sugestões IA'}
               </button>
+              <button
+                className={`${layoutStyles.btn} ${layoutStyles.btnSecondary} iconBtn`}
+                onClick={() => setReforco([])}
+                title="Cria uma lista com as questões dos assuntos em que a turma foi pior"
+              >
+                <LifeBuoy size={16} /> Lista de reforço
+              </button>
+              <Link to="/alunos-em-risco" className={`${layoutStyles.btn} ${layoutStyles.btnGhost} iconBtn`}><AlertTriangle size={16} /> Alunos em risco</Link>
+              <Link to="/exportar-notas" className={`${layoutStyles.btn} ${layoutStyles.btnGhost} iconBtn`}><Download size={16} /> Exportar notas</Link>
               <button className={`${layoutStyles.btn} ${layoutStyles.btnPrimary} iconBtn`} onClick={() => setShowAddModal(true)}><UserPlus size={16} /> Adicionar Aluno</button>
             </>
           )}
@@ -180,7 +196,25 @@ const DisciplinaAnalyticsPage: React.FC = () => {
                               </div>
                               <div className={layoutStyles.studentMetricRight}>
                                 <div className={`${layoutStyles.percentBadge} ${pctClass}`}>{pct.toFixed(0)}%</div>
-                                <div className={layoutStyles.responsesCount}>{m.respostasCount} respostas</div>
+                                {isStaff && (
+                                  <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end', marginTop: 6 }}>
+                                    <button
+                                      className={`${layoutStyles.btn} ${layoutStyles.btnGhost}`}
+                                      onClick={() => setAlunosParaAvisar([{ id: m.estudanteId, nome: m.estudanteNome }])}
+                                      aria-label={`Avisar ${m.estudanteNome}`}
+                                    >Avisar</button>
+                                    <button
+                                      className={`${layoutStyles.btn} ${layoutStyles.btnGhost}`}
+                                      onClick={() => setReforco([{ id: m.estudanteId, nome: m.estudanteNome }])}
+                                      aria-label={`Criar lista de reforço para ${m.estudanteNome}`}
+                                    >Reforço</button>
+                                    <Link
+                                      to={`/alunos/${encodeURIComponent(m.estudanteId)}`}
+                                      className={`${layoutStyles.btn} ${layoutStyles.btnGhost}`}
+                                      aria-label={`Abrir perfil de ${m.estudanteNome}`}
+                                    >Perfil</Link>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           );
@@ -203,6 +237,14 @@ const DisciplinaAnalyticsPage: React.FC = () => {
                             <div>
                               <div className={layoutStyles.listTitle}>{idx + 1}. {l.listaTitulo}</div>
                               <div className={layoutStyles.listMeta}>{l.respostasCount} respostas</div>
+                              {isStaff && (
+                                <button
+                                  className={`${layoutStyles.btn} ${layoutStyles.btnGhost}`}
+                                  style={{ marginTop: 6 }}
+                                  onClick={() => setListaParaReabrir({ id: l.listaId, titulo: l.listaTitulo })}
+                                  aria-label={`Reabrir lista ${l.listaTitulo}`}
+                                >Reabrir lista</button>
+                              )}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                               <div className={layoutStyles.difficultyBar} aria-hidden>
@@ -284,6 +326,23 @@ const DisciplinaAnalyticsPage: React.FC = () => {
           <Toast message={toastMessage} onClose={() => setToastMessage(null)} />
         )
       }
+
+      {isStaff && disciplinaId && (
+        <>
+          <ReabrirListaModal open={!!listaParaReabrir} lista={listaParaReabrir} onClose={() => setListaParaReabrir(null)} onDone={reload} />
+          <AvisarAlunosModal open={alunosParaAvisar.length > 0} alunos={alunosParaAvisar} onClose={() => setAlunosParaAvisar([])} />
+          <ReforcoModal
+            open={reforco !== null} disciplinaId={disciplinaId} disciplinaNome={disciplina?.nome}
+            alunos={reforco ?? []} onClose={() => setReforco(null)}
+          />
+        </>
+      )}
+
+      {disciplinaId && (
+        <div style={{ marginTop: 24 }}>
+          <MuralAvisos disciplinaId={disciplinaId} podeEditar={isStaff} />
+        </div>
+      )}
     </div >
   );
 };

@@ -2,12 +2,15 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { NavItem, VerticalNavbarViewModel } from '../model/VerticalNavbar.types';
+import { usePermissoes } from '../../instituicao/gestao/permissoesStore';
+import { PERMISSAO_NAV } from '../../instituicao/gestao/gestaoLogic';
 
 export const useVerticalNavbarViewModel = (
   initialItems?: NavItem[],
   onItemClick?: (item: NavItem) => void
 ): VerticalNavbarViewModel => {
   const location = useLocation();
+  const { dados: permissoes, tem } = usePermissoes();
 
   let defaultItems: NavItem[] = [
     { id: 'questoes', label: 'Questões', isActive: false, path: '/questoes' },
@@ -24,6 +27,16 @@ export const useVerticalNavbarViewModel = (
       defaultItems.unshift({ id: 'inicio', label: 'Início', isActive: false, path: '/inicio' });
       defaultItems.splice(1, 0, { id: 'evolucao', label: 'Evolução', isActive: false, path: '/evolucao' });
       defaultItems.splice(2, 0, { id: 'calendario', label: 'Calendário', isActive: false, path: '/calendario' });
+    }
+    if (roleRaw === 'PROFESSOR') {
+      // Professor não usa a página "Questões": o acervo dele é o Banco
+      defaultItems = defaultItems.filter(item => item.id !== 'questoes');
+      // FE-201, FE-202, FE-204: ferramentas do professor logo depois de Questões/Listas
+      defaultItems.splice(1, 0,
+        { id: 'correcao', label: 'Correção', isActive: false, path: '/correcao' },
+        { id: 'banco', label: 'Banco', isActive: false, path: '/banco-questoes' },
+        { id: 'risco', label: 'Em risco', isActive: false, path: '/alunos-em-risco' },
+      );
     }
     if (roleRaw === 'INSTITUICAO') {
       // Remove 'questões' for institution users
@@ -67,8 +80,18 @@ export const useVerticalNavbarViewModel = (
     [onItemClick]
   );
 
+  // FE-306: itens sem permissão ficam ocultos (não só bloqueados). Antes de a matriz carregar, mostra o padrão.
+  const GESTAO = ['VER_DASHBOARD', 'VER_RELATORIOS', 'IMPORTAR_USUARIOS', 'GERIR_CONVITES', 'GERIR_PERIODOS',
+    'EMITIR_BOLETINS', 'EDITAR_CONFIGURACOES', 'GERIR_PAPEIS', 'VER_AUDITORIA'];
+  const visiveis = navItems.filter((i) => !PERMISSAO_NAV[i.id] || tem(PERMISSAO_NAV[i.id]));
+  const coordenador = !initialItems && permissoes?.papel === 'COORDENADOR'
+    && GESTAO.some((p) => permissoes.permissoes.includes(p)) && !visiveis.some((i) => i.id === 'instituicao');
+  const comGestao: NavItem[] = coordenador
+    ? [{ id: 'instituicao', label: 'Instituição', isActive: location.pathname.startsWith('/instituicao'), path: '/instituicao' }, ...visiveis]
+    : visiveis;
+
   return {
-    navItems,
+    navItems: comGestao,
     activeItem,
     handleItemClick,
   };

@@ -8,6 +8,9 @@ export interface ListaResponseDTO {
   disciplinaId?: string;
   totalQuestoes?: number;
   questoesRespondidas?: number;
+  /** FE-205: fechamento da lista (ISO) e status de publicação (FE-206). */
+  fechaEm?: string | null;
+  status?: 'RASCUNHO' | 'PUBLICADA';
 }
 
 class QuestionListService {
@@ -70,7 +73,7 @@ class QuestionListService {
       title: dto.titulo,
       professor: {
         id: '1',
-        name: dto.professorNome
+        name: dto.professorNome ?? (dto as any).professor ?? ''
       },
       subject: {
         id: disciplinaId || 'default',
@@ -78,6 +81,8 @@ class QuestionListService {
       },
       questionsCompleted: dto.questoesRespondidas || 0,
       totalQuestions: dto.totalQuestoes || 0,
+      deadline: dto.fechaEm || undefined,
+      status: dto.status,
       tags: [],
       createdAt: new Date(),
       updatedAt: new Date()

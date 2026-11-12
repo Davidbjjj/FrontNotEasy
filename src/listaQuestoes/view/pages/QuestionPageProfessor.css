@@ -21,6 +21,8 @@
   box-shadow: 0 1px 2px rgba(16,24,40,0.04);
 }
 .qpp-question-card {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: 20px;
   border-radius: 10px;
   border: 1px solid #e6edf0;
@@ -33,11 +35,11 @@
 .qpp-question-title { font-size:16px; font-weight:700; margin:6px 0 }
 .qpp-question-enunciado { color:#374151; margin-bottom:12px; line-height:1.5 }
 
-.qpp-images { margin-top: 8px }
-.qpp-quest-image { max-width: 160px; max-height: 120px; object-fit: contain; border-radius: 6px; border: 1px solid #e6eef2 }
+.qpp-images { margin-top: 8px; min-width: 0; max-width: 100% }
+.qpp-quest-image { max-width: min(160px, 100%); max-height: 120px; width: auto; height: auto; object-fit: contain; border-radius: 6px; border: 1px solid #e6eef2 }
 
 /* When the image is not referenced inline (not part of enunciado or alternative), show it larger */
-.qpp-quest-image--large { max-width: 320px; max-height: 240px }
+.qpp-quest-image--large { max-width: min(320px, 100%); max-height: 240px }
 
 /* Alternative cards (big, clickable style) */
 .qpp-alt-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px }
@@ -111,7 +113,7 @@
 .qpp-muted { color:#6b7280 }
 
 /* Toasts */
-.qpp-toast-wrap { position: fixed; right: 18px; top: 18px; z-index: 2000; display:flex; flex-direction:column; gap:8px }
+.qpp-toast-wrap { position: fixed; right: 18px; bottom: 18px; z-index: 2000; pointer-events: none; display:flex; flex-direction:column; gap:8px }
 .qpp-toast { background: #111827; color: #fff; padding:10px 14px; border-radius:8px; box-shadow:0 6px 20px rgba(2,6,23,0.12); min-width:220px; max-width:360px; font-size:14px }
 .qpp-toast.success { background: #065f46 }
 .qpp-toast.error { background: #7f1d1d }
@@ -126,4 +128,15 @@
 @media (max-width: 600px) {
   .qpp-modal { width: 92%; padding: 14px }
   .qpp-row { flex-direction: column }
+}
+
+@media (max-width: 768px) {
+  .qpp-toast-wrap { bottom: calc(var(--bottombar-height, 64px) + 12px + env(safe-area-inset-bottom, 0px)); left: 12px; right: 12px; }
+  .qpp-toast { max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .qpp-question-card { padding: 14px; }
+  .qpp-question-head { flex-wrap: wrap; }
+  .qpp-quest-image, .qpp-quest-image--large { max-width: 100%; max-height: 220px; }
 }

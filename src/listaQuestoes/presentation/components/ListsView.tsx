@@ -2,7 +2,9 @@ import React from 'react';
 import { ListsViewProps, QuestionList } from '../../model/QuestionList.types';
 import AddQuestionsButton from './AddQuestionsButton/AddQuestionsButton';
 import AddListButton from './AddListButton/AddListButton';
-import { ArrowRight, Clock, Book, FileText, Trash2, Loader2 } from 'lucide-react';
+import { ArrowRight, Clock, Book, FileText, Trash2, Loader2, Settings2, Copy } from 'lucide-react';
+import ConfigListaModal from '../../../professor/lista/ConfigListaModal';
+import DuplicarListaModal from '../../../professor/lista/DuplicarListaModal';
 import './QuestionList.css';
 import { formatDateTime } from '../../../utils/date';
 import { respostaService } from '../../../question/service/api/respostaService';
@@ -42,6 +44,10 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
   const [studentAnswered, setStudentAnswered] = useState<number | null>(null);
   const [studentTotal, setStudentTotal] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [configAberta, setConfigAberta] = useState(false);
+  const [duplicando, setDuplicando] = useState(false);
+  const [configId, setConfigId] = useState<string | null>(null);
+  const isRascunho = list.status === 'RASCUNHO';
 
   useEffect(() => {
     let mounted = true;
@@ -111,12 +117,37 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
         <div className="list-card__main">
           <div className="list-card__top-row">
             <div>
-              <h3 className="list-card__subject">{list.title}</h3>
+              <h3 className="list-card__subject">
+                {list.title}
+                {isRascunho && (
+                  <span
+                    style={{ marginLeft: 8, fontSize: 12, padding: '2px 8px', borderRadius: 999, background: '#fffbeb', color: '#a16207', border: '1px solid #a16207', fontWeight: 700 }}
+                  >
+                    Rascunho
+                  </span>
+                )}
+              </h3>
               <p className="list-card__professor">{list.subject?.name} · {getPreferredTeacherName(list.professor.name)}</p>
             </div>
             <div className="list-card__actions" onClick={handleAddQuestionsClick}>
               {isProfessor && (
                 <>
+                  <button
+                    className="icon-btn"
+                    title={isRascunho ? 'Regras e publicação' : 'Regras da lista'}
+                    aria-label={isRascunho ? `Regras e publicação de ${list.title}` : `Regras da lista ${list.title}`}
+                    onClick={(e) => { e.stopPropagation(); setConfigId(list.id); setConfigAberta(true); }}
+                  >
+                    <Settings2 size={18} />
+                  </button>
+                  <button
+                    className="icon-btn"
+                    title="Duplicar lista"
+                    aria-label={`Duplicar lista ${list.title}`}
+                    onClick={(e) => { e.stopPropagation(); setDuplicando(true); }}
+                  >
+                    <Copy size={18} />
+                  </button>
                   <Popconfirm
                     title="Deletar Lista"
                     description="Tem certeza que deseja deletar esta lista?"
@@ -142,6 +173,27 @@ const ListCard: React.FC<ListCardProps> = ({ list, onClick, viewMode, onQuestion
               )}
             </div>
           </div>
+
+          {isProfessor && (
+            <div onClick={(e) => e.stopPropagation()}>
+              <ConfigListaModal
+                open={configAberta}
+                listaId={configId}
+                onClose={() => setConfigAberta(false)}
+                onSaved={() => onQuestionsAdded && onQuestionsAdded()}
+              />
+              <DuplicarListaModal
+                open={duplicando}
+                lista={{ id: list.id, titulo: list.title, disciplinaId: list.subject?.id }}
+                onClose={() => setDuplicando(false)}
+                onCreated={(copia) => {
+                  if (onQuestionsAdded) onQuestionsAdded();
+                  setConfigId(copia.id);
+                  setConfigAberta(true);
+                }}
+              />
+            </div>
+          )}
 
           <div className="list-card__progress">
             <p className="list-card__progress-text">{progressText}</p>

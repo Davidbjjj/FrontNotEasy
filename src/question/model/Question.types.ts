@@ -15,6 +15,12 @@ export interface Question {
   totalQuestions: number;
   listaId?: string;
   imagens?: Array<any>;
+  /** FE-201: "ABERTA" = resposta escrita, corrigida pelo professor. Ausente = objetiva. */
+  tipo?: 'OBJETIVA' | 'ABERTA';
+  /** Só o professor recebe: critérios de correção de questão aberta. */
+  rubrica?: string;
+  assunto?: string;
+  dificuldade?: 'FACIL' | 'MEDIA' | 'DIFICIL' | null;
 }
 
 export interface QuestionOption {
@@ -111,6 +117,8 @@ export interface QuestionContentProps {
   onOptionSelect?: (questionId: string, answerId: string, alternativaIndex: number) => void;
   disabled?: boolean;
   className?: string;
+  /** "ABERTA": mostra uma caixa de texto no lugar das alternativas; o texto vive em `selectedAnswer`. */
+  tipo?: 'OBJETIVA' | 'ABERTA';
 }
 
 export interface QuestionNavigationProps {

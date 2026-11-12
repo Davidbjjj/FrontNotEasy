@@ -66,7 +66,7 @@ export const Question: React.FC<QuestionProps> = (props) => {
 
       <div className="question-status-row">
         <SaveStatus state={saveState} savedAt={savedAt} pendingCount={pendingCount} onRetry={retrySync} />
-        <CountdownTimer deadline={deadline} />
+        <CountdownTimer deadline={deadline} onExpire={handleFinish} />
       </div>
 
       <hr style={{ border: 'none', borderTop: '1px solid #e5e7eb', margin: '20px 0' }} />
@@ -87,7 +87,8 @@ export const Question: React.FC<QuestionProps> = (props) => {
         imagens={currentQuestion.imagens}
         questionId={currentQuestion.id}
         options={currentQuestion.options}
-        selectedAnswer={selectedAnswer || undefined}
+        tipo={currentQuestion.tipo}
+        selectedAnswer={selectedAnswer ?? undefined}
         onAnswerSelect={handleAnswerSelect}
         onSubmitAnswer={handleSubmitAnswer}
         isSubmitting={isSubmitting}

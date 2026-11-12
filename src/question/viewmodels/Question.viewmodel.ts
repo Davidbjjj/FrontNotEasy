@@ -51,6 +51,8 @@ export const useQuestionViewModel = (
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [savedAt, setSavedAt] = useState<number | null>(null);
   const attemptRef = useRef(attempt);
+  const questionsRef = useRef(questions);
+  questionsRef.current = questions;
   const syncing = useRef(false);
   const userMoved = useRef(false);
   const resumed = useRef(false);
@@ -116,9 +118,12 @@ export const useQuestionViewModel = (
     setSaveState('saving');
     try {
       for (const [qid, letter] of entries) {
-        const alternativa = respostaService.converterLetraParaIndice(letter);
+        const aberta = questionsRef.current.find((q) => q.id === qid)?.tipo === 'ABERTA';
+        const alternativa = aberta ? -1 : respostaService.converterLetraParaIndice(letter);
         try {
-          await respostaService.enviarResposta({ estudanteId, questaoId: parseInt(qid), alternativa, listaId });
+          await respostaService.enviarResposta(aberta
+            ? { estudanteId, questaoId: parseInt(qid), listaId, textoResposta: letter }
+            : { estudanteId, questaoId: parseInt(qid), alternativa, listaId });
         } catch (e) {
           setSaveState(isNetworkError(e) ? 'offline' : 'error');
           return;
@@ -169,9 +174,12 @@ export const useQuestionViewModel = (
   // Select an answer locally; submission happens when the student clicks "Enviar resposta"
   const handleAnswerSelect = useCallback((answerId: string) => {
     setSelectedAnswer(answerId);
-    const qid = questions[currentQuestionIndex]?.id;
+    const q = questions[currentQuestionIndex];
+    const qid = q?.id;
+    // Questão aberta: editar o texto depois de enviado volta a exigir um novo envio
+    if (q?.tipo === 'ABERTA' && qid) setIsAnswered(answers[qid] === answerId);
     if (qid) updateAttempt((a) => ({ ...a, drafts: { ...a.drafts, [qid]: answerId } }));
-  }, [questions, currentQuestionIndex, updateAttempt]);
+  }, [questions, currentQuestionIndex, updateAttempt, answers]);
 
   const handleSubmitAnswer = useCallback(async () => {
     if (!selectedAnswer) return;
@@ -180,19 +188,17 @@ export const useQuestionViewModel = (
     setSaveState('saving');
     const qid = currentQuestion.id;
     const letter = selectedAnswer;
-    const alternativaIndex = respostaService.converterLetraParaIndice(letter);
+    const aberta = currentQuestion.tipo === 'ABERTA';
+    const alternativaIndex = aberta ? -1 : respostaService.converterLetraParaIndice(letter);
     const withoutDraft = (a: AttemptState) => {
       const drafts = { ...a.drafts };
       delete drafts[qid];
       return drafts;
     };
     try {
-      await respostaService.enviarResposta({
-        estudanteId: estudanteId,
-        questaoId: parseInt(qid),
-        alternativa: alternativaIndex,
-        listaId: listaId,
-      });
+      await respostaService.enviarResposta(aberta
+        ? { estudanteId, questaoId: parseInt(qid), listaId, textoResposta: letter }
+        : { estudanteId, questaoId: parseInt(qid), alternativa: alternativaIndex, listaId });
 
       setIsAnswered(true);
       setSessionAnswers((prev) => ({ ...prev, [qid]: letter }));
@@ -217,7 +223,7 @@ export const useQuestionViewModel = (
     } finally {
       setIsSubmitting(false);
     }
-  }, [selectedAnswer, estudanteId, listaId, currentQuestion.id, onAnswerSelect, updateAttempt]);
+  }, [selectedAnswer, estudanteId, listaId, currentQuestion.id, currentQuestion.tipo, onAnswerSelect, updateAttempt]);
 
   const handleNavigate = useCallback((direction: 'previous' | 'next') => {
     userMoved.current = true;

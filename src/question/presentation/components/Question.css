@@ -333,3 +333,37 @@
 .save-status__retry{ min-height:36px; padding:0 12px; border:1px solid currentColor; border-radius:8px; background:transparent; color:inherit; font-weight:600; cursor:pointer }
 .countdown{ margin-left:auto; font-weight:700; font-variant-numeric:tabular-nums; color:#111827 }
 .countdown--urgent{ color:#b91c1c }
+
+/* Questão aberta (FE-201) */
+.question-open {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.question-open__label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.question-open__text {
+  width: 100%;
+  min-height: 160px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.question-open__text:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+.question-open__hint {
+  font-size: 0.75rem;
+  color: #6b7280;
+}

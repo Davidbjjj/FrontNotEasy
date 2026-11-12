@@ -16,7 +16,9 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
   className = '',
   onOptionSelect,
   questionId,
+  tipo,
 }) => {
+  const aberta = tipo === 'ABERTA';
   return (
     <div className={`question-content ${className}`}>
       <div className="question-content__text">
@@ -40,8 +42,29 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
         </div>
       )}
 
+      {aberta && (
+        <div className="question-open">
+          <label htmlFor={`resposta-aberta-${questionId}`} className="question-open__label">
+            Sua resposta (o professor vai corrigir)
+          </label>
+          <textarea
+            id={`resposta-aberta-${questionId}`}
+            className="question-open__text"
+            rows={8}
+            maxLength={10000}
+            value={selectedAnswer ?? ''}
+            onChange={(e) => onAnswerSelect(e.target.value)}
+            placeholder="Escreva sua resposta aqui"
+          />
+          <span className="question-open__hint">
+            {(selectedAnswer ?? '').length}/10000
+            {isAnswered ? ' · Resposta enviada. Se editar, envie de novo antes de finalizar a lista.' : ''}
+          </span>
+        </div>
+      )}
+
       <div className="question-options">
-        {options.map((option) => (
+        {!aberta && options.map((option) => (
           <div
             key={option.id}
             className={`question-option ${selectedAnswer === option.id ? 'question-option--selected' : ''
@@ -50,7 +73,7 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
               if (isAnswered || isSubmitting) return;
               onAnswerSelect(option.id);
               if (onOptionSelect) {
-                const alternativaIndex = option.label.charCodeAt(0) - 65;
+                const alternativaIndex = option.id.charCodeAt(0) - 65; // ordem original, não a posição exibida
                 onOptionSelect(questionId ?? '', option.id, alternativaIndex);
               }
             }}
@@ -69,7 +92,7 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
         <button
           className="btn-submit-answer"
           onClick={() => onSubmitAnswer && onSubmitAnswer()}
-          disabled={!selectedAnswer || isAnswered || isSubmitting}
+          disabled={!selectedAnswer || !selectedAnswer.trim() || isAnswered || isSubmitting}
         >
           {isSubmitting ? 'Enviando...' : (isAnswered ? 'Respondida' : 'Enviar resposta')}
         </button>

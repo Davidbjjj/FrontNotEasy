@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Question } from '../../presentation/components/Question';
 import { questionService } from '../../service/api/question.service';
 import { respostaService } from '../../service/api/respostaService';
+import { emptyAttempt, saveAttempt } from '../../storage/attemptStorage';
 import AddQuestionsButton from '../../../listaQuestoes/presentation/components/AddQuestionsButton/AddQuestionsButton';
 import { FileText } from 'lucide-react';
 import './QuestionPage.css';
@@ -139,6 +140,31 @@ const QuestionPage: React.FC = () => {
     })();
   };
 
+  // FE-205: regras da lista (janela, tempo limite, tentativas) devolvidas junto com a visão do aluno
+  const config = visao?.config as {
+    aberta?: boolean; abreEm?: string | null; fechaEm?: string | null; prazoFinal?: number | null;
+    maxTentativas?: number; tentativasUsadas?: number; regraNota?: string; podeNovaTentativa?: boolean;
+    pendenteCorrecao?: number; tempoLimiteMinutos?: number | null;
+  } | undefined;
+  const [novaTentativaErro, setNovaTentativaErro] = useState<string | null>(null);
+  const [iniciandoTentativa, setIniciandoTentativa] = useState(false);
+
+  const handleNovaTentativa = async () => {
+    if (!listaId) return;
+    setIniciandoTentativa(true);
+    setNovaTentativaErro(null);
+    try {
+      const estudante = estudanteId || localStorage.getItem('userId') || '';
+      await respostaService.novaTentativa(listaId, estudante);
+      saveAttempt(estudante, listaId, emptyAttempt()); // descarta rascunhos da tentativa anterior
+      window.location.reload();
+    } catch (err: any) {
+      const d = err?.response?.data;
+      setNovaTentativaErro(typeof d === 'string' && d ? d : 'Não foi possível iniciar uma nova tentativa.');
+      setIniciandoTentativa(false);
+    }
+  };
+
   const handleNavigate = (direction: 'previous' | 'next') => {
     console.log(`Navegando para: ${direction}`);
   };
@@ -176,6 +202,22 @@ const QuestionPage: React.FC = () => {
     );
   }
 
+
+  // Lista ainda não abriu ou já fechou (e o aluno não tem entrega para ver)
+  if (!isProfessor && !isRespondida && config && config.aberta === false) {
+    const antes = config.abreEm && new Date(config.abreEm) > new Date();
+    const quando = (iso?: string | null) => (iso ? new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '');
+    return (
+      <div className="question-page-empty-wrap">
+        <EmptyState
+          icon={<FileText size={48} />}
+          title={antes ? 'Esta lista ainda não abriu' : 'O prazo desta lista encerrou'}
+          description={antes ? `Ela abre em ${quando(config.abreEm)}.` : `O prazo terminou em ${quando(config.fechaEm)}. Fale com o professor se precisar de mais tempo.`}
+          action={<button className="btn btn-secondary" onClick={() => navigate('/listas')}>Voltar para listas</button>}
+        />
+      </div>
+    );
+  }
 
   // If there are no questions to display, show the empty card -- but
   // if we have a student `visao` and it's responded/finalized, render that instead.
@@ -231,6 +273,28 @@ const QuestionPage: React.FC = () => {
               <div className="value">{visao.questoesCorretas ?? visao.corretas ?? '—'}</div>
             </div>
           </div>
+
+          {!isProfessor && Number(config?.pendenteCorrecao ?? visao.pendenteCorrecao ?? 0) > 0 && (
+            <p role="status" className="student-view-note">
+              {Number(config?.pendenteCorrecao ?? visao.pendenteCorrecao)} {Number(config?.pendenteCorrecao ?? visao.pendenteCorrecao) === 1 ? 'questão aberta aguarda' : 'questões abertas aguardam'} correção do professor.
+              A nota atual é parcial e será atualizada quando ele corrigir.
+            </p>
+          )}
+
+          {!isProfessor && config && (config.maxTentativas ?? 1) > 1 && (
+            <p className="student-view-note">
+              Tentativa {config.tentativasUsadas ?? 1} de {config.maxTentativas}.{' '}
+              {config.regraNota === 'ULTIMA' ? 'Vale a nota da última tentativa.' : 'Vale a maior nota entre as tentativas.'}
+            </p>
+          )}
+          {!isProfessor && config?.podeNovaTentativa && (
+            <div>
+              <button className="btn btn-primary" onClick={handleNovaTentativa} disabled={iniciandoTentativa}>
+                {iniciandoTentativa ? 'Preparando…' : 'Fazer nova tentativa'}
+              </button>
+              {novaTentativaErro && <p role="alert" style={{ color: '#b91c1c' }}>{novaTentativaErro}</p>}
+            </div>
+          )}
         </div>
       ) : (
         <>
@@ -239,6 +303,7 @@ const QuestionPage: React.FC = () => {
             listaId={listaId!}
             estudanteId={estudanteId}
             initialAnswers={initialAnswers}
+            deadline={config?.prazoFinal ?? undefined}
             onAnswerSelect={handleAnswerSelect}
             onNavigate={handleNavigate}
             onFinish={handleFinish}

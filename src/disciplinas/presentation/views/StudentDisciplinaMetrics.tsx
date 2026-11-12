@@ -5,6 +5,7 @@ import { dashboardService } from '../../services/api/dashboard.service';
 import styles from './StudentDisciplinaMetrics.module.css';
 import { Row, Col, Card, Statistic, Spin, Alert, Progress, Divider, Segmented, Empty } from 'antd';
 import type { SegmentedValue } from 'antd/es/segmented';
+import MuralAvisos from '../../../mural/MuralAvisos';
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LabelList } from 'recharts';
 
 const COLORS = ['#4caf50', '#ff9800', '#f44336', '#2196f3', '#9c27b0'];
@@ -452,6 +453,12 @@ export default function StudentDisciplinaMetrics(): JSX.Element {
           </div>
         </Col>
       </Row>
+
+      {disciplinaId && (
+        <div style={{ marginTop: 24 }}>
+          <MuralAvisos disciplinaId={disciplinaId} podeEditar={false} />
+        </div>
+      )}
     </div>
   );
 }

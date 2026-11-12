@@ -31,20 +31,24 @@ const notaColumns = (nomeDisciplina: (id: string) => string): Column<NotaPonto>[
   { key: 'nota', header: 'Nota (0–10)', align: 'right', accessor: (r) => formatNotaEscala(notaNormalizada(r)) },
 ];
 
-const assuntoColumns: Column<DesempenhoAssunto>[] = [
+const assuntoColumns = (semLinks: boolean): Column<DesempenhoAssunto>[] => [
   {
     key: 'nome', header: 'Assunto',
-    render: (r) => (
+    render: (r) => (semLinks ? <>{r.nome}</> : (
       <Link to={erradasPath(r.id)} className={styles.link}>
         {r.nome}<span className="sr-only">: ver questões erradas</span>
       </Link>
-    ),
+    )),
   },
   { key: 'pct', header: 'Acertos', align: 'right', accessor: (r) => `${percentual(r)}% (${r.acertos} de ${r.total})` },
   { key: 'nivel', header: 'Situação', accessor: (r) => nivel(percentual(r)) },
 ];
 
-const Conteudo: React.FC<{ data: Evolucao }> = ({ data }) => {
+/**
+ * Gráficos de nota ao longo do tempo e desempenho por assunto. Reaproveitado no perfil do aluno que o
+ * professor vê (FE-207), onde `semLinks` desliga a navegação para as telas exclusivas do aluno.
+ */
+export const EvolucaoConteudo: React.FC<{ data: Evolucao; semLinks?: boolean; vazio?: React.ReactNode }> = ({ data, semLinks = false, vazio }) => {
   const navigate = useNavigate();
   const filtroId = useId();
   const [disciplinaId, setDisciplinaId] = useState('');
@@ -62,6 +66,7 @@ const Conteudo: React.FC<{ data: Evolucao }> = ({ data }) => {
   );
 
   if (data.notas.length === 0 && data.assuntos.length === 0) {
+    if (vazio) return <>{vazio}</>;
     return (
       <EmptyState
         icon={<span aria-hidden="true">📈</span>}
@@ -115,7 +120,9 @@ const Conteudo: React.FC<{ data: Evolucao }> = ({ data }) => {
 
       <section className={styles.section} aria-labelledby="evolucao-assunto">
         <h2 id="evolucao-assunto" className={styles.sectionTitle}>Desempenho por assunto</h2>
-        <p className={styles.muted}>Do mais fraco ao mais forte. Clique em um assunto para ver as questões que você errou.</p>
+        <p className={styles.muted}>
+          {semLinks ? 'Do mais fraco ao mais forte.' : 'Do mais fraco ao mais forte. Clique em um assunto para ver as questões que você errou.'}
+        </p>
         <ChartWrapper
           title="Percentual de acertos por assunto"
           description={resumoAssuntos(assuntos)}
@@ -131,9 +138,9 @@ const Conteudo: React.FC<{ data: Evolucao }> = ({ data }) => {
             <Bar
               dataKey="pct"
               isAnimationActive={false}
-              cursor="pointer"
+              cursor={semLinks ? undefined : 'pointer'}
               label={{ position: 'right', fontSize: 12, formatter: (v: any) => `${v}%` }}
-              onClick={(d: any) => d?.id && navigate(erradasPath(d.id))}
+              onClick={(d: any) => { if (!semLinks && d?.id) navigate(erradasPath(d.id)); }}
             >
               {barras.map((b) => <Cell key={b.id} fill={corAssunto(b.pct)} />)}
             </Bar>
@@ -145,7 +152,7 @@ const Conteudo: React.FC<{ data: Evolucao }> = ({ data }) => {
             <div>
               <DataTable
                 caption="Desempenho por assunto, do mais fraco ao mais forte"
-                columns={assuntoColumns}
+                columns={assuntoColumns(semLinks)}
                 rows={assuntos}
                 rowKey={(r) => r.id}
               />
@@ -183,7 +190,7 @@ const EvolucaoPage: React.FC = () => {
         </div>
       )}
 
-      {!loading && !error && data && <Conteudo data={data} />}
+      {!loading && !error && data && <EvolucaoConteudo data={data} />}
     </main>
   );
 };

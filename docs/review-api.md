@@ -1,8 +1,13 @@
 # Contrato da API de revisão da lista (FE-102)
 
-Proposta do front-end. Enquanto o back-end não implementa, o front usa um
-**mock** (`src/estudante/revisao/revisaoService.ts`). Para a API real:
-`REACT_APP_REVIEW_MOCK=false`.
+**Implementado no back** (sem mock no front). O `revisaoService.ts` converte o
+`RevisaoListaDTO` real (`respostaAluno`, `gabarito`, `alternativas[{ordem,texto}]`,
+`assunto` como texto) para o modelo da tela. O JSON abaixo é a proposta original.
+
+**Real:** `GET /listas/{id}/estudantes/{eid}/revisao` devolve **403** se a lista não foi
+finalizada ou se o professor não liberou o gabarito; o front mostra o aviso de bloqueio.
+O professor libera com `PUT /listas/{id}/gabarito-liberado` (`{ "liberado": true }`).
+Ainda sem: questões abertas, disciplina, `liberadoEm` e `id` do assunto.
 
 Tela: `/listas/{listaId}/revisao` (papel ALUNO). Links: "Revisar" no painel inicial e
 "Ver gabarito e explicações" na página da lista finalizada.

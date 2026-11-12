@@ -11,12 +11,33 @@ import DisciplinaManager from '../components/DisciplinaManager';
 import EstudanteManager from '../components/EstudanteManager';
 import AssociacaoManager from '../components/AssociacaoManager';
 import ConfiguracaoManager from '../components/ConfiguracaoManager';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { menuVisivel } from '../../gestao/gestaoLogic';
+import { usePermissoes } from '../../gestao/permissoesStore';
+import ImportacaoView from '../../gestao/ImportacaoView';
+import ConvitesView from '../../gestao/ConvitesView';
+import { DashboardView, DetalheKpiView } from '../../gestao/DashboardView';
+import PeriodosTurmasView from '../../gestao/PeriodosTurmasView';
+import ComparativosView from '../../gestao/ComparativosView';
+import BoletinsView from '../../gestao/BoletinsView';
+import PapeisView from '../../gestao/PapeisView';
+import AuditoriaView from '../../gestao/AuditoriaView';
+import PersonalizacaoView from '../../gestao/PersonalizacaoView';
 
 const { Content, Sider } = Layout;
 
 const InstituicaoPage: React.FC = () => {
   const instituicaoId = localStorage.getItem('userId') || '';
-  const [activeView, setActiveView] = useState('professores');
+  // FE-306: a área é guiada pela URL (/instituicao/:tela/:sub) e pelas permissões do papel; o que não tem permissão nem aparece
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { dados: permissoes, pronto: permissoesProntas } = usePermissoes();
+  const menu = React.useMemo(() => menuVisivel(permissoes?.papel ?? null, permissoes?.permissoes ?? []), [permissoes]);
+  const partes = location.pathname.split('/').filter(Boolean);
+  const activeView = partes[1] || menu[0]?.chave || '';
+  const subView = partes[2] || '';
+  const setActiveView = (v: string) => navigate(`/instituicao/${v}`);
+  const isAdmin = permissoes?.papel === 'ADMIN';
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -90,16 +111,42 @@ const InstituicaoPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (instituicaoId) {
+    if (instituicaoId && isAdmin) {
       loadDisciplinas();
       loadMaterias();
       loadProfessores();
       loadPermittedEmails();
     }
-  }, [instituicaoId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instituicaoId, isAdmin]);
 
   const renderContent = () => {
+    if (!permissoesProntas) return <p role="status">Carregando…</p>;
+    if (menu.length === 0) {
+      return <p role="status">Você não tem permissão para nenhuma área de gestão. Fale com o administrador da instituição.</p>;
+    }
+    if (!menu.some((m) => m.chave === activeView)) {
+      return <p role="alert">Você não tem acesso a esta área.</p>;
+    }
     switch (activeView) {
+      case 'dashboard':
+        return subView ? <DetalheKpiView kpi={subView} /> : <DashboardView />;
+      case 'importacao':
+        return <ImportacaoView />;
+      case 'convites':
+        return <ConvitesView />;
+      case 'periodos':
+        return <PeriodosTurmasView />;
+      case 'comparativos':
+        return <ComparativosView />;
+      case 'boletins':
+        return <BoletinsView />;
+      case 'papeis':
+        return <PapeisView />;
+      case 'auditoria':
+        return <AuditoriaView />;
+      case 'personalizacao':
+        return <PersonalizacaoView />;
       case 'professores':
         return (
           <ProfessorManager
@@ -185,7 +232,7 @@ const InstituicaoPage: React.FC = () => {
         }}>
           <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>Instituição</h2>
         </div>
-        <Sidebar activeView={activeView} onNavigate={(view) => {
+        <Sidebar activeView={activeView} items={menu} onNavigate={(view) => {
           setActiveView(view);
           if (isMobile) setCollapsed(true);
         }} />
@@ -195,7 +242,7 @@ const InstituicaoPage: React.FC = () => {
           <div style={{ padding: isMobile ? 16 : 24, background: '#fff', minHeight: 360 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
               <h1 style={{ margin: 0, fontSize: isMobile ? '20px' : '24px', fontWeight: 'bold' }}>
-                {activeView.charAt(0).toUpperCase() + activeView.slice(1)}
+                {menu.find((m) => m.chave === activeView)?.rotulo ?? 'Instituição'}
               </h1>
               {isMobile && (
                 <Button

@@ -39,3 +39,8 @@
 }
 .close { font-size: var(--font-size-lg); }
 .action:focus-visible, .close:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* No celular a navegação inferior (64px) fica fixa: os avisos sobem para não ficarem atrás dela */
+@media (max-width: 768px) {
+  .region { bottom: calc(var(--bottombar-height) + var(--space-3) + env(safe-area-inset-bottom, 0px)); }
+}

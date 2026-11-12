@@ -6,21 +6,48 @@ import {
   TeamOutlined,
   LinkOutlined,
   SettingOutlined,
+  DashboardOutlined,
+  UploadOutlined,
+  MailOutlined,
+  CalendarOutlined,
+  BarChartOutlined,
+  FilePdfOutlined,
+  SafetyOutlined,
+  AuditOutlined,
+  BgColorsOutlined,
 } from '@ant-design/icons';
+
+export interface SidebarItem {
+  chave: string;
+  rotulo: string;
+}
 
 interface SidebarProps {
   activeView: string;
   onNavigate: (view: string) => void;
+  /** Só os itens que o usuário pode usar (FE-306): o que não tem permissão nem aparece. */
+  items: SidebarItem[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate }) => {
-  const items = [
-    { key: 'professores', icon: <UserOutlined />, label: 'Professores' },
-    { key: 'disciplinas', icon: <BookOutlined />, label: 'Disciplinas' },
-    { key: 'estudantes', icon: <TeamOutlined />, label: 'Estudantes' },
-    { key: 'associacoes', icon: <LinkOutlined />, label: 'Associações' },
-    { key: 'configuracoes', icon: <SettingOutlined />, label: 'Configurações' },
-  ];
+const ICONES: Record<string, React.ReactNode> = {
+  dashboard: <DashboardOutlined />,
+  importacao: <UploadOutlined />,
+  convites: <MailOutlined />,
+  periodos: <CalendarOutlined />,
+  comparativos: <BarChartOutlined />,
+  boletins: <FilePdfOutlined />,
+  papeis: <SafetyOutlined />,
+  auditoria: <AuditOutlined />,
+  personalizacao: <BgColorsOutlined />,
+  professores: <UserOutlined />,
+  disciplinas: <BookOutlined />,
+  estudantes: <TeamOutlined />,
+  associacoes: <LinkOutlined />,
+  configuracoes: <SettingOutlined />,
+};
+
+const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate, items }) => {
+  const menu = items.map((i) => ({ key: i.chave, icon: ICONES[i.chave], label: i.rotulo }));
 
   return (
     <div style={{ padding: '8px 0' }}>
@@ -28,7 +55,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onNavigate }) => {
         mode="inline"
         selectedKeys={[activeView]}
         style={{ borderRight: 0, backgroundColor: 'transparent' }}
-        items={items}
+        items={menu}
         onClick={(e) => onNavigate(e.key)}
       />
     </div>

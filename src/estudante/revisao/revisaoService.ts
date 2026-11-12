@@ -1,71 +1,108 @@
 import api from '../../services/apiClient';
-import type { RevisaoLista } from './types';
+import type { QuestaoRevisao, RevisaoLista } from './types';
 
-/**
- * Contrato com o back-end: ver docs/review-api.md.
- * Enquanto o endpoint não existe, o mock responde. API real: REACT_APP_REVIEW_MOCK=false
- */
-const USE_MOCK = process.env.REACT_APP_REVIEW_MOCK !== 'false';
+/** Nota máxima das listas objetivas (o back devolve a nota já em 0–10). */
+const NOTA_MAXIMA = 10;
+
+interface AlternativaDTO { id?: number; ordem?: number; texto?: string }
+
+interface ItemRevisaoDTO {
+  questaoId: number;
+  tipo: string;
+  assunto: string | null;
+  cabecalho: string | null;
+  enunciado: string;
+  alternativas: AlternativaDTO[] | null;
+  respostaAluno: number | null;
+  gabarito: number | null;
+  correta: boolean | null;
+  explicacao: string | null;
+  /** Questão aberta (FE-201): texto do aluno, nota 0–10 e feedback; nota nula = ainda na fila de correção. */
+  textoResposta?: string | null;
+  notaQuestao?: number | null;
+  feedback?: string | null;
+  corrigida?: boolean | null;
+}
+
+/** GET /listas/{listaId}/estudantes/{estudanteId}/revisao (RevisaoListaDTO do back). */
+interface RevisaoListaDTO {
+  listaId: string;
+  titulo: string;
+  nota: number | null;
+  questoes: ItemRevisaoDTO[] | null;
+}
 
 export interface RevisaoService {
   get(listaId: string, estudanteId: string, signal?: AbortSignal): Promise<RevisaoLista>;
 }
 
-const httpService: RevisaoService = {
-  async get(listaId, estudanteId, signal) {
-    const { data } = await api.get<RevisaoLista>(
-      `/listas/${encodeURIComponent(listaId)}/estudantes/${encodeURIComponent(estudanteId)}/revisao`,
-      { signal }
-    );
-    return data;
-  },
-};
-
-const mockService: RevisaoService = {
-  async get(listaId) {
-    const data: RevisaoLista = {
-      listaId,
-      titulo: 'Lista 1 — Funções',
-      disciplina: 'Matemática',
-      regraGabarito: 'APOS_ENTREGA',
-      gabaritoLiberado: true,
-      liberadoEm: null,
-      nota: 6.5,
-      notaMaxima: 10,
-      questoes: [
-        {
-          tipo: 'OBJETIVA', questaoId: 'q1', numero: 1, assunto: { id: 'a1', nome: 'Função afim' },
-          enunciado: 'Se f(x) = 2x + 3, quanto vale f(4)?',
-          alternativas: ['8', '10', '11', '14'], minhaResposta: 2, respostaCerta: 2,
-          explicacao: 'Substituindo x por 4: 2·4 + 3 = 11.',
-        },
-        {
-          tipo: 'OBJETIVA', questaoId: 'q2', numero: 2, assunto: { id: 'a2', nome: 'Função quadrática' },
-          enunciado: 'Quais são as raízes de x² − 5x + 6 = 0?',
-          alternativas: ['1 e 6', '2 e 3', '−2 e −3', '5 e 6'], minhaResposta: 0, respostaCerta: 1,
-          explicacao: 'Soma = 5 e produto = 6, logo as raízes são 2 e 3.',
-        },
-        {
-          tipo: 'OBJETIVA', questaoId: 'q3', numero: 3, assunto: { id: 'a2', nome: 'Função quadrática' },
-          enunciado: 'Qual é a coordenada x do vértice de y = x² − 4x + 1?',
-          alternativas: ['−2', '2', '4', '1'], minhaResposta: null, respostaCerta: 1,
-          explicacao: null,
-        },
-        {
-          tipo: 'ABERTA', questaoId: 'q4', numero: 4, assunto: { id: 'a1', nome: 'Função afim' },
-          enunciado: 'Explique com suas palavras o que é o coeficiente angular de uma reta.',
-          minhaResposta: 'É a inclinação da reta.', nota: 1.5, notaMaxima: 2,
-          feedback: 'Boa definição! Faltou relacionar com a variação de y por unidade de x.',
-        },
-        {
-          tipo: 'ABERTA', questaoId: 'q5', numero: 5, assunto: null,
-          enunciado: 'Dê um exemplo do cotidiano que seja modelado por uma função afim.',
-          minhaResposta: 'Corrida de táxi: valor fixo mais valor por km.', nota: null, notaMaxima: 2, feedback: null,
-        },
-      ],
+function mapQuestao(q: ItemRevisaoDTO, indice: number): QuestaoRevisao {
+  if (q.tipo === 'ABERTA') {
+    return {
+      tipo: 'ABERTA',
+      questaoId: String(q.questaoId),
+      numero: indice + 1,
+      assunto: q.assunto ? { id: q.assunto, nome: q.assunto } : null,
+      enunciado: q.enunciado,
+      minhaResposta: q.textoResposta ?? null,
+      nota: q.corrigida ? (q.notaQuestao ?? null) : null,
+      notaMaxima: NOTA_MAXIMA,
+      feedback: q.feedback ?? null,
     };
-    return new Promise((r) => setTimeout(() => r(data), 250));
+  }
+  const alternativas = [...(q.alternativas ?? [])]
+    .sort((a, b) => (a.ordem ?? 0) - (b.ordem ?? 0))
+    .map((a) => a.texto ?? '');
+  return {
+    tipo: 'OBJETIVA',
+    questaoId: String(q.questaoId),
+    numero: indice + 1,
+    // O back só manda o nome do assunto, sem id: sem id não há link para a evolução.
+    assunto: q.assunto ? { id: q.assunto, nome: q.assunto } : null,
+    enunciado: q.enunciado,
+    alternativas,
+    minhaResposta: q.respostaAluno ?? null,
+    // Sem gabarito cadastrado: -1 nunca bate com uma resposta, a questão não conta como acerto.
+    respostaCerta: q.gabarito ?? -1,
+    explicacao: q.explicacao ?? null,
+  };
+}
+
+export const revisaoService: RevisaoService = {
+  async get(listaId, estudanteId, signal) {
+    try {
+      const { data } = await api.get<RevisaoListaDTO>(
+        `/listas/${encodeURIComponent(listaId)}/estudantes/${encodeURIComponent(estudanteId)}/revisao`,
+        { signal }
+      );
+      return {
+        listaId: String(data.listaId),
+        titulo: data.titulo,
+        disciplina: '',
+        regraGabarito: 'MANUAL',
+        gabaritoLiberado: true,
+        liberadoEm: null,
+        nota: data.nota ?? null,
+        notaMaxima: NOTA_MAXIMA,
+        questoes: (data.questoes ?? []).map(mapQuestao),
+      };
+    } catch (e: any) {
+      // 403 = lista não finalizada ou gabarito ainda não liberado pelo professor.
+      // O back não envia gabarito nesse caso, então não há dados para mostrar além do aviso.
+      if (e?.response?.status === 403) {
+        return {
+          listaId,
+          titulo: '',
+          disciplina: '',
+          regraGabarito: 'MANUAL',
+          gabaritoLiberado: false,
+          liberadoEm: null,
+          nota: null,
+          notaMaxima: NOTA_MAXIMA,
+          questoes: [],
+        };
+      }
+      throw e;
+    }
   },
 };
-
-export const revisaoService: RevisaoService = USE_MOCK ? mockService : httpService;

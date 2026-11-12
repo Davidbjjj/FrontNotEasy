@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { questionService } from '../../../question/service/api/question.service';
 import { respostaService } from '../../../question/service/api/respostaService';
 import ImageWithAuth from '../../../components/ImageWithAuth';
+import ConfigListaModal from '../../../professor/lista/ConfigListaModal';
+import NovaQuestaoModal from '../../../professor/questao/NovaQuestaoModal';
 import './QuestionPageProfessor.css';
 
 // Small helper components inside file to keep everything together
@@ -82,7 +84,11 @@ const QuestionPageProfessor: React.FC = () => {
 
   // modal / edit state
   const [editingQuestion, setEditingQuestion] = useState<any | null>(null);
-  const [formState, setFormState] = useState<{ cabecalho: string; enunciado: string; alternativas: string[]; gabarito: number } | null>(null);
+  const [formState, setFormState] = useState<{ cabecalho: string; enunciado: string; alternativas: string[]; gabarito: number; rubrica: string } | null>(null);
+  // FE-205 / FE-201: regras da lista, nova questão e recarga da lista de questões
+  const [regrasAbertas, setRegrasAbertas] = useState(false);
+  const [novaAberta, setNovaAberta] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
   const [altEditIndex, setAltEditIndex] = useState<number | null>(null);
 
   // menu state per alternative (open menu index)
@@ -92,6 +98,7 @@ const QuestionPageProfessor: React.FC = () => {
   const [deleteTarget, setDeleteTarget] = useState<any | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isTogglingGabarito, setIsTogglingGabarito] = useState(false);
   const [previewVisaoStudent, setPreviewVisaoStudent] = useState<any | null>(null);
 
   useEffect(() => {
@@ -149,7 +156,7 @@ const QuestionPageProfessor: React.FC = () => {
       }
     };
     load();
-  }, [listaId]);
+  }, [listaId, reloadKey]);
 
   // Open editor modal for a specific question
   const openEditor = (q: any) => {
@@ -158,6 +165,7 @@ const QuestionPageProfessor: React.FC = () => {
       enunciado: q.content || '',
       alternativas: q.options ? q.options.map((o: any) => o.text || '') : [],
       gabarito: q.correctAnswer ? q.correctAnswer.charCodeAt(0) - 65 : 0,
+      rubrica: q.rubrica || '',
     };
     setEditingQuestion(q);
     setFormState(initial);
@@ -173,7 +181,7 @@ const QuestionPageProfessor: React.FC = () => {
   };
 
   // local setters
-  const setField = (field: 'cabecalho' | 'enunciado' | 'alternativas' | 'gabarito', value: any) => {
+  const setField = (field: 'cabecalho' | 'enunciado' | 'alternativas' | 'gabarito' | 'rubrica', value: any) => {
     if (!formState) return;
     setFormState({ ...formState, [field]: value } as any);
   };
@@ -206,6 +214,25 @@ const QuestionPageProfessor: React.FC = () => {
 
   const handleSave = async () => {
     if (!editingQuestion || !formState || !listaId) return;
+    if (editingQuestion.tipo === 'ABERTA') {
+      if (!formState.enunciado.trim()) { show('Escreva o enunciado.', 'error'); return; }
+      try {
+        setIsSaving(true);
+        const updated = await questionService.updateQuestion(listaId, editingQuestion.id, {
+          cabecalho: formState.cabecalho, enunciado: formState.enunciado, alternativas: [], gabarito: null,
+          tipo: 'ABERTA', rubrica: formState.rubrica,
+        });
+        setQuestions((prev) => prev.map((p) => (String(p.id) === String(updated.id)
+          ? { ...p, title: updated.cabecalho, content: updated.enunciado, rubrica: formState.rubrica } : p)));
+        closeEditor();
+        show('Questão atualizada com sucesso.', 'success');
+      } catch (err: any) {
+        show(err?.status === 404 ? 'Questão não encontrada nesta lista.' : 'Erro ao atualizar questão.', 'error');
+      } finally {
+        setIsSaving(false);
+      }
+      return;
+    }
     // validations
     if (!formState.alternativas || formState.alternativas.length === 0) {
       show('Alternativas não pode ser vazia.', 'error');
@@ -283,6 +310,20 @@ const QuestionPageProfessor: React.FC = () => {
   };
 
   if (loading) return <div className="qpp-container">Carregando questões...</div>;
+  const handleGabarito = async (liberado: boolean) => {
+    if (!listaId) return;
+    setIsTogglingGabarito(true);
+    try {
+      await questionService.setGabaritoLiberado(listaId, liberado);
+      show(liberado ? 'Gabarito liberado para a revisão dos alunos.' : 'Gabarito bloqueado para os alunos.', 'success');
+    } catch (e: any) {
+      const status = e?.response?.status;
+      show(status === 403 ? 'Apenas professor/instituição pode alterar o gabarito.' : 'Não foi possível alterar o gabarito. Tente novamente.', 'error');
+    } finally {
+      setIsTogglingGabarito(false);
+    }
+  };
+
   if (error) return (
     <div className="qpp-container">
       <h3>Erro</h3>
@@ -296,6 +337,16 @@ const QuestionPageProfessor: React.FC = () => {
       <div className="qpp-header">
         <div className="qpp-title">Questões — Modo Professor</div>
         <div className="qpp-muted">Lista: {listaId}</div>
+        <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <button className="qpp-btn primary" disabled={isTogglingGabarito} onClick={() => handleGabarito(true)}>
+            Liberar gabarito para revisão
+          </button>
+          <button className="qpp-btn" disabled={isTogglingGabarito} onClick={() => handleGabarito(false)}>
+            Bloquear gabarito
+          </button>
+          <button className="qpp-btn" onClick={() => setNovaAberta(true)}>Nova questão</button>
+          <button className="qpp-btn" onClick={() => setRegrasAbertas(true)}>Regras da lista</button>
+        </div>
       </div>
 
       {previewVisaoStudent && previewVisaoStudent.estudanteId && (
@@ -352,8 +403,15 @@ const QuestionPageProfessor: React.FC = () => {
               </div>
             )}
 
+            {q.tipo === 'ABERTA' && (
+              <div className="qpp-muted" style={{ marginBottom: 8 }}>
+                <span className="qpp-badge">Questão aberta</span>{' '}
+                <strong>Rubrica:</strong> {q.rubrica || 'não cadastrada'}
+              </div>
+            )}
+
             <ul className="qpp-alt-list">
-              {q.options && q.options.map((o: any, i: number) => {
+              {q.tipo !== 'ABERTA' && q.options && q.options.map((o: any, i: number) => {
                 const isCorrect = String(q.correctAnswer || '').toUpperCase() === String.fromCharCode(65 + i);
                 return (
                   <li key={i} className={`qpp-alt-card ${isCorrect ? 'qpp-alt-correct' : ''}`} aria-label={`Alternativa ${String.fromCharCode(65 + i)}`}>
@@ -377,6 +435,14 @@ const QuestionPageProfessor: React.FC = () => {
               <label className="qpp-label" style={{ marginTop: 12 }}>Enunciado</label>
               <textarea className="qpp-textarea" value={formState.enunciado} onChange={(e) => setField('enunciado', e.target.value)} />
 
+              {editingQuestion.tipo === 'ABERTA' && (
+                <>
+                  <label className="qpp-label" style={{ marginTop: 12 }}>Rubrica de correção</label>
+                  <textarea className="qpp-textarea" value={formState.rubrica} onChange={(e) => setField('rubrica', e.target.value)} />
+                </>
+              )}
+
+              {editingQuestion.tipo !== 'ABERTA' && (
               <div className="qpp-alternatives">
                 <label className="qpp-label">Alternativas</label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -413,6 +479,7 @@ const QuestionPageProfessor: React.FC = () => {
                   <button className="qpp-btn" onClick={addAlternative}>Adicionar alternativa</button>
                 </div>
               </div>
+              )}
 
             </div>
           </div>
@@ -433,6 +500,13 @@ const QuestionPageProfessor: React.FC = () => {
 
       {/* Confirm delete modal */}
       <ConfirmModal open={!!deleteTarget} title="Excluir Questão" message="Deseja realmente excluir essa questão? Esta ação é irreversível." onConfirm={confirmDelete} onCancel={() => setDeleteTarget(null)} loading={isDeleting} />
+
+      {listaId && (
+        <>
+          <ConfigListaModal open={regrasAbertas} listaId={listaId} onClose={() => setRegrasAbertas(false)} />
+          <NovaQuestaoModal open={novaAberta} listaId={listaId} onClose={() => setNovaAberta(false)} onCreated={() => setReloadKey((n) => n + 1)} />
+        </>
+      )}
 
       {/* Toasts */}
       <ToastList toasts={toasts} />

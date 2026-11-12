@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import ErrorBoundary from './errors/ErrorBoundary';
 import ConnectionBanner from './errors/ConnectionBanner';
 import SessionExpiredDialog from './errors/SessionExpiredDialog';
+import { BrandingSync } from './branding/BrandingSync';
 
 const App = () => {
   const location = useLocation();
@@ -20,7 +21,7 @@ const App = () => {
     '/validar-token'
   ];
 
-  const hideLayout = noLayoutPaths.includes(location.pathname);
+  const hideLayout = noLayoutPaths.includes(location.pathname) || location.pathname.startsWith('/convite/');
 
   // Inicializa Google OAuth Provider
   const googleClientId = '197044467131-mmc55c92o7o61sgmenfc9u0c6h3gfco0.apps.googleusercontent.com';
@@ -36,6 +37,7 @@ const App = () => {
     <GoogleOAuthProvider clientId={googleClientId}>
       <ConnectionBanner />
       <SessionExpiredDialog />
+      <BrandingSync />
       {content}
     </GoogleOAuthProvider>
   );

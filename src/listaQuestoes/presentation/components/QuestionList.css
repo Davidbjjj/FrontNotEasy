@@ -409,6 +409,30 @@
   cursor: not-allowed;
 }
 
+/* Botões de ícone neutros (regras e duplicar lista) */
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  color: #1d4ed8;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.icon-btn:hover {
+  background-color: #eef2ff;
+}
+
+.icon-btn:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
 /* Botão de deletar */
 .icon-btn-danger {
   display: flex;

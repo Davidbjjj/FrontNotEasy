@@ -28,6 +28,12 @@ import EvolucaoPage from './estudante/evolucao/EvolucaoPage';
 import ErradasAssuntoPage from './estudante/evolucao/ErradasAssuntoPage';
 import PlanoRevisaoPage from './estudante/plano/PlanoRevisaoPage';
 import CalendarioPage from './estudante/calendario/CalendarioPage';
+import CorrecaoPage from './professor/correcao/CorrecaoPage';
+import BancoQuestoesPage from './professor/banco/BancoQuestoesPage';
+import AlunosRiscoPage from './professor/risco/AlunosRiscoPage';
+import PerfilAlunoPage from './professor/aluno/PerfilAlunoPage';
+import ExportarNotasPage from './professor/exportar/ExportarNotasPage';
+import AceiteConvitePage from './instituicao/gestao/AceiteConvitePage';
 
 
 
@@ -42,6 +48,7 @@ const RouterConfig = () => {
       <Route path="/validar-token" element={<ValidateTokenPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/access-denied" element={<AccessDenied />} />
+      <Route path="/convite/:token" element={<AceiteConvitePage />} />
 
       {/* Protected routes - require authentication */}
       <Route path="/inicio" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><StudentDashboardPage /></RoleProtectedRoute>} />
@@ -61,10 +68,15 @@ const RouterConfig = () => {
       <Route path="/disciplinas" element={<ProtectedRoute><DisciplinasPage /></ProtectedRoute>} />
       <Route path="/disciplinas/:disciplinaId" element={<ProtectedRoute><DisciplinaDetailRouter /></ProtectedRoute>} />
       <Route path="/listas" element={<ProtectedRoute><QuestionListPage /></ProtectedRoute>} />
-      <Route path="/instituicao" element={<RoleProtectedRoute allowedRoles={["INSTITUICAO"]}><InstituicaoPage /></RoleProtectedRoute>} />
+      <Route path="/instituicao/*" element={<RoleProtectedRoute allowedRoles={["INSTITUICAO", "PROFESSOR"]}><InstituicaoPage /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes/professor" element={<RoleProtectedRoute allowedRoles={["PROFESSOR"]}><QuestionPageProfessor /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/questoes" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><QuestionPageEstudante /></RoleProtectedRoute>} />
       <Route path="/listas/:listaId/revisao" element={<RoleProtectedRoute allowedRoles={["ALUNO"]}><RevisaoPage /></RoleProtectedRoute>} />
+      <Route path="/correcao" element={<RoleProtectedRoute allowedRoles={["PROFESSOR"]}><CorrecaoPage /></RoleProtectedRoute>} />
+      <Route path="/banco-questoes" element={<RoleProtectedRoute allowedRoles={["PROFESSOR"]}><BancoQuestoesPage /></RoleProtectedRoute>} />
+      <Route path="/alunos-em-risco" element={<RoleProtectedRoute allowedRoles={["PROFESSOR", "INSTITUICAO"]}><AlunosRiscoPage /></RoleProtectedRoute>} />
+      <Route path="/alunos/:estudanteId" element={<RoleProtectedRoute allowedRoles={["PROFESSOR", "INSTITUICAO"]}><PerfilAlunoPage /></RoleProtectedRoute>} />
+      <Route path="/exportar-notas" element={<RoleProtectedRoute allowedRoles={["PROFESSOR", "INSTITUICAO"]}><ExportarNotasPage /></RoleProtectedRoute>} />
       <Route path="/config"element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
       <Route path="/busca" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
       <Route path="*" element={<NotFoundPage />} />

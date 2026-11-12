@@ -332,7 +332,7 @@
     padding: var(--spacing-md);
   }
   
-  .respostas-modal {
+  .respostas-modal:not(.respostas-modal--premium) {
     padding: var(--spacing-lg);
     margin: var(--spacing-md);
   }

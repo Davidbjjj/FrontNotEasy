@@ -13,7 +13,7 @@
 .bottom-navbar__list {
   list-style: none;
   margin: 0;
-  padding: 0 12px;
+  padding: 0 4px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -21,8 +21,12 @@
 }
 
 .bottom-navbar__item {
-  flex: 1 1 auto;
+  flex: 1 1 0;
+  min-width: 0; /* 7 itens cabem em 360px: o rótulo corta com reticências em vez de empurrar os vizinhos */
+  height: 100%;
   text-align: center;
+  padding: 6px 2px;
+  box-sizing: border-box;
 }
 
 .bottom-navbar__link {
@@ -31,15 +35,29 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: rgba(255,255,255,0.9);
+  color: #fff; /* branco sobre #c1121f = 6,2:1 */
   text-decoration: none;
   font-size: 12px;
   height: 100%;
-  padding: 6px 8px;
+  padding: 4px 2px;
+  border-radius: 12px;
+  box-sizing: border-box;
 }
 
+.bottom-navbar__link:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -3px;
+}
+
+/* Aba atual: pílula branca com texto vermelho (6,2:1) e traço mais grosso; não depende só de cor */
 .bottom-navbar__link--active {
-  color: #fff;
+  background: #fff;
+  color: #c1121f;
+  font-weight: 700;
+}
+
+.bottom-navbar__link--active .bottom-navbar__icon {
+  stroke-width: 2.25;
 }
 
 .bottom-navbar__icon {
@@ -50,7 +68,11 @@
 
 .bottom-navbar__label {
   font-size: 11px;
-  line-height: 1;
+  line-height: 1.1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Mostrar apenas em telas pequenas */

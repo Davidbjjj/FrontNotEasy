@@ -168,3 +168,12 @@
 @media (max-width:720px){
   .result-metrics{ flex-direction:column }
 }
+.student-view-note {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #0369a1;
+  font-size: 0.9rem;
+}

@@ -28,7 +28,7 @@
   color: #0b1220;
 }
 
-.smallMuted { color: var(--muted); font-size: 0.9rem }
+.smallMuted { color: #4b5563; font-size: 0.9rem }
 
 .layout {
   display: grid;
@@ -71,9 +71,10 @@
 
 .actions { display:flex; gap:8px }
 
-.btn { padding:8px 12px; border-radius:8px; cursor:pointer; border: none; font-weight:600 }
-.btnPrimary { background:var(--accent); color:white }
-.btnGhost { background:transparent; border:1px solid #e6eef6 }
+.btn { padding:8px 12px; min-height:44px; border-radius:8px; cursor:pointer; border: none; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; color:inherit }
+.btn:focus-visible { outline:3px solid #1d4ed8; outline-offset:2px }
+.btnPrimary { background:#1d4ed8; color:white }
+.btnGhost { background:transparent; border:1px solid #9ca3af; color:#1d4ed8 }
 
 /* activity card */
 .activityCard { display:flex; flex-direction:column; gap:6px; padding:10px; border-radius:8px; background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%); border:1px solid #eef3ff }
@@ -148,9 +149,9 @@
 .studentMetricEmail { color:var(--muted); font-size:0.88rem }
 .studentMetricRight { margin-left:auto; text-align:right }
 .percentBadge { display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; min-width:64px }
-.percentHigh { background:linear-gradient(90deg,#10b981,#059669); color:white }
-.percentMedium { background:linear-gradient(90deg,#f59e0b,#f97316); color:white }
-.percentLow { background:linear-gradient(90deg,#ef4444,#dc2626); color:white }
+.percentHigh { background:#047857; color:#fff } /* branco sobre verde escuro: 5,5:1 (antes ~2,5:1) */
+.percentMedium { background:#b45309; color:#fff } /* 5,0:1 */
+.percentLow { background:#b91c1c; color:#fff } /* 6,5:1 */
 .responsesCount { color:var(--muted); font-size:0.85rem }
 .progressBar { width:180px; height:8px; background:#eef2ff; border-radius:999px; overflow:hidden; margin-top:6px }
 .progressFill { height:100%; border-radius:999px; background:linear-gradient(90deg,#60a5fa,#2563eb); }
@@ -410,3 +411,29 @@
 
 
 
+
+
+/* ===== Mobile: cartões e ações dos alunos/listas sem estourar a tela ===== */
+.layout > * { min-width: 0; }
+.studentMetricRight { min-width: 0; }
+
+@media (max-width: 768px) {
+  .container { padding: 12px; }
+  .header { flex-wrap: wrap; align-items: flex-start; }
+  .header .actions, .actions { flex-wrap: wrap; width: 100%; }
+  .header .actions > * { flex: 1 1 calc(50% - 10px); }
+  .panel { padding: 12px; }
+  .studentMetricList { grid-template-columns: 1fr; }
+  /* avatar + nome na primeira linha; nota e botões descem para uma linha própria, alinhados à esquerda */
+  .studentMetricCard { flex-wrap: wrap; align-items: flex-start; }
+  .studentMetricInfo { flex: 1 1 0; min-width: 0; }
+  .studentMetricRight { flex: 1 1 100%; margin-left: 0; text-align: left; }
+  .studentMetricRight > div:last-child { justify-content: flex-start !important; }
+  .studentMetricInfo > div { display: block !important; width: 100%; }
+  .progressBar { width: 100%; max-width: 100%; }
+  .listCard { flex-wrap: wrap; }
+  .listCard > div { min-width: 0; }
+  .difficultyBar { width: 100%; }
+  .completedItem { flex-wrap: wrap; }
+  .completedItem .progressBar { width: 100% !important; }
+}

@@ -142,8 +142,8 @@ const RevisaoPage: React.FC = () => {
 
   return (
     <main className={styles.page} aria-labelledby="revisao-titulo" aria-busy={loading || undefined}>
-      <h1 id="revisao-titulo" className={styles.title}>Revisão{data ? `: ${data.titulo}` : ''}</h1>
-      {data && <p className={styles.muted}>{data.disciplina}</p>}
+      <h1 id="revisao-titulo" className={styles.title}>Revisão{data && data.titulo ? `: ${data.titulo}` : ''}</h1>
+      {data && data.disciplina && <p className={styles.muted}>{data.disciplina}</p>}
 
       {loading && <p role="status" className={styles.muted}>Carregando sua revisão…</p>}
 

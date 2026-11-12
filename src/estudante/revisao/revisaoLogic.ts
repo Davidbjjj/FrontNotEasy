@@ -17,6 +17,9 @@ export function contarErradas(questoes: QuestaoRevisao[]): number {
 }
 
 export function mensagemBloqueio(regra: RegraGabarito, liberadoEm: string | null): string {
+  if (regra === 'MANUAL') {
+    return 'O gabarito ainda não está disponível: finalize a lista e aguarde o professor liberar.';
+  }
   if (regra === 'APOS_PRAZO') {
     const quando = liberadoEm
       ? new Date(liberadoEm).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })

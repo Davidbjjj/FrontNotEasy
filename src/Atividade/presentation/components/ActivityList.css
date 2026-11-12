@@ -13,8 +13,13 @@
   margin: 8px 0 20px 0;
 }
 
-.activities-header{ display:flex; align-items:center; justify-content:space-between; gap:12px }
-.activities-add-btn{ background:#111827; color:white; border:none; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600 }
+.activities-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
+.activities-controls{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
+.activities-search{ padding:0 12px; min-height:44px; border-radius:8px; border:1px solid #9ca3af; font:inherit; min-width:0; flex:1 1 220px }
+.activities-filter{ min-height:44px; padding:0 8px; border-radius:8px; border:1px solid #9ca3af; font:inherit; background:#fff }
+.activities-search:focus-visible, .activities-filter:focus-visible, .activities-add-btn:focus-visible, .activity-card:focus-visible, .activity-delete-btn:focus-visible{ outline:3px solid #1d4ed8; outline-offset:2px }
+.activity-delete-btn{ min-width:44px; min-height:44px }
+.activities-add-btn{ background:#111827; color:white; border:none; min-height:44px; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600 }
 .activities-add-btn:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(2,6,23,0.08) }
 
 .activity-group{
@@ -22,6 +27,8 @@
 }
 
 .activity-group-date{
+  font-size: 1rem;
+  text-transform: capitalize;
   font-weight: 600;
   color: #374151;
   margin: 8px 0 12px 8px;
@@ -111,7 +118,16 @@
 }
 
 @media (max-width: 640px){
-  .activity-card{ flex-direction: row; padding:12px }
-  .activity-thumb{ width:48px; height:48px }
-  .activities-page-title{ font-size:22px }
+  .activity-list-outer{ padding:16px 12px }
+  .activity-card{ flex-direction: row; padding:12px; gap:12px }
+  .activity-thumb{ width:40px; height:40px }
+  .activities-page-title{ font-size:22px; margin:4px 0 8px }
+  .activities-controls{ width:100% }
+  .activities-filter{ flex:1 1 140px }
+  .activities-add-btn{ flex:1 1 100% }
+  /* título e prazo empilhados: a coluna do prazo não esmaga o nome da atividade */
+  .activity-card .activity-body{ flex-direction:column; gap:8px; min-width:0 }
+  .activity-card-title{ overflow-wrap:anywhere }
+  .activity-meta{ flex-direction:row; align-items:center; justify-content:space-between; margin-left:0; min-width:0; width:100% }
+  .activity-group-panel{ padding:4px 0 12px }
 }

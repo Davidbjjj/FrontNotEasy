@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { eventoService } from '../../services/api/eventoService';
 import { message, Popconfirm, Button } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
+import { EmptyState } from '../../../ui/EmptyState/EmptyState';
 
 
 export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggleActivity, onCreateActivity }) => {
@@ -87,15 +88,16 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
     <div className="activity-list-outer">
       <div className="activities-header">
         <h1 className="activities-page-title">Atividades</h1>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div className="activities-controls">
           <input
+            type="search"
+            className="activities-search"
             placeholder="Pesquisar título ou disciplina"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             aria-label="Pesquisar atividades"
-            style={{ padding: '6px 8px', borderRadius: 6, border: '1px solid #ccc' }}
           />
-          <select value={filter} onChange={(e) => setFilter(e.target.value as any)} aria-label="Filtrar atividades">
+          <select className="activities-filter" value={filter} onChange={(e) => setFilter(e.target.value as any)} aria-label="Filtrar atividades">
             <option value="all">Todos</option>
             <option value="urgent">Urgentes (≤2 dias)</option>
             <option value="overdue">Vencidas</option>
@@ -106,9 +108,16 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
       </div>
 
       <div className="activities-groups">
+        {Object.keys(groups).length === 0 && (
+          <EmptyState
+            icon={<span aria-hidden="true">📅</span>}
+            title={query || filter !== 'all' ? 'Nenhuma atividade encontrada' : 'Nenhuma atividade por aqui'}
+            description={query || filter !== 'all' ? 'Tente outro termo ou limpe o filtro.' : 'Quando houver atividades com prazo, elas aparecem aqui.'}
+          />
+        )}
         {Object.entries(groups).map(([groupDate, items]) => (
           <section key={groupDate} className="activity-group">
-            <div className="activity-group-date">{groupDate}</div>
+            <h2 className="activity-group-date">{groupDate}</h2>
             <div className="activity-group-panel">
               {items.map((activity) => (
                 <article key={activity.id} className="activity-card-row">
@@ -117,7 +126,11 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
                     role="button"
                     tabIndex={0}
                     onClick={() => navigate(`/atividades/${activity.id}`, { state: { activity } })}
-                    onKeyPress={(e) => { if (e.key === 'Enter') navigate(`/atividades/${activity.id}`, { state: { activity } }); }}
+                    aria-label={`Abrir atividade ${activity.title || 'sem título'}`}
+                    onKeyDown={(e) => {
+                      if (e.target !== e.currentTarget) return; // não rouba Enter/Espaço do botão de excluir
+                      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/atividades/${activity.id}`, { state: { activity } }); }
+                    }}
                   >
                     <div className="activity-thumb" aria-hidden>
                       {/* optional image placeholder – keep as background color for now */}
@@ -152,12 +165,13 @@ export const ActivityList: React.FC<ActivityListProps> = ({ activities, onToggle
                               <Button
                                 danger
                                 icon={<DeleteOutlined />}
-                                size="small"
+                                className="activity-delete-btn"
+                                aria-label={`Excluir atividade ${activity.title || ''}`}
                                 onClick={(e) => e.stopPropagation()}
                               />
                             </Popconfirm>
                           )}
-                          <div className="activity-card-action">›</div>
+                          <div className="activity-card-action" aria-hidden="true">›</div>
                         </div>
                       </div>
                     </div>

@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1000; /* abaixo da navegação inferior (1001): ela continua visível e o modal termina logo acima dela */
   padding: var(--spacing-md);
   backdrop-filter: blur(4px);
 }
@@ -28,11 +28,19 @@
   flex-direction: column;
   max-height: 90vh;
   padding: 0;
+  overflow: hidden; /* só o conteúdo rola; o cabeçalho com o X fica sempre visível */
+}
+
+@supports (height: 100dvh) {
+  .respostas-modal--premium { max-height: calc(100dvh - 2 * var(--spacing-md)); }
 }
 
 .respostas-modal-content {
   flex: 1;
+  min-height: 0; /* sem isso o filho flex não encolhe e o fim do conteúdo nunca aparece */
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: var(--spacing-xxl);
 }
 
@@ -69,15 +77,28 @@
 @media (max-width: 768px) {
   .respostas-modal-content {
     padding: var(--spacing-lg);
+    padding-bottom: calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Celular: o modal ocupa só o espaço entre a barra superior (70px) e a navegação inferior (64px),
+   que continuam visíveis e livres */
+@media (max-width: 768px) {
+  .respostas-modal-overlay {
+    top: 70px;
+    bottom: calc(var(--bottombar-height, 64px) + env(safe-area-inset-bottom, 0px));
+    padding: 0;
+    align-items: stretch;
+  }
+  .respostas-modal--premium {
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
   }
 }
 
 @media (max-width: 480px) {
   .respostas-modal {
     border-radius: var(--border-radius-lg);
-  }
-
-  .respostas-modal--premium {
-    max-height: 100vh;
   }
 }
