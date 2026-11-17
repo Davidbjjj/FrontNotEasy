@@ -12,7 +12,6 @@ import {
   Input,
   message,
 } from "antd";
-import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import styles from "./Login.module.css";
 import { authService } from "../../services/api/authService";
 import RecaptchaComponent from "./RecaptchaComponent";
@@ -100,7 +99,7 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
   return (
     <div className={styles.page}>
       <Row gutter={0} className={styles.wrapper}>
-        <Col xs={0} md={12} className={styles.leftCol}>
+        <Col xs={0} lg={12} className={styles.leftCol}>
           <div className={styles.leftSide}>
             <div className={styles.heroContainer}>
               <img
@@ -119,7 +118,7 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
           </div>
         </Col>
 
-        <Col xs={24} md={12} className={styles.rightCol}>
+        <Col xs={24} lg={12} className={styles.rightCol}>
           <div className={styles.formHolder}>
             <Card className={styles.card} bordered={false}>
               <Title level={2} className={styles.cardTitle}>
@@ -145,7 +144,8 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
                   <Input
                     size="large"
                     placeholder="E-mail"
-                    prefix={<MailOutlined />}
+                    aria-label="E-mail"
+                    autoComplete="email"
                   />
                 </Form.Item>
 
@@ -156,7 +156,8 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
                   <Input.Password
                     size="large"
                     placeholder="Senha"
-                    prefix={<LockOutlined />}
+                    aria-label="Senha"
+                    autoComplete="current-password"
                   />
                 </Form.Item>
 
@@ -181,7 +182,11 @@ export default function LoginPage({ onSubmit, onForgotPassword, onRegister }) {
                       disabled={isButtonDisabled || isSubmitting}
                       loading={isSubmitting}
                     >
-                      ENTRAR
+                      {isSubmitting
+                        ? "ACESSANDO..."
+                        : isButtonDisabled
+                          ? "Preencha todos os itens para prosseguir"
+                          : "ACESSAR"}
                     </Button>
 
                     <div className={styles.signupHint}>

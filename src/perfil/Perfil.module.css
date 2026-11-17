@@ -62,7 +62,7 @@
 .cropArea {
   position: relative;
   overflow: hidden;
-  background: #111827;
+  background: var(--ne-secondary-dark);
   border-radius: var(--radius-sm);
   cursor: grab;
   touch-action: none;
@@ -84,6 +84,6 @@
   overflow: hidden;
   flex: none;
   border-radius: var(--radius-full);
-  background: #111827;
+  background: var(--ne-secondary-dark);
   border: 2px solid var(--border);
 }

@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f8fafc 0%, #e5e7eb 100%);
+  background: linear-gradient(135deg, var(--ne-gray-light) 0%, var(--ne-gray-medium) 100%);
   padding: 2rem;
 }
 
@@ -46,7 +46,7 @@
 .access-denied-title {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   margin-bottom: 1rem;
 }
 
@@ -59,7 +59,7 @@
 
 .access-denied-submessage {
   font-size: 0.95rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   margin-bottom: 2rem;
   line-height: 1.5;
 }
@@ -84,20 +84,20 @@
 }
 
 .btn-primary {
-  background: #2563eb;
+  background: var(--ne-secondary);
   color: white;
 }
 
 .btn-primary:hover {
-  background: #1d4ed8;
+  background: var(--ne-secondary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(26, 57, 121, 0.3);
 }
 
 .btn-secondary {
   background: transparent;
-  color: #2563eb;
-  border: 2px solid #2563eb;
+  color: var(--ne-secondary);
+  border: 2px solid var(--ne-secondary);
 }
 
 .btn-secondary:hover {
@@ -107,20 +107,20 @@
 
 .access-denied-help {
   padding-top: 1.5rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--ne-gray-medium);
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
 }
 
 .access-denied-help a {
-  color: #2563eb;
+  color: var(--ne-secondary);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
 .access-denied-help a:hover {
-  color: #1d4ed8;
+  color: var(--ne-secondary-dark);
   text-decoration: underline;
 }
 
@@ -161,5 +161,5 @@
 }
 
 /* Garante o azul AA mesmo que outro CSS global defina .btn-primary */
-.access-denied .btn-primary { background: #1d4ed8; color: #fff; }
-.access-denied .btn-primary:hover { background: #1e40af; }
+.access-denied .btn-primary { background: var(--ne-secondary-dark); color: #fff; }
+.access-denied .btn-primary:hover { background: var(--ne-secondary-dark); }

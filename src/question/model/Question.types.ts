@@ -28,6 +28,8 @@ export interface QuestionOption {
   label: string;
   value: string;
   text: string;
+  /** Quando a alternativa é uma figura (ex.: um dos cinco gráficos): URL da imagem (relativa ao back). */
+  imagemUrl?: string;
 }
 
 export interface QuestionNavigation {

@@ -13,7 +13,7 @@
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #28a745;
+    background-color: var(--ne-success);
     color: white;
     padding: 15px 25px;
     border-radius: 5px;
@@ -30,7 +30,7 @@
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #dc3545;
+    background-color: var(--ne-error-dark);
     color: white;
     padding: 15px 25px;
     border-radius: 5px;

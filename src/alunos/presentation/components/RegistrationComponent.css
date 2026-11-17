@@ -1,22 +1,25 @@
+/* Cadastro - Estudante — Figma (frames "cadastro-dadosdoestudante")
+   fundo cinza claro, card branco, título vermelho, campos "textfield" e botões 64px */
 .registration-container {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #011C40;
-  padding: 0;
+  background-color: var(--ne-gray-light);
+  padding: 24px 16px;
   margin: 0;
-  overflow: hidden;
+  box-sizing: border-box;
+  font-family: var(--ne-font);
 }
 
 .registration-card {
-  width: 600px;
-  height: 640px;
-  border-radius: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(145deg, #0349A6, #011C40);
-  border: 2px solid white;
-  padding: 10px;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 16px;
+  box-shadow: none;
+  background: var(--ne-white);
+  border: none;
+  padding: 16px;
   margin: 0;
 }
 
@@ -24,19 +27,43 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  height: 100%;
+  gap: 32px;
+  padding: 16px;
 }
 
 .registration-form {
   flex: 1;
+  max-width: 420px;
 }
 
 .registration-title {
-  color: white;
-  text-align: center;
-  margin-bottom: 20px;
+  color: var(--ne-primary);
+  font-family: var(--ne-font);
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 24px;
 }
+
+.registration-form .ant-form-item-label > label {
+  font-family: var(--ne-font);
+  font-weight: 600;
+  color: var(--ne-black);
+}
+
+.registration-form .ant-input,
+.registration-form .ant-input-affix-wrapper {
+  min-height: 46px;
+  border: none;
+  border-bottom: 1px solid var(--ne-secondary-dark);
+  border-radius: 8px 8px 0 0;
+  box-shadow: var(--ne-elevation-3);
+  font-family: var(--ne-font);
+}
+
+.registration-form .ant-input-affix-wrapper .ant-input { box-shadow: none; border: none; min-height: auto; }
+.registration-form .ant-form-item-has-error .ant-input,
+.registration-form .ant-form-item-has-error .ant-input-affix-wrapper { border-bottom: 2px solid var(--ne-error); }
+.registration-form .ant-input-password-icon { color: var(--ne-primary) !important; }
 
 .registration-image {
   flex: 1;
@@ -46,10 +73,21 @@
 .registration-img {
   max-width: 100%;
   height: auto;
-  border-radius: 75px;
+  border-radius: 16px;
 }
 
 .registration-button {
-  width: 150px;
+  width: 100%;
+  max-width: 420px;
+  height: var(--ne-control-height) !important;
   margin-top: 16px;
+  border-radius: var(--ne-radius) !important;
+  font-family: var(--ne-font);
+  font-weight: 700 !important;
+  font-size: 16px !important;
+}
+
+@media (max-width: 768px) {
+  .registration-image { display: none; }
+  .registration-form { max-width: 100%; }
 }

@@ -57,7 +57,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
   position: relative;
 
   margin: 0 !important;
-  color: #1f2937 !important;
+  color: var(--ne-secondary-dark) !important;
   font-size: 1.5rem !important;
   font-weight: 600 !important;
 }
@@ -68,7 +68,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
   padding: 4px !important;
   border-radius: 4px !important;
   cursor: pointer !important;
-  color: #6b7280 !important;
+  color: var(--ne-gray-dark) !important;
   transition: all 0.2s ease !important;
 }
 
@@ -97,7 +97,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 
 /* Área de drop de arquivos */
 .file-drop-zone {
-  border: 2px dashed #d1d5db !important;
+  border: 2px dashed var(--ne-gray-medium) !important;
   border-radius: 8px !important;
   padding: 40px 20px !important;
   text-align: center !important;
@@ -109,13 +109,13 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 
 
 .file-drop-zone--has-file {
-  border-color: #10b981 !important;
+  border-color: var(--ne-success) !important;
   background: #f0fdf4 !important;
   cursor: default !important;
 }
 
 .file-drop-zone--processing {
-  border-color: #3b82f6 !important;
+  border-color: var(--ne-secondary) !important;
   background: #f0f9ff !important;
   pointer-events: none !important;
   opacity: 0.95 !important;
@@ -126,12 +126,12 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 }
 
 .file-drop-content {
-  color: #6b7280 !important;
+  color: var(--ne-gray-dark) !important;
 }
 
 .file-drop-icon {
   margin: 0 auto 16px !important;
-  color: #9ca3af !important;
+  color: var(--ne-gray-dark) !important;
 }
 
 .file-drop-text {
@@ -142,7 +142,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 
 .file-drop-hint {
   font-size: 0.8rem !important;
-  color: #9ca3af !important;
+  color: var(--ne-gray-dark) !important;
 }
 
 /* Conteúdo quando arquivo está selecionado */
@@ -154,7 +154,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 }
 
 .file-selected-icon {
-  color: #10b981 !important;
+  color: var(--ne-success) !important;
   flex-shrink: 0 !important;
 }
 
@@ -172,7 +172,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 
 .file-size {
   font-size: 0.8rem !important;
-  color: #6b7280 !important;
+  color: var(--ne-gray-dark) !important;
   margin: 0 !important;
 }
 
@@ -182,7 +182,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
   padding: 6px !important;
   border-radius: 4px !important;
   cursor: pointer !important;
-  color: #6b7280 !important;
+  color: var(--ne-gray-dark) !important;
   transition: all 0.2s ease !important;
   flex-shrink: 0 !important;
 }
@@ -194,7 +194,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
   background: #fef2f2 !important;
   border: 1px solid #fecaca !important;
   border-radius: 6px !important;
-  color: #dc2626 !important;
+  color: var(--ne-error-dark) !important;
   margin-bottom: 16px !important;
   font-size: 0.9rem !important;
 }
@@ -209,7 +209,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 
 .btn-secondary {
   padding: 10px 20px !important;
-  border: 1px solid #d1d5db !important;
+  border: 1px solid var(--ne-gray-medium) !important;
   background: white !important;
   border-radius: 6px !important;
   cursor: pointer !important;
@@ -226,7 +226,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 
 .add-questions-modal .btn-primary {
   padding: 10px 20px !important;
-  background: #047857 !important;
+  background: var(--ne-success-dark) !important;
   color: white !important;
   border: none !important;
   border-radius: 6px !important;
@@ -237,7 +237,7 @@ body.modal-open *:not(.modal-overlay):not(.modal-overlay *):not(.modal-content):
 
 
 .add-questions-modal .btn-primary:disabled {
-  background: #9ca3af !important;
+  background: var(--ne-gray-dark) !important;
   cursor: not-allowed !important;
 }
 

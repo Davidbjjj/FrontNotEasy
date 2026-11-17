@@ -1,5 +1,8 @@
+/* Tela "Acesso a plataforma" — Figma Noteasy (node 390:10, base 1366x768) */
 .page {
   min-height: 100vh;
+  background: var(--ne-gray-light);
+  font-family: var(--ne-font);
 }
 
 .wrapper {
@@ -9,10 +12,10 @@
 }
 
 .leftCol {
-  background: #ffffff;
+  background: var(--ne-gray-light);
   height: 100vh;
   margin: 0 !important;
-  padding: 0 !important;
+  padding: 0 0 0 5.8% !important; /* imagem começa em x=80 no frame de 1366 */
 }
 
 .leftSide {
@@ -28,6 +31,7 @@
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .heroImage {
@@ -38,34 +42,38 @@
   margin: 0;
 }
 
+/* Balão com a marca + frase (Figma: card branco, raio 16, texto azul secundário) */
 .logoOverlay {
   position: absolute;
-  top: 20px;
+  top: 6%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: row;
   align-items: center;
-  background: #ffffff;
-  padding: 12px 16px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-  max-width: 90%;
-  width: 250px;
+  gap: 24px;
+  background: var(--ne-white);
+  padding: 16px 28px;
+  border-radius: 16px;
+  box-shadow: var(--ne-elevation-1);
+  width: 86%;
+  max-width: 512px;
+  box-sizing: border-box;
 }
 
 .logoOverlay img {
-  height: 80px;
+  height: 88px;
   width: auto;
   object-fit: contain;
-  margin-right: 12px;
+  flex-shrink: 0;
 }
 
 .logoOverlay .bubbleText {
-  font-size: 15px;
-  line-height: 1.3;
-  font-weight: 600;
-  color: #1f2d3d;
+  font-family: var(--ne-font);
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--ne-secondary);
   text-align: left;
 }
 
@@ -74,70 +82,185 @@
   align-items: center;
   justify-content: center;
   padding: 32px 16px;
-  background: linear-gradient(180deg, #ffffff 0%, #f5f7fa 100%);
+  background: var(--ne-gray-light);
 }
 
 .formHolder {
   width: 100%;
-  max-width: 480px;
+  max-width: 486px;
 }
 
+/* Card branco do formulário */
 .card {
   border-radius: 16px !important;
-  padding: 40px 24px;
-  box-shadow: 0 20px 28px rgba(13, 13, 50, 0.08);
+  padding: 32px 24px;
+  box-shadow: none;
   width: 100%;
-  max-width: 480px;
+  max-width: 486px;
   margin: 0 auto;
+  background: var(--ne-white) !important;
 }
 
 .cardTitle {
   text-align: center;
-  color: #cf2d25 !important;
-  margin-bottom: 24px !important;
-  font-size: 28px;
-  font-weight: 700;
+  font-family: var(--ne-font) !important;
+  color: var(--ne-primary) !important;
+  margin: 8px 0 48px !important;
+  font-size: 32px !important;
+  font-weight: 600 !important;
+}
+
+/* Campos: componente "textfield" do Figma
+   fundo branco, raio 8 só em cima, borda inferior azul #142B5C, sombra Elevation 3 */
+.card :global(.ant-form-item) {
+  margin-bottom: 32px;
+}
+
+.card :global(.ant-input-affix-wrapper),
+.card :global(.ant-input) {
+  font-family: var(--ne-font);
+}
+
+.card :global(.ant-input-affix-wrapper-lg),
+.card :global(.ant-input-lg) {
+  height: var(--ne-control-height);
+  padding: 6px 12px 4px;
+  border: none;
+  border-bottom: 1px solid var(--ne-secondary-dark);
+  border-radius: 8px 8px 0 0;
+  background: var(--ne-white);
+  box-shadow: var(--ne-elevation-3);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ne-black);
+}
+
+.card :global(.ant-input-affix-wrapper-lg .ant-input) {
+  height: auto;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+.card :global(.ant-input::placeholder) {
+  color: var(--ne-black);
+  font-weight: 600;
+  opacity: 1;
+}
+
+/* Foco = "activated"; válido = "correct" (verde); erro = "error" (vermelho) */
+.card :global(.ant-input-affix-wrapper-lg:focus-within),
+.card :global(.ant-input-lg:focus) {
+  border-bottom: 2px solid var(--ne-secondary-dark);
+}
+
+.card :global(.ant-form-item-has-success .ant-input-affix-wrapper-lg),
+.card :global(.ant-form-item-has-success .ant-input-lg) {
+  border-bottom: 2px solid var(--ne-success);
+}
+
+.card :global(.ant-form-item-has-error .ant-input-affix-wrapper-lg),
+.card :global(.ant-form-item-has-error .ant-input-lg) {
+  border-bottom: 2px solid var(--ne-error);
+}
+
+.card :global(.ant-form-item-explain-error) {
+  font-size: 12px;
+  color: var(--ne-error-dark);
+  margin-top: 8px;
+}
+
+/* Ícone de mostrar/ocultar senha em vermelho, como no Figma */
+.card :global(.ant-input-password-icon) {
+  color: var(--ne-primary) !important;
+  font-size: 22px;
 }
 
 .forgotRow {
-  margin-top: 4px;
+  margin: -12px 0 24px;
   display: flex;
   justify-content: flex-start;
 }
 
 .forgotLink {
-  padding: 0;
-  font-size: 14px;
+  padding: 0 !important;
+  height: auto !important;
+  font-family: var(--ne-font);
+  font-size: 16px;
+  font-weight: 600 !important;
+  color: var(--ne-secondary) !important;
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 .signupHint {
-  margin-top: 8px;
+  margin: 40px 0 12px 20px;
   text-align: left;
-  color: #811610;
+}
+
+.signupHint :global(.ant-typography) {
+  font-family: var(--ne-font);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ne-primary-darker);
+}
+
+/* Primary Button do Figma: 64px, raio 8, Alexandria Bold 16px */
+.primaryBtn,
+.secondaryBtn {
+  height: var(--ne-control-height) !important;
+  border-radius: var(--ne-radius) !important;
+  font-family: var(--ne-font) !important;
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  box-shadow: var(--ne-elevation-1) !important;
 }
 
 .primaryBtn {
-  background: #cf2d25 !important;
-  border-color: #f9f9f9 !important;
-  color: #f9f9f9 !important;
-  font-weight: 600;
+  background: var(--ne-primary) !important;
+  border-color: var(--ne-primary) !important;
+  color: var(--ne-white) !important;
 }
 
-.primaryBtn:hover,
-.primaryBtn:focus {
-  filter: brightness(0.95);
+.primaryBtn:hover:not(:disabled) {
+  background: var(--ne-primary-dark) !important;
+  border-color: var(--ne-primary-dark) !important;
 }
 
+/* Estado "select" (carregando) */
+.primaryBtn:global(.ant-btn-loading) {
+  background: var(--ne-primary-dark) !important;
+  border-color: var(--ne-primary-darker) !important;
+}
+
+/* Estado "dependent": substitui o cinza desabilitado (nota de acessibilidade do Figma) */
+.primaryBtn:disabled:not(:global(.ant-btn-loading)) {
+  background: var(--ne-white) !important;
+  border: 1px solid var(--ne-warning) !important;
+  color: var(--ne-warning-dark) !important;
+  font-weight: 400 !important;
+  box-shadow: none !important;
+}
+
+/* Secundary Button: branco com texto vermelho; foco/hover = vermelho claro */
 .secondaryBtn {
-  font-weight: 600;
-  color: #cf2d25 !important;
+  background: var(--ne-white) !important;
+  border: none !important;
+  color: var(--ne-primary) !important;
 }
 
-/* Social Login Styles */
+.secondaryBtn:hover,
+.secondaryBtn:focus-visible {
+  background: var(--ne-primary-light) !important;
+  color: var(--ne-white) !important;
+}
+
+/* Social Login */
 .socialLoginContainer {
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid #e8e8e8;
+  border-top: 1px solid var(--ne-gray-medium);
 }
 
 .githubBtn {
@@ -157,59 +280,32 @@
   visibility: hidden !important;
 }
 
-@media (max-width: 1200px) {
-  .cardTitle {
-    font-size: 26px;
-  }
-}
-
-
-@media (max-width: 991px) and (min-width: 768px) {
-
+/* Tablet (Figma "Tablet - acesso"): só o formulário, centralizado */
+@media (max-width: 991px) {
   .leftCol {
     display: none;
   }
 
   .rightCol {
     padding: 32px 24px;
-    display: flex;
-    justify-content: center;
   }
 
   .formHolder {
-    max-width: 400px;
-    width: 100%;
-    transform: translateX(250px);
+    max-width: 486px;
   }
-
-  .card {
-    padding: 48px 24px;
-  }
-
-  .cardTitle {
-    font-size: 24px !important;
-  }
-
-  .primaryBtn,
-  .secondaryBtn {
-    font-size: 15px;
-  }
-
 }
 
-
+/* Phone (Figma "Android Small" 360x640) */
 @media (max-width: 576px) {
-  .formHolder {
-    max-width: 100%;
+  .rightCol {
+    padding: 16px;
+    align-items: flex-start;
   }
   .card {
     padding: 24px 16px;
   }
   .cardTitle {
-    font-size: 20px !important;
-  }
-  .primaryBtn,
-  .secondaryBtn {
-    font-size: 14px;
+    font-size: 24px !important;
+    margin-bottom: 32px !important;
   }
 }

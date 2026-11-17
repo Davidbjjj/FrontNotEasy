@@ -70,9 +70,9 @@
 }
 
 .btn {
-  border: 1px solid #c1121f;
+  border: 1px solid var(--ne-primary);
   background: #fff;
-  color: #c1121f;
+  color: var(--ne-primary);
   border-radius: 8px;
   padding: 6px 12px;
   font-weight: 600;
@@ -80,7 +80,7 @@
 }
 
 .btnPrimary {
-  background: #c1121f;
+  background: var(--ne-primary);
   color: #fff;
 }
 
@@ -93,6 +93,6 @@
 }
 
 .btn:focus-visible {
-  outline: 2px solid #0958d9;
+  outline: 2px solid var(--ne-secondary);
   outline-offset: 2px;
 }

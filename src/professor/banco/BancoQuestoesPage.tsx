@@ -3,7 +3,12 @@ import { Button, EmptyState, FilterBar, Modal, useToast } from '../../ui';
 import { mensagemErro, professorService, urlImagem } from '../professorService';
 import { DIFICULDADES, parseTags, resumoEnunciado, rotuloDificuldade } from '../professorLogic';
 import type { FiltrosBanco, ListaConfig, PaginaBanco, QuestaoBanco } from '../types';
+import { textoDaAlternativa } from '../../question/model/alternativaFigura';
 import styles from '../Professor.module.css';
+
+const ESTILO_IMAGEM: React.CSSProperties = {
+  maxWidth: 360, maxHeight: 220, width: 'auto', height: 'auto', objectFit: 'contain', border: '1px solid var(--border)', borderRadius: 8,
+};
 
 const FILTROS_VAZIOS = { q: '', assunto: '', dificuldade: '', tag: '', disciplinaId: '', tipo: '' };
 const TAMANHO = 10;
@@ -27,16 +32,24 @@ const Previa: React.FC<{ questao: QuestaoBanco }> = ({ questao }) => {
     <div className={`${styles.cardAlt} ${styles.stack}`} aria-label={`Pré-visualização da questão ${questao.id}`}>
       {q.cabecalho && <p className={styles.muted}>{q.cabecalho}</p>}
       <p className={styles.pre}>{q.enunciado}</p>
-      {full?.imagens?.map((img, k) => (
-        <img key={k} src={urlImagem(img.urlPublica)} alt={img.nomeArquivo || `Imagem ${k + 1}`} style={{ maxWidth: 360, maxHeight: 220, width: 'auto', height: 'auto', objectFit: 'contain', border: '1px solid var(--border)', borderRadius: 8 }} />
+      {full?.imagens?.filter((img) => img.alternativaIndice == null).map((img, k) => (
+        <img key={k} src={urlImagem(img.urlPublica)} alt={img.nomeArquivo || `Imagem ${k + 1}`} style={ESTILO_IMAGEM} />
       ))}
       {q.tipo === 'OBJETIVA' && q.alternativas.length > 0 && (
         <ol className={styles.alts} type="A">
-          {q.alternativas.map((a, i) => (
-            <li key={i} className={i === q.gabarito ? styles.altCorreta : undefined}>
-              {a}{i === q.gabarito && <span> (gabarito)</span>}
-            </li>
-          ))}
+          {q.alternativas.map((a, i) => {
+            // alternativa que é uma figura: a imagem vem com alternativaIndice = posição da alternativa
+            const figura = full?.imagens?.find((img) => img.alternativaIndice === i);
+            return (
+              <li key={i} className={i === q.gabarito ? styles.altCorreta : undefined}>
+                {figura && (
+                  <img src={urlImagem(figura.urlPublica)} alt={`Figura da alternativa ${String.fromCharCode(65 + i)}`}
+                    style={{ ...ESTILO_IMAGEM, display: 'block' }} />
+                )}
+                {textoDaAlternativa(a, !!figura)}{i === q.gabarito && <span> (gabarito)</span>}
+              </li>
+            );
+          })}
         </ol>
       )}
       {q.tipo === 'ABERTA' && (

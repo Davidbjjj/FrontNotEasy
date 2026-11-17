@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { HelpCircle, LogOut } from "lucide-react";
+import { HelpCircle, LogOut } from "lucide-react"; // Figma: ícone de suporte (?) e sair (seta)
 import GlobalSearch from "../../../busca/GlobalSearch";
 import NotificationBell from "../../../notifications/NotificationBell";
 import { BrandLogo } from "../../../branding/BrandingSync";
@@ -85,15 +85,15 @@ export const TopBar: React.FC<TopBarProps> = ({
             className="top-bar__action"
             onClick={() => setHelpOpen((o) => !o)}
             type="button"
-            aria-label="Ajuda"
+            aria-label="Suporte"
             aria-haspopup="menu"
             aria-expanded={helpOpen}
           >
-            <HelpCircle size={20} />
-            <span>Ajuda</span>
+            <HelpCircle size={32} />
+            <span>suporte</span>
           </button>
           {helpOpen && (
-            <div className="top-bar__menu" role="menu" aria-label="Ajuda">
+            <div className="top-bar__menu" role="menu" aria-label="Suporte">
               <button
                 type="button"
                 role="menuitem"
@@ -127,8 +127,8 @@ export const TopBar: React.FC<TopBarProps> = ({
           type="button"
           aria-label="Sair"
         >
-          <LogOut size={20} />
-          <span>Sair</span>
+          <LogOut size={32} />
+          <span>sair</span>
         </button>
       </div>
     </header>

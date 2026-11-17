@@ -9,15 +9,25 @@ import { AuthProvider } from './auth/AuthProvider';
 import { ConfigProvider } from 'antd';
 import { ToastProvider } from './ui/Toast/ToastProvider';
 import { NotificationsProvider } from './notifications/NotificationsProvider';
-// Tokens do antd ajustados para contraste AA (texto >= 4.5:1)
+// Tokens do antd alinhados ao design do Figma (Noteasy) e com contraste AA
 const antdTheme = {
   token: {
-    colorPrimary: '#0958d9',
-    colorLink: '#0958d9',
-    colorError: '#cf1322',
+    colorPrimary: '#D12E25',       // Color/primary/primary
+    colorPrimaryHover: '#A52520',  // primary-dark
+    colorLink: '#1A3979',          // Color/secundary/secundary
+    colorLinkHover: '#142B5C',
+    colorSuccess: '#067003',
+    colorWarning: '#B84F0C',
+    colorError: '#D11800',
+    colorInfo: '#1A3979',
+    colorTextBase: '#000000',
     colorTextDescription: '#595959',
     colorTextSecondary: '#595959',
-    colorTextPlaceholder: '#6b7280',
+    colorTextPlaceholder: '#656565',
+    colorBgLayout: '#F6F6F6',
+    borderRadius: 8,
+    fontFamily: "'Alexandria', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    controlHeightLG: 54,
   },
 };
 

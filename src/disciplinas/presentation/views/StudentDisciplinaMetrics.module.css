@@ -1,8 +1,8 @@
 :root{
   --bg: #f5f7fb;
   --card-bg: #ffffff;
-  --muted: #6b7280;
-  --primary: #1890ff;
+  --muted: var(--ne-gray-dark);
+  --primary: var(--ne-secondary);
   --success: #52c41a;
   --warning: #faad14;
   --error: #ff4d4f;
@@ -25,7 +25,7 @@
   margin: 0 0 4px 0;
   font-size: 24px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
 }
 
 .subtitle{
@@ -38,7 +38,7 @@
   border-radius: 12px;
   background: var(--card-bg);
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--ne-gray-medium);
   height: 100%;
   transition: box-shadow 0.2s ease;
 }
@@ -164,7 +164,7 @@
 .summaryValue{
   font-size: 20px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   line-height: 1.1;
 }
 
@@ -196,7 +196,7 @@
 .miniStatValue{
   font-size: 20px;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
 }
 
 .miniStatLabel{
@@ -234,7 +234,7 @@
 }
 
 .sectionTitle{
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   margin-bottom: 16px;
   font-size: 18px;
 }
@@ -248,7 +248,7 @@
 .listCard{
   border-radius: 8px;
   background: var(--card-bg);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--ne-gray-medium);
   transition: all 0.2s ease;
 }
 
@@ -271,7 +271,7 @@
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 8px;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   line-height: 1.4;
 }
 
@@ -287,7 +287,7 @@
 }
 
 .listStat strong{
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
 }
 
 .emptyState{

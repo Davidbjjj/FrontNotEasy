@@ -1,23 +1,23 @@
 /* ===== VARIÁVEIS CSS ===== */
 :root {
   /* Cores */
-  --primary-dark: #0f172a;
-  --primary-blue: #1e40af;
+  --primary-dark: var(--ne-secondary-dark);
+  --primary-blue: var(--ne-secondary-dark);
   --primary-blue-light: #eef2ff;
   --surface-white: #ffffff;
-  --background-light: #f8fafc;
-  --text-primary: #0f172a;
+  --background-light: var(--ne-gray-light);
+  --text-primary: var(--ne-secondary-dark);
   --text-secondary: #475569;
-  --text-muted: #6b7280;
+  --text-muted: var(--ne-gray-dark);
   --text-light: #94a3b8;
-  --border-light: #e2e8f0;
-  --border-medium: #cbd5e1;
+  --border-light: var(--ne-gray-medium);
+  --border-medium: var(--ne-gray-medium);
   --shadow-light: rgba(2, 6, 23, 0.04);
   --shadow-medium: rgba(2, 6, 23, 0.08);
   --shadow-heavy: rgba(2, 6, 23, 0.12);
-  --success-green: #10b981;
-  --warning-orange: #f59e0b;
-  --error-red: #ef4444;
+  --success-green: var(--ne-success);
+  --warning-orange: var(--ne-warning);
+  --error-red: var(--ne-error-dark);
   
   /* Espaçamentos */
   --spacing-xs: 4px;
@@ -57,7 +57,7 @@
   justify-content: center;
   min-height: 100vh;
   background-color: var(--background-light);
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: var(--ne-font);
 }
 
 /* ===== LAYOUT PROFESSOR ===== */

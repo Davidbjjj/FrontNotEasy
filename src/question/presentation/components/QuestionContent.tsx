@@ -3,6 +3,7 @@ import { QuestionContentProps } from '../../model/Question.types';
 import './Question.css';
 import ZoomableImage from './ZoomableImage';
 import api from '../../../services/apiClient';
+import { textoDaAlternativa, urlAbsoluta } from '../../model/alternativaFigura';
 
 export const QuestionContent: React.FC<QuestionContentProps> = ({
   content,
@@ -83,7 +84,19 @@ export const QuestionContent: React.FC<QuestionContentProps> = ({
             aria-pressed={selectedAnswer === option.id}
           >
             <span className="question-option__label">{option.label}</span>
-            <span className="question-option__text">{option.text}</span>
+            {option.imagemUrl && (
+              // ampliar a figura não marca a alternativa
+              <span className="question-option__figura" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+                <ZoomableImage
+                  src={urlAbsoluta(option.imagemUrl, api?.defaults?.baseURL)}
+                  alt={`Figura da alternativa ${option.label}`}
+                  className="question-option__img"
+                />
+              </span>
+            )}
+            {textoDaAlternativa(option.text, !!option.imagemUrl) && (
+              <span className="question-option__text">{textoDaAlternativa(option.text, !!option.imagemUrl)}</span>
+            )}
           </div>
         ))}
       </div>

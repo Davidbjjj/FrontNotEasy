@@ -28,6 +28,6 @@
 
 .scanner-button:disabled,
 .scanner-button.uploading {
-    background-color: #6c757d;
+    background-color: var(--ne-gray-dark);
     cursor: not-allowed;
 }

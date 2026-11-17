@@ -3,23 +3,23 @@
   padding: 28px 24px;
   max-width: 980px;
   margin: 0 auto;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-family: var(--ne-font);
 }
 
 .activities-page-title{
   font-size: 28px;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--ne-secondary-dark);
   margin: 8px 0 20px 0;
 }
 
 .activities-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap }
 .activities-controls{ display:flex; gap:8px; align-items:center; flex-wrap:wrap }
-.activities-search{ padding:0 12px; min-height:44px; border-radius:8px; border:1px solid #9ca3af; font:inherit; min-width:0; flex:1 1 220px }
-.activities-filter{ min-height:44px; padding:0 8px; border-radius:8px; border:1px solid #9ca3af; font:inherit; background:#fff }
-.activities-search:focus-visible, .activities-filter:focus-visible, .activities-add-btn:focus-visible, .activity-card:focus-visible, .activity-delete-btn:focus-visible{ outline:3px solid #1d4ed8; outline-offset:2px }
+.activities-search{ padding:0 12px; min-height:44px; border-radius:8px; border:1px solid var(--ne-gray-dark); font:inherit; min-width:0; flex:1 1 220px }
+.activities-filter{ min-height:44px; padding:0 8px; border-radius:8px; border:1px solid var(--ne-gray-dark); font:inherit; background:#fff }
+.activities-search:focus-visible, .activities-filter:focus-visible, .activities-add-btn:focus-visible, .activity-card:focus-visible, .activity-delete-btn:focus-visible{ outline:3px solid var(--ne-secondary-dark); outline-offset:2px }
 .activity-delete-btn{ min-width:44px; min-height:44px }
-.activities-add-btn{ background:#111827; color:white; border:none; min-height:44px; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600 }
+.activities-add-btn{ background:var(--ne-secondary-dark); color:white; border:none; min-height:44px; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600 }
 .activities-add-btn:hover{ transform:translateY(-2px); box-shadow:0 6px 18px rgba(2,6,23,0.08) }
 
 .activity-group{
@@ -79,18 +79,18 @@
 .activity-card-title{
   margin:0;
   font-size:1.05rem;
-  color:#0f172a;
+  color:var(--ne-secondary-dark);
   font-weight:700;
 }
 
 .activity-card-sub{
   margin:6px 0 0 0;
-  color:#6b7280;
+  color:var(--ne-gray-dark);
   font-size:0.95rem;
 }
 
 .activity-card-action{
-  color:#9ca3af;
+  color:var(--ne-gray-dark);
   font-size:22px;
   margin-left:12px;
 }
@@ -98,7 +98,7 @@
 .activity-meta{
   display:flex; flex-direction:column; align-items:flex-end; gap:6px; margin-left:8px; min-width:120px
 }
-.activity-meta .deadline{ color:#64748b; font-size:0.9rem }
+.activity-meta .deadline{ color:var(--ne-gray-dark); font-size:0.9rem }
 
 .activity-card .activity-body{ display:flex; justify-content:space-between; gap:16px }
 

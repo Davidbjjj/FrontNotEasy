@@ -71,7 +71,11 @@ export default function RedefinirSenha() {
     <main className={styles.page}>
       {/* Lado esquerdo com imagem ilustrativa (decorativa) */}
       <div className={styles.illustration}>
-        <img src="/assets/redefinir-senha.png" alt="" />
+        <img src="/Alunos.svg" alt="" />
+        <div className={styles.bubble}>
+          <img src="/LogoGGE.svg" alt="Logo GGE" />
+          <p>Aqui, enquanto <br /> o(a) aluno(a) pratica, <br /> o(a) professor(a) <br /> descobre onde focar.</p>
+        </div>
       </div>
 
       {/* Lado direito com formulário */}
@@ -110,14 +114,14 @@ export default function RedefinirSenha() {
             <ul id="regras-senha" className={styles.rules}>
               {regras.map((r) => (
                 <li key={r.texto} className={r.ok ? styles.ok : styles.pending}>
-                  <span aria-hidden="true">{r.ok ? "✓" : "•"}</span> {r.texto}
+                  <span aria-hidden="true">{r.ok ? "✓" : "✕"}</span> {r.texto}
                   <span className="sr-only">{r.ok ? " (atendido)" : " (pendente)"}</span>
                 </li>
               ))}
             </ul>
 
             <button type="submit" disabled={!senhaValida} className={styles.submit}>
-              Confirmar
+              {senhaValida ? "Confirmar" : "Siga os critérios para gerar senha"}
             </button>
           </form>
 

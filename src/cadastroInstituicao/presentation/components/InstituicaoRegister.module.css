@@ -1,6 +1,7 @@
 .page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--ne-gray-light);
+  font-family: var(--ne-font);
 }
 
 .wrapper {
@@ -12,8 +13,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
+  background: var(--ne-gray-light);
+  padding: 2rem 0 2rem 5.8%;
 }
 
 .leftSide {
@@ -48,7 +49,10 @@
 .bubbleText {
   display: inline-block;
   background: rgba(255, 255, 255, 0.95);
-  color: #333;
+  color: var(--ne-secondary);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.2;
   padding: 1rem 1.5rem;
   border-radius: 16px;
   font-size: 1rem;
@@ -60,7 +64,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
+  background: var(--ne-gray-light);
   padding: 2rem;
 }
 
@@ -71,51 +75,57 @@
 
 .card {
   border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: none;
   padding: 2rem;
 }
 
 .cardTitle {
   text-align: center;
   margin-bottom: 2rem !important;
-  color: #333;
+  color: var(--ne-primary) !important;
+  font-family: var(--ne-font);
   font-weight: 600;
 }
 
 .primaryBtn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--ne-primary);
   border: none;
-  border-radius: 8px;
-  height: 48px;
+  border-radius: var(--ne-radius);
+  height: var(--ne-control-height);
+  box-shadow: var(--ne-elevation-1);
   font-weight: 600;
   font-size: 16px;
   transition: all 0.3s ease;
 }
 
 .primaryBtn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.4);
+  background: var(--ne-primary-dark) !important;
 }
 
 .primaryBtn:disabled {
-  background: #ccc;
+  background: var(--ne-white) !important;
+  border: 1px solid var(--ne-warning) !important;
+  color: var(--ne-warning-dark) !important;
+  font-weight: 400;
+  box-shadow: none;
   cursor: not-allowed;
 }
 
 .secondaryBtn {
-  border: 2px solid #4c51bf;
-  color: #4c51bf;
-  border-radius: 8px;
-  height: 48px;
+  border: none;
+  color: var(--ne-primary);
+  background: var(--ne-white);
+  border-radius: var(--ne-radius);
+  height: var(--ne-control-height);
+  box-shadow: var(--ne-elevation-1);
   font-weight: 600;
   font-size: 16px;
   transition: all 0.3s ease;
 }
 
 .secondaryBtn:hover {
-  background: #667eea;
-  color: white;
-  border-color: #667eea;
+  background: var(--ne-primary-light) !important;
+  color: white !important;
 }
 
 .loginHint {
@@ -124,7 +134,8 @@
 }
 
 .loginHint span {
-  color: #666;
+  color: var(--ne-primary-darker);
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {

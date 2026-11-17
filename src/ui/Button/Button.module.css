@@ -1,20 +1,48 @@
+/* Botões conforme Figma > Componenetes > "Primary Button" e "Secundary Button"
+   enable / focus / select (carregando) / dependent (aguardando preenchimento) */
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   min-height: var(--tap-target);
   padding: 0 var(--space-4);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ne-radius);
   border: 1px solid transparent;
-  font: inherit;
-  font-size: var(--font-size-sm);
+  font-family: var(--ne-font);
+  font-size: 16px;
   font-weight: var(--font-weight-bold);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 .btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
-.primary { background: var(--primary-blue); color: var(--color-on-primary); }
-.primary:hover:not(:disabled) { background: var(--primary-dark); }
-.secondary { background: var(--bg); color: var(--text-dark); border-color: var(--border); }
-.secondary:hover:not(:disabled) { background: var(--bg-alt); }
-.danger { background: var(--color-danger); color: var(--color-on-primary); }
-.ghost { background: transparent; color: var(--primary-dark); }
-.ghost:hover:not(:disabled) { background: var(--bg-alt); }
+.btn:disabled { cursor: not-allowed; }
+
+/* Tamanho "large" = altura padrão dos formulários do design (64px, 284–420px) */
+.lg { min-height: var(--ne-control-height); min-width: min(284px, 100%); max-width: 420px; width: 100%; }
+
+/* Primary: vermelho var(--ne-primary), texto branco */
+.primary { background: var(--ne-primary); color: var(--ne-white); box-shadow: var(--ne-elevation-1); }
+.primary:hover:not(:disabled) { background: var(--ne-primary-dark); }
+.primary[aria-busy='true'] { background: var(--ne-primary-dark); border-color: var(--ne-primary-darker); letter-spacing: 0.03em; }
+
+/* Secundary: fundo branco, texto vermelho */
+.secondary { background: var(--ne-white); color: var(--ne-primary); box-shadow: var(--ne-elevation-1); }
+.secondary:hover:not(:disabled) { background: var(--ne-primary-light); color: var(--ne-white); }
+.secondary[aria-busy='true'] { color: var(--ne-primary-dark); border-color: var(--ne-primary-dark); }
+
+/* Dependent: usado no lugar do cinza "desabilitado" (nota de acessibilidade do Figma) */
+.primary:disabled:not([aria-busy='true']),
+.secondary:disabled:not([aria-busy='true']),
+.dependent {
+  background: var(--ne-white);
+  color: var(--ne-warning-dark);
+  border-color: var(--ne-warning);
+  font-weight: 400;
+  box-shadow: none;
+}
+
+.danger { background: var(--ne-error-dark); color: var(--ne-white); }
+.danger:hover:not(:disabled) { background: #B01400; }
+.ghost { background: transparent; color: var(--ne-secondary); }
+.ghost:hover:not(:disabled) { background: var(--ne-gray-light); }

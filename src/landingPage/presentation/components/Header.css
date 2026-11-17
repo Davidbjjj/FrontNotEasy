@@ -1,12 +1,12 @@
 /* ====== VARIÁVEIS CSS ====== */
 :root {
-  --primary-blue: #2563eb;
-  --primary-dark: #1d4ed8;
-  --text-dark: #1f2937;
-  --text-light: #6b7280;
+  --primary-blue: var(--ne-secondary);
+  --primary-dark: var(--ne-secondary-dark);
+  --text-dark: var(--ne-secondary-dark);
+  --text-light: var(--ne-gray-dark);
   --background-white: #ffffff;
-  --background-light: #f8fafc;
-  --border-light: #e5e7eb;
+  --background-light: var(--ne-gray-light);
+  --border-light: var(--ne-gray-medium);
   --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
   --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
   --radius-small: 8px;

@@ -123,7 +123,7 @@
 
 .card-icon--blue {
   background: #dbeafe;
-  color: #1e40af;
+  color: var(--ne-secondary-dark);
 }
 
 .card-icon--purple {
@@ -133,12 +133,12 @@
 
 .card-icon--green {
   background: #dcfce7;
-  color: #16a34a;
+  color: var(--ne-success);
 }
 
 .card-icon--red {
   background: #fee2e2;
-  color: #dc2626;
+  color: var(--ne-error-dark);
 }
 
 .card-content {
@@ -193,11 +193,11 @@
 }
 
 .progress-segment--correct {
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: linear-gradient(90deg, var(--ne-success), var(--ne-success));
 }
 
 .progress-segment--incorrect {
-  background: linear-gradient(90deg, #ef4444, #dc2626);
+  background: linear-gradient(90deg, var(--ne-error-dark), var(--ne-error-dark));
 }
 
 .progress-legend {
@@ -221,11 +221,11 @@
 }
 
 .legend-dot--correct {
-  background: #10b981;
+  background: var(--ne-success);
 }
 
 .legend-dot--incorrect {
-  background: #ef4444;
+  background: var(--ne-error-dark);
 }
 
 .legend-text {

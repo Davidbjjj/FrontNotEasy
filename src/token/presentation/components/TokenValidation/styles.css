@@ -1,7 +1,7 @@
 .validation-container {
   display: flex;
   min-height: 100vh;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--ne-font);
   flex-direction: column;
 }
 
@@ -84,7 +84,7 @@
 /* Texto ao lado da logo */
 .text-content {
   color: rgb(2, 2, 2);
-  font-family: "Poppins", sans-serif;
+  font-family: var(--ne-font);
   font-size: 14px;
   font-weight: 600;
   text-align: left;
@@ -174,7 +174,7 @@
 }
 
 .token-input-box:focus-visible {
-  outline: 2px solid var(--color-focus, #1d4ed8);
+  outline: 2px solid var(--color-focus, var(--ne-secondary-dark));
   outline-offset: 2px;
 }
 

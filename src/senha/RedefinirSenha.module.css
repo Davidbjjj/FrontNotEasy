@@ -1,25 +1,55 @@
+/* Tela "Redefinição de Senha" — Figma (node 655:893): mesmo layout da tela de acesso */
 .page {
   display: flex;
   min-height: 100vh;
-  background: var(--bg-alt);
+  background: var(--ne-gray-light);
+  font-family: var(--ne-font);
 }
 
 .illustration {
   display: none;
+  position: relative;
   flex: 1;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg);
+  margin-left: 5.8%;
+  overflow: hidden;
 }
 
-.illustration img {
-  max-width: 28rem;
+.illustration > img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-@media (min-width: 768px) {
+.bubble {
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 86%;
+  max-width: 512px;
+  box-sizing: border-box;
+  padding: 16px 28px;
+  background: var(--ne-white);
+  border-radius: 16px;
+  box-shadow: var(--ne-elevation-1);
+}
+
+.bubble img { height: 88px; width: auto; }
+
+.bubble p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 500;
+  color: var(--ne-secondary);
+}
+
+@media (min-width: 992px) {
   .illustration {
-    display: flex;
+    display: block;
   }
 }
 
@@ -33,84 +63,132 @@
 
 .card {
   width: 100%;
-  max-width: 28rem;
+  max-width: 486px;
   box-sizing: border-box;
-  padding: var(--space-5);
-  background: var(--bg);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  padding: 32px 36px;
+  background: var(--ne-white);
+  border-radius: 16px;
 }
 
 .title {
-  margin: 0 0 var(--space-4);
-  font-size: var(--font-size-lg);
-  color: var(--color-danger);
+  margin: 8px 0 32px;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--ne-primary);
 }
 
 .field {
-  margin-bottom: var(--space-4);
+  margin-bottom: 24px;
 }
 
+/* textfield do Figma: rótulo dentro do campo, borda inferior azul */
 .label {
   display: block;
-  margin-bottom: var(--space-1);
-  font-weight: var(--font-weight-medium);
+  padding: 6px 12px 0;
+  background: var(--ne-white);
+  border-radius: 8px 8px 0 0;
+  box-shadow: var(--ne-elevation-3);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ne-black);
 }
 
 .input {
   width: 100%;
   box-sizing: border-box;
-  min-height: var(--tap-target);
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--font-size-md);
-  border: 1px solid var(--text-light);
-  border-radius: var(--radius-sm);
+  min-height: 36px;
+  padding: 4px 12px 8px;
+  font-family: var(--ne-font);
+  font-size: 16px;
+  letter-spacing: 0.3em;
+  border: none;
+  border-bottom: 1px solid var(--ne-secondary-dark);
+  border-radius: 0;
+  background: var(--ne-white);
+  box-shadow: 0 4px 8px 3px rgba(0, 0, 0, 0.15);
+  clip-path: inset(0 -12px -12px -12px);
 }
 
+.input:focus { outline: none; border-bottom-width: 2px; }
+.input:focus-visible { outline: 2px solid var(--ne-secondary); outline-offset: 2px; }
+.input[aria-invalid='true'] { border-bottom: 2px solid var(--ne-error); }
+
 .rules {
-  margin: 0 0 var(--space-4);
-  padding: 0;
+  margin: 0 0 24px;
+  padding: 0 0 0 4px;
   list-style: none;
-  font-size: var(--font-size-sm);
+  font-size: 13px;
 }
 
 .rules li {
-  padding: var(--space-1) 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  color: var(--ne-black);
 }
 
-.ok {
-  color: var(--color-success);
+/* marcador circular: verde quando atendido, vermelho quando pendente */
+.rules li > span[aria-hidden='true'] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ne-white);
 }
 
-.pending {
-  color: var(--color-danger);
-}
+.ok > span[aria-hidden='true'] { background: var(--ne-success); }
+.pending > span[aria-hidden='true'] { background: var(--ne-error); }
 
+/* Primary Button (64px) — "select"/escuro como no Figma */
 .submit {
   width: 100%;
-  min-height: var(--tap-target);
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--font-size-md);
-  color: var(--color-on-primary);
-  background: var(--color-danger);
+  min-height: var(--ne-control-height);
+  padding: 0 var(--space-4);
+  font-family: var(--ne-font);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ne-white);
+  background: var(--ne-primary);
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ne-radius);
+  box-shadow: var(--ne-elevation-1);
   cursor: pointer;
 }
 
+.submit:hover:not(:disabled) { background: var(--ne-primary-dark); }
+
+/* "dependent" no lugar de cinza desabilitado */
 .submit:disabled {
-  background: var(--text-light);
+  background: var(--ne-white);
+  color: var(--ne-warning-dark);
+  border: 1px solid var(--ne-warning);
+  font-weight: 400;
+  box-shadow: none;
   cursor: not-allowed;
 }
 
+/* Secundary Button: "Voltar para login" */
 .back {
-  min-height: var(--tap-target);
-  margin-top: var(--space-3);
+  width: 100%;
+  min-height: var(--ne-control-height);
+  margin-top: 24px;
   padding: 0 var(--space-2);
-  font-size: var(--font-size-sm);
-  color: var(--color-danger);
-  text-decoration: underline;
-  background: none;
+  font-family: var(--ne-font);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ne-primary);
+  text-decoration: none;
+  background: var(--ne-white);
   border: 0;
+  border-radius: var(--ne-radius);
+  box-shadow: var(--ne-elevation-1);
   cursor: pointer;
 }
+
+.back:hover { background: var(--ne-primary-light); color: var(--ne-white); }

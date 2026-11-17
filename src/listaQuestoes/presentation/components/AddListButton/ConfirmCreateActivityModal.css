@@ -18,13 +18,13 @@
   flex-direction: column;
   gap: 12px;
 }
-.ccam-header h2 { margin: 0; font-size: 18px; color: #0f172a }
+.ccam-header h2 { margin: 0; font-size: 18px; color: var(--ne-secondary-dark) }
 .ccam-body { color: #334155; font-size: 14px }
-.ccam-list-title { margin-top: 8px; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #e6eef2 }
-.ccam-sub { margin-top: 10px; color: #64748b; font-size: 13px }
+.ccam-list-title { margin-top: 8px; background: var(--ne-gray-light); padding: 8px; border-radius: 8px; border: 1px solid #e6eef2 }
+.ccam-sub { margin-top: 10px; color: var(--ne-gray-dark); font-size: 13px }
 .ccam-footer { display:flex; justify-content:flex-end; gap:10px; margin-top: 6px }
 .ccam-btn { padding: 8px 12px; border-radius: 8px; border: 0; cursor: pointer }
-.ccam-btn-ghost { background: #f1f5f9; color: #0f172a }
+.ccam-btn-ghost { background: var(--ne-gray-light); color: var(--ne-secondary-dark) }
 .ccam-btn-primary { background: #0ea5a4; color: #fff }
 
 @media (max-width: 480px) {

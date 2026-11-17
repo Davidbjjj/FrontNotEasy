@@ -1,12 +1,14 @@
 import { Question, QuestionOption } from '../../model/Question.types';
+import { urlImagemDaAlternativa } from '../../model/alternativaFigura';
 import api from '../../../services/apiClient';
 
 export interface QuestaoResponseDTO {
   id: number;
   cabecalho: string;
   enunciado: string;
-  // backend may return alternativas as array of strings or array of objects { id, ordem, texto }
-  alternativas: Array<string | { id?: number | string; ordem?: number; texto?: string }>;
+  // backend may return alternativas as array of strings or array of objects { id, ordem, texto, imagem }
+  // (imagem: quando a alternativa é uma figura)
+  alternativas: Array<string | { id?: number | string; ordem?: number; texto?: string; imagem?: { urlPublica?: string } | null }>;
   gabarito: number;
   imagens?: Array<any>;
   /** "OBJETIVA" (padrão) ou "ABERTA" (FE-201). */
@@ -46,7 +48,8 @@ class QuestionService {
         id: String.fromCharCode(65 + ordem), // A, B, C, D... (ordem original)
         label: String.fromCharCode(65 + altIndex),
         value: String.fromCharCode(65 + ordem),
-        text
+        text,
+        imagemUrl: urlImagemDaAlternativa(alternativa)
       } as QuestionOption;
     });
     const aberta = dto.tipo === 'ABERTA';

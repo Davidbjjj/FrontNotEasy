@@ -41,11 +41,11 @@
 }
 
 .resposta-item-card.resposta-correct {
-  border-left: 4px solid #10b981;
+  border-left: 4px solid var(--ne-success);
 }
 
 .resposta-item-card.resposta-incorrect {
-  border-left: 4px solid #ef4444;
+  border-left: 4px solid var(--ne-error-dark);
 }
 
 /* Header */
@@ -88,12 +88,12 @@
 
 .resposta-item-status.resposta-correct {
   background: #dcfce7;
-  color: #16a34a;
+  color: var(--ne-success);
 }
 
 .resposta-item-status.resposta-incorrect {
   background: #fee2e2;
-  color: #dc2626;
+  color: var(--ne-error-dark);
 }
 
 .status-icon {
@@ -158,12 +158,12 @@
 
 .answer-indicator.resposta-correct {
   background: #dcfce7;
-  color: #16a34a;
+  color: var(--ne-success);
 }
 
 .answer-indicator.resposta-incorrect {
   background: #fee2e2;
-  color: #dc2626;
+  color: var(--ne-error-dark);
 }
 
 /* Indicator bar */

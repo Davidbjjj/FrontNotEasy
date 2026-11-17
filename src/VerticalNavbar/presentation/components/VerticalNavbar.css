@@ -1,24 +1,32 @@
+/* Menu lateral — Figma "Início Sessão" (grupo 890:4125)
+   - item ativo: aba vermelha var(--ne-primary) colada na borda esquerda, 54px, raio 8 à direita,
+     ícone + rótulo brancos (Alexandria SemiBold 18px)
+   - demais itens: quadrados 50px com fundo rosa rgba(243,206,207,.6), ícone vermelho, raio 8 */
 .vertical-navbar {
   width: 100px;
-  height: calc(100vh - 60px); /* Ajusta a altura considerando o header */
-  background-color: #ffffff;
-  border-right: 1px solid #e9ecef;
-  padding: 20px 0;
+  height: calc(100vh - 100px);
+  background-color: transparent;
+  padding: 42px 0 20px;
+  box-sizing: border-box;
   position: fixed;
   left: 0;
-  top: 60px; /* Posiciona abaixo do header */
+  top: 100px; /* altura do header */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  transition: width 0.3s ease;
-  overflow: hidden;
-  /* Z-index menor que o header (TopBar tem 1000), então navbar fica por baixo */
+  align-items: flex-start;
+  transition: width 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  overflow-x: hidden;
+  overflow-y: auto;
   z-index: 999;
+  font-family: var(--ne-font);
   -webkit-tap-highlight-color: transparent;
 }
 
-.vertical-navbar:hover {
+.vertical-navbar:hover,
+.vertical-navbar:focus-within {
   width: 220px;
+  background-color: var(--ne-gray-light);
+  box-shadow: var(--ne-elevation-1);
 }
 
 .vertical-navbar__list {
@@ -26,81 +34,85 @@
   margin: 0;
   padding: 0;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
 }
 
 .vertical-navbar__item {
-  margin: 15px 0;
-  text-align: center;
+  margin: 0;
+  display: flex;
 }
 
 .vertical-navbar__button {
-  width: 80%;
+  box-sizing: border-box;
+  margin-left: 25px;
+  width: 50px;
+  height: 50px;
   border: none;
-  background: none;
-  text-align: center;
+  border-radius: var(--ne-radius);
+  background: var(--ne-primary-tint);
+  color: var(--ne-primary);
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 6px;
-  border-radius: 12px;
-  padding: 12px;
-  color: #c1121f;
-  font-weight: 500;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 0 11px;
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: width 0.3s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.vertical-navbar:hover .vertical-navbar__button,
+.vertical-navbar:focus-within .vertical-navbar__button {
+  width: 180px;
 }
 
 .vertical-navbar__button:hover {
-  background-color: #c1121f;
-  color: #fff;
-  transform: translateY(-2px);
+  background-color: var(--ne-primary-lighter);
+  color: var(--ne-primary-dark);
 }
 
-/* Mantém o mesmo visual do hover quando o botão recebe foco/active (por clique ou navegação) */
-.vertical-navbar__button:focus,
-.vertical-navbar__button:active {
-  background-color: #c1121f;
-  transform: translateY(-2px);
-  outline: none;
-}
-
-.vertical-navbar__button--active {
-  background-color: #c1121f;
-  color: #fff;
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(193, 18, 31, 0.3);
-  transition: all 0.3s ease-in-out;
-}
-
+/* Item ativo = aba vermelha que nasce da borda esquerda */
+.vertical-navbar__button--active,
 .vertical-navbar__button--active:hover {
-  background-color: #a40f1b;
+  margin-left: 0;
+  width: 88px;
+  height: 54px;
+  padding-left: 30px;
+  border-radius: 0 var(--ne-radius) var(--ne-radius) 0;
+  background-color: var(--ne-primary);
+  color: var(--ne-white);
+  font-size: 18px;
 }
 
-/* Evita que o foco padrão do navegador quebre o visual ao clicar */
+.vertical-navbar:hover .vertical-navbar__button--active,
+.vertical-navbar:focus-within .vertical-navbar__button--active {
+  width: 205px;
+}
+
 .vertical-navbar__button:focus-visible {
-  outline: 3px solid #fff;
-  outline-offset: -5px;
-  box-shadow: 0 0 0 2px #1d4ed8;
+  outline: 3px solid var(--ne-secondary);
+  outline-offset: 2px;
 }
 
 .vertical-navbar__icon {
-  font-size: 24px;
-  transition: transform 0.3s ease;
-}
-
-.vertical-navbar__button--active .vertical-navbar__icon {
-  transform: rotate(-10deg);
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
 }
 
 .vertical-navbar__label {
-  font-size: 0.9rem;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
 }
 
-.vertical-navbar:hover .vertical-navbar__label {
+.vertical-navbar:hover .vertical-navbar__label,
+.vertical-navbar:focus-within .vertical-navbar__label {
   opacity: 1;
 }
 
@@ -110,19 +122,12 @@
   transition: margin-left 0.3s ease;
 }
 
-.vertical-navbar:hover ~ .list-main__content {
-  margin-left: 220px;
-}
-
-/* Responsivo */
 @media (max-width: 768px) {
   .vertical-navbar {
-    width: 80px;
-    top: 50px; /* Ajuste menor para mobile se o header for menor */
-    height: calc(100vh - 50px);
+    display: none;
   }
-  
+
   .list-main__content {
-    margin-left: 80px;
+    margin-left: 0;
   }
 }

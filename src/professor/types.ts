@@ -30,6 +30,8 @@ export interface FilaCorrecao {
 export interface ImagemQuestao {
   urlPublica: string;
   nomeArquivo?: string;
+  /** 0 = A ... 4 = E quando a imagem É a alternativa (ex.: um dos cinco gráficos); nulo nas do enunciado. */
+  alternativaIndice?: number | null;
 }
 
 export interface DetalheCorrecao {

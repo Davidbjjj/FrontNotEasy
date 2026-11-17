@@ -15,7 +15,7 @@
 .results-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   margin-bottom: 20px;
 }
 
@@ -29,7 +29,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  background: linear-gradient(135deg, var(--ne-secondary), var(--ne-secondary-dark));
   color: white;
 }
 
@@ -68,8 +68,8 @@
 }
 
 .stat-item.total {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: var(--ne-gray-light);
+  border: 1px solid var(--ne-gray-medium);
 }
 
 .stat-number {
@@ -78,11 +78,11 @@
 }
 
 .stat-item.correct .stat-number {
-  color: #16a34a;
+  color: var(--ne-success);
 }
 
 .stat-item.wrong .stat-number {
-  color: #dc2626;
+  color: var(--ne-error-dark);
 }
 
 .stat-item.total .stat-number {
@@ -91,14 +91,14 @@
 
 .stat-label {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   margin-top: 4px;
 }
 
 .details-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   margin-bottom: 20px;
 }
 
@@ -116,12 +116,12 @@
 
 .answer-item.correct {
   background: #f0fdf4;
-  border-left-color: #16a34a;
+  border-left-color: var(--ne-success);
 }
 
 .answer-item.wrong {
   background: #fef2f2;
-  border-left-color: #dc2626;
+  border-left-color: var(--ne-error-dark);
 }
 
 .answer-header {
@@ -145,12 +145,12 @@
 
 .answer-status.correct {
   background: #dcfce7;
-  color: #166534;
+  color: var(--ne-success-dark);
 }
 
 .answer-status.wrong {
   background: #fee2e2;
-  color: #991b1b;
+  color: var(--ne-error-dark);
 }
 
 .question-text {
@@ -172,7 +172,7 @@
 }
 
 .answer-given {
-  background: #f3f4f6;
+  background: var(--ne-gray-light);
 }
 
 .correct-answer {
@@ -181,7 +181,7 @@
 }
 
 .option-text {
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   font-style: italic;
 }
 
@@ -191,7 +191,7 @@
   gap: 12px;
   margin-top: 30px;
   padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--ne-gray-medium);
 }
 
 .btn-retry, .btn-close {
@@ -204,16 +204,16 @@
 }
 
 .btn-retry {
-  background: #3b82f6;
+  background: var(--ne-secondary);
   color: white;
 }
 
 .btn-retry:hover {
-  background: #2563eb;
+  background: var(--ne-secondary);
 }
 
 .btn-close {
-  background: #6b7280;
+  background: var(--ne-gray-dark);
   color: white;
 }
 
@@ -228,7 +228,7 @@
 }
 
 .btn-show-results {
-  background: #10b981;
+  background: var(--ne-success);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -239,5 +239,5 @@
 }
 
 .btn-show-results:hover {
-  background: #059669;
+  background: var(--ne-success);
 }

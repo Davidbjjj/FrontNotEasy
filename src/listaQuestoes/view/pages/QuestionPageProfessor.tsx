@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { questionService } from '../../../question/service/api/question.service';
 import { respostaService } from '../../../question/service/api/respostaService';
 import ImageWithAuth from '../../../components/ImageWithAuth';
+import { textoDaAlternativa, urlAbsoluta, urlImagemDaAlternativa } from '../../../question/model/alternativaFigura';
 import ConfigListaModal from '../../../professor/lista/ConfigListaModal';
 import NovaQuestaoModal from '../../../professor/questao/NovaQuestaoModal';
 import './QuestionPageProfessor.css';
@@ -261,7 +262,9 @@ const QuestionPageProfessor: React.FC = () => {
         content: updated.enunciado,
         options: (updated.alternativas || []).map((a: any, i: number) => {
           const text = typeof a === 'string' ? a : (a?.texto ?? '');
-          return { id: String.fromCharCode(65 + i), label: String.fromCharCode(65 + i), value: String.fromCharCode(65 + i), text };
+          // a figura da alternativa não muda ao editar o texto: mantém a que já estava na tela
+          const imagemUrl = urlImagemDaAlternativa(a) ?? p.options?.[i]?.imagemUrl;
+          return { id: String.fromCharCode(65 + i), label: String.fromCharCode(65 + i), value: String.fromCharCode(65 + i), text, imagemUrl };
         }),
         correctAnswer: String.fromCharCode(65 + updated.gabarito),
         imagens: updated.imagens || []
@@ -416,7 +419,16 @@ const QuestionPageProfessor: React.FC = () => {
                 return (
                   <li key={i} className={`qpp-alt-card ${isCorrect ? 'qpp-alt-correct' : ''}`} aria-label={`Alternativa ${String.fromCharCode(65 + i)}`}>
                     <div className="qpp-alt-letter">{String.fromCharCode(65 + i)}</div>
-                    <div className="qpp-alt-text">{o.text}</div>
+                    <div className="qpp-alt-text">
+                      {o.imagemUrl && (
+                        <ImageWithAuth
+                          src={urlAbsoluta(o.imagemUrl, api?.defaults?.baseURL)}
+                          alt={`Figura da alternativa ${String.fromCharCode(65 + i)}`}
+                          className="qpp-alt-img"
+                        />
+                      )}
+                      {textoDaAlternativa(o.text, !!o.imagemUrl)}
+                    </div>
                   </li>
                 );
               })}

@@ -2,15 +2,15 @@
   min-height: 100vh;
   padding: 28px;
   background: linear-gradient(180deg, #fbfdff 0%, #f7fafc 100%);
-  color: #0f172a;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  color: var(--ne-secondary-dark);
+  font-family: var(--ne-font);
 }
 
 :root {
   --bg: #f7fafc;
   --card: #ffffff;
-  --muted: #6b7280;
-  --accent: #2563eb;
+  --muted: var(--ne-gray-dark);
+  --accent: var(--ne-secondary);
   --glass: rgba(255,255,255,0.6);
 }
 
@@ -72,9 +72,9 @@
 .actions { display:flex; gap:8px }
 
 .btn { padding:8px 12px; min-height:44px; border-radius:8px; cursor:pointer; border: none; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; color:inherit }
-.btn:focus-visible { outline:3px solid #1d4ed8; outline-offset:2px }
-.btnPrimary { background:#1d4ed8; color:white }
-.btnGhost { background:transparent; border:1px solid #9ca3af; color:#1d4ed8 }
+.btn:focus-visible { outline:3px solid var(--ne-secondary-dark); outline-offset:2px }
+.btnPrimary { background:var(--ne-secondary-dark); color:white }
+.btnGhost { background:transparent; border:1px solid var(--ne-gray-dark); color:var(--ne-secondary-dark) }
 
 /* activity card */
 .activityCard { display:flex; flex-direction:column; gap:6px; padding:10px; border-radius:8px; background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%); border:1px solid #eef3ff }
@@ -121,7 +121,7 @@
 .studentInfo { display:flex; align-items:center; gap:8px }
 .studentEmail { color: var(--muted); font-size:0.9rem }
 
-.activityCard { display:flex; gap:10px; align-items:center; padding:12px; border-radius:10px; background:#fff; border:1px solid #f1f5f9 }
+.activityCard { display:flex; gap:10px; align-items:center; padding:12px; border-radius:10px; background:#fff; border:1px solid var(--ne-gray-light) }
 .activityTitle { font-weight:700 }
 .activityMeta { color:var(--muted); font-size:0.9rem }
 
@@ -149,28 +149,28 @@
 .studentMetricEmail { color:var(--muted); font-size:0.88rem }
 .studentMetricRight { margin-left:auto; text-align:right }
 .percentBadge { display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; min-width:64px }
-.percentHigh { background:#047857; color:#fff } /* branco sobre verde escuro: 5,5:1 (antes ~2,5:1) */
-.percentMedium { background:#b45309; color:#fff } /* 5,0:1 */
-.percentLow { background:#b91c1c; color:#fff } /* 6,5:1 */
+.percentHigh { background:var(--ne-success-dark); color:#fff } /* branco sobre verde escuro: 5,5:1 (antes ~2,5:1) */
+.percentMedium { background:var(--ne-warning-dark); color:#fff } /* 5,0:1 */
+.percentLow { background:var(--ne-error-dark); color:#fff } /* 6,5:1 */
 .responsesCount { color:var(--muted); font-size:0.85rem }
 .progressBar { width:180px; height:8px; background:#eef2ff; border-radius:999px; overflow:hidden; margin-top:6px }
-.progressFill { height:100%; border-radius:999px; background:linear-gradient(90deg,#60a5fa,#2563eb); }
+.progressFill { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--ne-secondary-light),var(--ne-secondary)); }
 
 /* Lists with lowest averages */
 .listCards { display:flex; flex-direction:column; gap:10px; margin-top:8px }
 .listCard {
   display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding:12px; border-radius:10px; background:#fff; border:1px solid #f1f5f9;
+  padding:12px; border-radius:10px; background:#fff; border:1px solid var(--ne-gray-light);
   box-shadow: 0 6px 14px rgba(2,6,23,0.03);
 }
 .listTitle { font-weight:700 }
 .listMeta { color:var(--muted); font-size:0.9rem }
-.difficultyBar { height:8px; background:#f1f5f9; border-radius:999px; overflow:hidden; width:140px }
-.difficultyFill { height:100%; border-radius:999px; background:linear-gradient(90deg,#ef4444,#f97316); }
+.difficultyBar { height:8px; background:var(--ne-gray-light); border-radius:999px; overflow:hidden; width:140px }
+.difficultyFill { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--ne-error-dark),var(--ne-warning)); }
 
 /* Activities completed per student */
 .completedList { display:flex; flex-direction:column; gap:10px; margin-top:8px }
-.completedItem { display:flex; align-items:center; gap:12px; padding:10px; border-radius:8px; background:#fff; border:1px solid #f1f5f9 }
+.completedItem { display:flex; align-items:center; gap:12px; padding:10px; border-radius:8px; background:#fff; border:1px solid var(--ne-gray-light) }
 .completedLabel { font-weight:600 }
 .completedCount { font-weight:700; margin-left:auto; color:var(--muted) }
 
@@ -204,13 +204,13 @@
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--ne-gray-medium);
 }
 
 .modalHeader h2 {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #0f172a;
+  color: var(--ne-secondary-dark);
   margin: 0;
 }
 
@@ -219,12 +219,12 @@
   border: none;
   cursor: pointer;
   padding: 4px;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   transition: color 0.2s;
 }
 
 .modalCloseBtn:hover {
-  color: #0f172a;
+  color: var(--ne-secondary-dark);
 }
 
 .modalBody {
@@ -232,7 +232,7 @@
 }
 
 .modalDescription {
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   margin-bottom: 24px;
   line-height: 1.5;
 }
@@ -246,19 +246,19 @@
   align-items: center;
   gap: 12px;
   padding: 16px 20px;
-  border: 2px dashed #d1d5db;
+  border: 2px dashed var(--ne-gray-medium);
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s;
-  background: #f9fafb;
+  background: var(--ne-gray-light);
   color: #374151;
   font-weight: 600;
 }
 
 .uploadLabel:hover {
-  border-color: #2563eb;
+  border-color: var(--ne-secondary);
   background: #eff6ff;
-  color: #2563eb;
+  color: var(--ne-secondary);
 }
 
 .fileInfo {
@@ -267,7 +267,7 @@
   background: #f0fdf4;
   border: 1px solid #86efac;
   border-radius: 8px;
-  color: #166534;
+  color: var(--ne-success-dark);
   font-size: 0.9rem;
 }
 
@@ -276,7 +276,7 @@
   gap: 12px;
   justify-content: flex-end;
   padding: 16px 24px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--ne-gray-medium);
 }
 
 .btnSecondary {
@@ -290,17 +290,17 @@
 }
 
 .btnSecondary:disabled {
-  background: #d1d5db;
+  background: var(--ne-gray-medium);
   cursor: not-allowed;
 }
 
 /* IA Dashboard styles */
 .iaDashboard {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--ne-secondary) 0%, var(--ne-secondary-dark) 100%);
   border-radius: 16px;
   padding: 24px;
   margin-bottom: 24px;
-  box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 20px 50px rgba(26, 57, 121, 0.3);
   color: white;
 }
 
@@ -347,14 +347,14 @@
   background: rgba(255, 255, 255, 0.95);
   border-radius: 12px;
   padding: 20px;
-  color: #0f172a;
+  color: var(--ne-secondary-dark);
 }
 
 .iaCardTitle {
   font-size: 1.1rem;
   font-weight: 700;
   margin: 0 0 12px 0;
-  color: #1e293b;
+  color: var(--ne-secondary-dark);
 }
 
 .iaCardText {
@@ -377,9 +377,9 @@
   align-items: flex-start;
   gap: 12px;
   padding: 12px;
-  background: #f8fafc;
+  background: var(--ne-gray-light);
   border-radius: 8px;
-  border-left: 3px solid #e2e8f0;
+  border-left: 3px solid var(--ne-gray-medium);
 }
 
 .iaIconError {

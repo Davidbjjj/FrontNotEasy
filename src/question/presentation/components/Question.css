@@ -14,7 +14,7 @@
 .question-header__title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   margin: 0 0 8px 0;
   display: flex;
   justify-content: between;
@@ -23,7 +23,7 @@
 
 .question-header__subject {
   font-size: 1rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   margin: 0 0 16px 0;
 }
 
@@ -34,14 +34,14 @@
 .question-header__progress-bar {
   width: 100%;
   height: 8px;
-  background: #e5e7eb;
+  background: var(--ne-gray-medium);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .question-header__progress-fill {
   height: 100%;
-  background: #10b981;
+  background: var(--ne-success);
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -49,7 +49,7 @@
 .question-header__progress-text {
   text-align: right;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   margin: 4px 0 0 0;
 }
 
@@ -64,7 +64,7 @@
   color: #374151;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #f3f4f6;
+  border-bottom: 2px solid var(--ne-gray-light);
 }
 
 .question-content__text {
@@ -88,7 +88,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 16px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid var(--ne-gray-medium);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -96,12 +96,12 @@
 }
 
 .question-option:hover {
-  border-color: #3b82f6;
-  background: #f8fafc;
+  border-color: var(--ne-secondary);
+  background: var(--ne-gray-light);
 }
 
 .question-option--selected {
-  border-color: #3b82f6;
+  border-color: var(--ne-secondary);
   background: #eff6ff;
 }
 
@@ -112,7 +112,7 @@
 
 .btn-submit-answer {
   padding: 10px 14px;
-  background: #2563eb;
+  background: var(--ne-secondary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -144,11 +144,11 @@
   gap: 8px;
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--ne-gray-medium);
 }
 
 .question-tag {
-  background: #f3f4f6;
+  background: var(--ne-gray-light);
   color: #374151;
   padding: 4px 8px;
   border-radius: 4px;
@@ -161,7 +161,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 0;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--ne-gray-medium);
   margin-top: 30px;
 }
 
@@ -178,7 +178,7 @@
 
 .question-navigation__btn {
   padding: 10px 20px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--ne-gray-medium);
   border-radius: 6px;
   background: white;
   color: #374151;
@@ -189,8 +189,8 @@
 }
 
 .question-navigation__btn:hover:not(:disabled) {
-  background: #f8fafc;
-  border-color: #9ca3af;
+  background: var(--ne-gray-light);
+  border-color: var(--ne-gray-dark);
 }
 
 .question-navigation__btn:disabled {
@@ -199,14 +199,14 @@
 }
 
 .question-navigation__btn--primary {
-  background: #c1121f;
+  background: var(--ne-primary);
   color: white;
-  border-color: #c1121f;
+  border-color: var(--ne-primary);
 }
 
 .question-navigation__btn--primary:hover:not(:disabled) {
-  background: #a40f1b;
-  border-color: #a40f1b;
+  background: var(--ne-primary-dark);
+  border-color: var(--ne-primary-dark);
 }
 
 .question-navigation__btn--previous {
@@ -217,9 +217,9 @@
 .question-explanation {
   margin-top: 24px;
   padding: 16px;
-  background: #f8fafc;
+  background: var(--ne-gray-light);
   border-radius: 8px;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid var(--ne-secondary);
 }
 
 .question-explanation__title {
@@ -229,7 +229,7 @@
 }
 
 .question-explanation__text {
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   line-height: 1.5;
   white-space: pre-line;
 }
@@ -266,12 +266,12 @@
 .question-map__grid{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px }
 .question-map__item{
   min-width:44px; min-height:44px; padding:0 8px;
-  border:2px solid #d1d5db; border-radius:8px; background:#fff; color:#374151;
+  border:2px solid var(--ne-gray-medium); border-radius:8px; background:#fff; color:#374151;
   font-size:1rem; font-weight:600; cursor:pointer; touch-action:manipulation;
 }
-.question-map__item--answered{ background:#d1fae5; border-color:#10b981; color:#065f46 }
-.question-map__item--current{ border-color:#2563eb; box-shadow:0 0 0 2px #bfdbfe; }
-.question-map__item:focus-visible{ outline:3px solid #2563eb; outline-offset:2px }
+.question-map__item--answered{ background:#d1fae5; border-color:var(--ne-success); color:var(--ne-success-dark) }
+.question-map__item--current{ border-color:var(--ne-secondary); box-shadow:0 0 0 2px #bfdbfe; }
+.question-map__item:focus-visible{ outline:3px solid var(--ne-secondary); outline-offset:2px }
 
 /* ===== Enunciado, fórmulas e imagens legíveis ===== */
 .question-content__text,
@@ -288,14 +288,14 @@
 .image-zoom__close{
   align-self:flex-end; margin:max(12px, env(safe-area-inset-top)) 12px 8px;
   min-height:48px; padding:0 18px; border:0; border-radius:8px;
-  background:#fff; color:#111827; font-size:1rem; font-weight:700; cursor:pointer;
+  background:#fff; color:var(--ne-secondary-dark); font-size:1rem; font-weight:700; cursor:pointer;
 }
 .image-zoom__scroller{
   flex:1; overflow:auto; -webkit-overflow-scrolling:touch;
   touch-action:pan-x pan-y pinch-zoom; display:flex; align-items:flex-start; justify-content:center;
 }
 .image-zoom__img{ max-width:none; width:100%; height:auto; min-width:100%; box-shadow:none; border-radius:0; object-fit:contain }
-.image-zoom__hint{ margin:0; padding:8px 12px calc(8px + env(safe-area-inset-bottom)); color:#e5e7eb; text-align:center; font-size:.85rem }
+.image-zoom__hint{ margin:0; padding:8px 12px calc(8px + env(safe-area-inset-bottom)); color:var(--ne-gray-medium); text-align:center; font-size:.85rem }
 
 /* ===== Celular ===== */
 @media (max-width: 768px){
@@ -313,7 +313,7 @@
   .question-navigation{
     position:sticky; bottom:0; z-index:20;
     margin:24px -12px 0; padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-    background:#fff; border-top:1px solid #e5e7eb; box-shadow:0 -4px 12px rgba(15,23,42,.06);
+    background:#fff; border-top:1px solid var(--ne-gray-medium); box-shadow:0 -4px 12px rgba(15,23,42,.06);
     gap:8px;
   }
   .question-navigation__counter{ text-align:center }
@@ -327,12 +327,12 @@
 /* ===== FE-104: salvamento e tempo ===== */
 .question-status-row{ display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px; min-height:24px }
 .save-status{ font-size:.875rem; color:#4b5563; display:flex; align-items:center; gap:8px; flex-wrap:wrap }
-.save-status--saved{ color:#047857 }
-.save-status--offline{ color:#92400e; background:#fffbeb; border:1px solid #fcd34d; border-radius:8px; padding:6px 10px }
-.save-status--error{ color:#b91c1c }
+.save-status--saved{ color:var(--ne-success-dark) }
+.save-status--offline{ color:var(--ne-warning-dark); background:#fffbeb; border:1px solid #fcd34d; border-radius:8px; padding:6px 10px }
+.save-status--error{ color:var(--ne-error-dark) }
 .save-status__retry{ min-height:36px; padding:0 12px; border:1px solid currentColor; border-radius:8px; background:transparent; color:inherit; font-weight:600; cursor:pointer }
-.countdown{ margin-left:auto; font-weight:700; font-variant-numeric:tabular-nums; color:#111827 }
-.countdown--urgent{ color:#b91c1c }
+.countdown{ margin-left:auto; font-weight:700; font-variant-numeric:tabular-nums; color:var(--ne-secondary-dark) }
+.countdown--urgent{ color:var(--ne-error-dark) }
 
 /* Questão aberta (FE-201) */
 .question-open {
@@ -351,7 +351,7 @@
   width: 100%;
   min-height: 160px;
   padding: 12px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--ne-gray-medium);
   border-radius: 8px;
   font: inherit;
   resize: vertical;
@@ -359,11 +359,115 @@
 }
 
 .question-open__text:focus-visible {
-  outline: 2px solid #1d4ed8;
+  outline: 2px solid var(--ne-secondary-dark);
   outline-offset: 2px;
 }
 
 .question-open__hint {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
 }
+
+/* =====================================================================
+   Ajustes do Figma — tela "questoes1/2/3" (resolver atividade)
+   ===================================================================== */
+.question-page { background: transparent; font-family: var(--ne-font); max-width: 900px; }
+
+/* Título da atividade: faixa vermelha "Matemática | Desafio I..." */
+.question-header__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 54px;
+  padding: 0 24px;
+  margin: 0 0 24px;
+  background: var(--ne-primary);
+  color: var(--ne-white);
+  border-radius: 0 var(--ne-radius) var(--ne-radius) 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+.question-header__subject { color: var(--ne-secondary); font-weight: 500; }
+
+/* Progresso laranja com % acima e "10 de 20" ao lado */
+.question-header__progress-bar { height: 12px; border-radius: 36px; background: var(--ne-gray-medium); }
+.question-header__progress-fill { background: var(--ne-warning); border-radius: 36px; }
+.question-header__progress-text { text-align: center; color: var(--ne-warning-dark); font-weight: 600; }
+
+/* Cartão da questão: cabeçalho azul #4A6BA8 */
+.question-content__number {
+  margin: 0 0 24px;
+  padding: 14px 24px;
+  border: none;
+  border-radius: var(--ne-radius) var(--ne-radius) 0 0;
+  background: var(--ne-secondary-light);
+  color: var(--ne-white);
+  font-size: 20px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.question-content__text { color: var(--ne-black); font-size: 15px; }
+
+/* Alternativas: borda azul 1px, raio 8, selecionada = azul claro #B8C7E8 */
+.question-option {
+  padding: 12px 16px;
+  border: 1px solid var(--ne-secondary);
+  border-radius: var(--ne-radius);
+  box-shadow: var(--ne-elevation-1);
+  background: var(--ne-white);
+}
+.question-option:hover { border-color: var(--ne-secondary-dark); background: var(--ne-gray-light); }
+.question-option--selected,
+.question-option--selected:hover {
+  border-color: var(--ne-secondary);
+  background: var(--ne-secondary-lighter);
+}
+.question-option__label,
+.question-option__text { color: var(--ne-black); font-weight: 500; }
+
+/* Tag de assunto (componente Tag) */
+.question-tags { border-top: none; }
+.question-tag {
+  background: var(--ne-secondary-lighter);
+  color: var(--ne-secondary-dark);
+  border-radius: var(--ne-radius);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Paginação: "10–20  [< ANTERIOR] [PRÓXIMA >]" */
+.question-navigation { border-top: none; justify-content: center; gap: 16px; }
+.question-navigation__counter { color: var(--ne-secondary-dark); font-weight: 500; }
+.question-navigation__btn {
+  min-height: 36px;
+  padding: 6px 16px;
+  border: 1px solid var(--ne-secondary);
+  border-radius: var(--ne-radius);
+  background: var(--ne-white);
+  color: var(--ne-secondary-dark);
+  font-family: var(--ne-font);
+  font-weight: 600;
+  text-transform: uppercase;
+  box-shadow: var(--ne-elevation-1);
+}
+.question-navigation__btn:not(.question-navigation__btn--previous) {
+  background: var(--ne-secondary-light);
+  border-color: var(--ne-secondary-light);
+  color: var(--ne-white);
+}
+.question-navigation__btn:not(.question-navigation__btn--previous):hover:not(:disabled) {
+  background: var(--ne-secondary);
+  border-color: var(--ne-secondary);
+}
+.question-navigation__btn--primary,
+.question-navigation__btn--primary:hover:not(:disabled) {
+  background: var(--ne-primary) !important;
+  border-color: var(--ne-primary) !important;
+}
+.btn-submit-answer { background: var(--ne-primary); font-family: var(--ne-font); min-height: 46px; padding: 10px 24px; }
+.btn-submit-answer:hover:not(:disabled) { background: var(--ne-primary-dark); }
+
+/* Alternativa que é uma figura (ex.: um dos cinco gráficos) */
+.question-option__figura{ display:block; max-width:100% }
+.question-option__img{ display:block; max-width:min(320px, 100%); max-height:240px; width:auto; height:auto; object-fit:contain; border-radius:6px; border:1px solid var(--ne-gray-medium); background:#fff }

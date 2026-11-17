@@ -16,13 +16,13 @@
 .questoes-header__title {
   font-size: 2rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   margin: 0 0 12px 0;
 }
 
 .questoes-header__subtitle {
   font-size: 1.1rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   margin: 0 0 20px 0;
 }
 
@@ -33,7 +33,7 @@
 .questoes-header__progress-bar {
   width: 100%;
   height: 8px;
-  background: #e5e7eb;
+  background: var(--ne-gray-medium);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 8px;
@@ -41,7 +41,7 @@
 
 .questoes-header__progress-fill {
   height: 100%;
-  background: #10b981;
+  background: var(--ne-success);
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -50,7 +50,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
 }
 
 .questoes-header__stats {
@@ -62,7 +62,7 @@
   text-align: center;
   padding: 12px;
   border-radius: 8px;
-  background: #f8fafc;
+  background: var(--ne-gray-light);
   min-width: 80px;
 }
 
@@ -70,12 +70,12 @@
   display: block;
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
 }
 
 .questoes-header__stat-label {
   font-size: 0.8rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
   margin-top: 4px;
 }
 
@@ -90,7 +90,7 @@
 /* Questão Card */
 .questao-card {
   background: white;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--ne-gray-medium);
   border-radius: 12px;
   padding: 24px;
   cursor: pointer;
@@ -101,19 +101,19 @@
 .questao-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border-color: #3b82f6;
+  border-color: var(--ne-secondary);
 }
 
 .questao-card.pending {
-  border-left: 4px solid #f59e0b;
+  border-left: 4px solid var(--ne-warning);
 }
 
 .questao-card.correct {
-  border-left: 4px solid #10b981;
+  border-left: 4px solid var(--ne-success);
 }
 
 .questao-card.wrong {
-  border-left: 4px solid #ef4444;
+  border-left: 4px solid var(--ne-error-dark);
 }
 
 .questao-card__header {
@@ -126,7 +126,7 @@
 .questao-card__title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--ne-secondary-dark);
   margin: 0;
   flex: 1;
   margin-right: 12px;
@@ -142,17 +142,17 @@
 
 .questao-card__status--pending {
   background: #fef3c7;
-  color: #d97706;
+  color: var(--ne-warning-dark);
 }
 
 .questao-card__status--correct {
   background: #d1fae5;
-  color: #065f46;
+  color: var(--ne-success-dark);
 }
 
 .questao-card__status--wrong {
   background: #fee2e2;
-  color: #991b1b;
+  color: var(--ne-error-dark);
 }
 
 .questao-card__content {
@@ -177,7 +177,7 @@
   display: flex;
   gap: 8px;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
 }
 
 .questao-card__alternativa-label {
@@ -191,16 +191,16 @@
 
 .questao-card__more-alternatives {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--ne-gray-dark);
   font-style: italic;
 }
 
 .questao-card__resposta {
   font-size: 0.9rem;
   padding: 12px;
-  background: #f8fafc;
+  background: var(--ne-gray-light);
   border-radius: 6px;
-  border-left: 3px solid #e5e7eb;
+  border-left: 3px solid var(--ne-gray-medium);
 }
 
 .questao-card__feedback {
@@ -209,18 +209,18 @@
 }
 
 .questao-card__feedback.correct {
-  color: #10b981;
+  color: var(--ne-success);
 }
 
 .questao-card__feedback.wrong {
-  color: #ef4444;
+  color: var(--ne-error-dark);
 }
 
 /* Button */
 .questao-card__button {
   width: 100%;
   padding: 12px 20px;
-  background: #c1121f;
+  background: var(--ne-primary);
   color: white;
   border: none;
   border-radius: 8px;
@@ -231,14 +231,14 @@
 }
 
 .questao-card__button:hover {
-  background: #a40f1b;
+  background: var(--ne-primary-dark);
 }
 
 /* Empty State */
 .questoes-empty {
   text-align: center;
   padding: 60px 20px;
-  color: #6b7280;
+  color: var(--ne-gray-dark);
 }
 
 .questoes-empty h3 {
@@ -250,8 +250,8 @@
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #e5e7eb;
-  border-top: 4px solid #3b82f6;
+  border: 4px solid var(--ne-gray-medium);
+  border-top: 4px solid var(--ne-secondary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
@@ -265,7 +265,7 @@
 .error-message {
   text-align: center;
   padding: 40px 20px;
-  color: #dc2626;
+  color: var(--ne-error-dark);
 }
 
 .error-message h2 {
@@ -273,7 +273,7 @@
 }
 
 .btn-retry {
-  background: #3b82f6;
+  background: var(--ne-secondary);
   color: white;
   border: none;
   padding: 10px 20px;
@@ -283,7 +283,7 @@
 }
 
 .btn-retry:hover {
-  background: #2563eb;
+  background: var(--ne-secondary);
 }
 
 /* Responsive */
@@ -314,3 +314,48 @@
     align-self: flex-start;
   }
 }
+/* =====================================================================
+   Ajustes do Figma — card "List-default" e lista de questões
+   ===================================================================== */
+.questoes-page { background: transparent; font-family: var(--ne-font); }
+.questoes-header__title { color: var(--ne-secondary-dark); font-weight: 600; }
+.questoes-header__subtitle { color: var(--ne-gray-dark); }
+.questoes-header__progress-bar { height: 17px; border-radius: 36px; background: var(--ne-gray-medium); }
+.questoes-header__progress-fill { background: var(--ne-success); border-radius: 36px 0 0 36px; }
+.questoes-header__stat { background: var(--ne-white); box-shadow: var(--ne-elevation-1); border-radius: var(--ne-radius); }
+.questoes-header__stat-number { color: var(--ne-secondary-dark); }
+
+.questoes-list { gap: 24px; }
+
+.questao-card {
+  border: none;
+  border-radius: var(--ne-radius);
+  padding: 16px 20px;
+  box-shadow: var(--ne-elevation-1);
+}
+.questao-card:hover { transform: none; box-shadow: var(--ne-elevation-3); }
+.questao-card.pending { border-left: 4px solid var(--ne-warning); }
+.questao-card.correct { border-left: 4px solid var(--ne-success); }
+.questao-card.wrong { border-left: 4px solid var(--ne-error); }
+.questao-card__title { color: var(--ne-secondary-dark); font-size: 20px; font-weight: 500; }
+.questao-card__enunciado,
+.questao-card__alternativa { color: var(--ne-black); }
+.questao-card__status { border-radius: var(--ne-radius); font-weight: 500; font-size: 12px; padding: 6px 12px; }
+.questao-card__status--pending { background: #FDF1E7; color: var(--ne-warning-dark); }
+.questao-card__status--correct { background: #EAF7EA; color: var(--ne-success-dark); }
+.questao-card__status--wrong { background: #FDECEC; color: var(--ne-error-dark); }
+.questao-card__feedback.correct { color: var(--ne-success-dark); }
+.questao-card__feedback.wrong { color: var(--ne-error-dark); }
+.questao-card__button {
+  min-height: 46px;
+  background: var(--ne-primary);
+  border-radius: var(--ne-radius);
+  font-family: var(--ne-font);
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: var(--ne-elevation-1);
+}
+.questao-card__button:hover { background: var(--ne-primary-dark); }
+.loading-spinner { border-top-color: var(--ne-primary); }
+.btn-retry { background: var(--ne-primary); border-radius: var(--ne-radius); }
+.btn-retry:hover { background: var(--ne-primary-dark); }

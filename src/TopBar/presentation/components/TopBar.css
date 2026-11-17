@@ -1,87 +1,126 @@
+/* Header das telas logadas — Figma "Início Sessão" (frame 856:2152)
+   branco, 100px, borda inferior vermelha de 3px, textos azul #1A3979 em Alexandria Medium */
 .top-bar {
-  height: 70px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e9ecef;
-  padding: 0 30px;
+  height: 100px;
+  box-sizing: border-box;
+  background-color: var(--ne-white);
+  border-bottom: 3px solid var(--ne-primary);
+  padding: 0 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 24px;
   position: fixed;
   top: 0;
   right: 0;
-  left: 0; /* Largura da VerticalNavbar */
-  z-index: 1000; /* Garantir que fique acima de tudo */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  left: 0;
+  z-index: 1000;
+  box-shadow: var(--ne-elevation-1);
+  font-family: var(--ne-font);
 }
 
 .top-bar__user-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 24px;
+  min-width: 0;
 }
 
+/* Avatar circular 54px */
 .top-bar__user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
   border-radius: 50%;
-  background-color: #c1121f;
+  background-color: var(--ne-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-weight: bold;
-  font-size: 1rem;
+  color: var(--ne-white);
+  font-weight: 600;
+  font-size: 1.1rem;
+  overflow: hidden;
 }
 
 .top-bar__user-name {
-  font-weight: 600;
-  color: #343a40;
-  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ne-secondary);
+  font-size: 24px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .top-bar__actions {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
-.top-bar__action {
+/* "notificações / suporte / sair": rótulo em minúsculas + ícone à direita */
+.top-bar__action,
+.top-bar__actions [data-tour="notifications"] button {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 8px 4px 8px 10px;
+  border-radius: var(--ne-radius);
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #6c757d;
+  flex-direction: row-reverse;
+  gap: 10px;
+  color: var(--ne-secondary);
+  font-family: var(--ne-font);
+  font-size: 24px;
   font-weight: 500;
-  transition: all 0.3s ease;
+  text-transform: lowercase;
+  transition: background-color 0.2s ease, color 0.2s ease;
   position: relative;
 }
 
-.top-bar__action:hover {
-  background-color: #f8f9fa;
-  color: #c1121f;
+.top-bar__action svg,
+.top-bar__actions [data-tour="notifications"] button svg {
+  width: 32px;
+  height: 32px;
+  color: var(--ne-secondary);
 }
 
-/* Responsivo */
+.top-bar__action:hover,
+.top-bar__actions [data-tour="notifications"] button:hover {
+  background-color: var(--ne-gray-light);
+  color: var(--ne-secondary-dark);
+}
+
+/* Tablet */
+@media (max-width: 1200px) {
+  .top-bar { padding: 0 32px; }
+  .top-bar__user-name,
+  .top-bar__action,
+  .top-bar__actions [data-tour="notifications"] button { font-size: 18px; }
+  .top-bar__action svg,
+  .top-bar__actions [data-tour="notifications"] button svg { width: 26px; height: 26px; }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
   .top-bar {
-    /* Em mobile queremos a TopBar ocupando toda a largura */
-    left: 0;
-    right: 0;
+    height: var(--mobile-topbar-height);
     padding: 0 12px;
+    gap: 8px;
   }
-  
+
+  .top-bar__user-avatar { width: 40px; height: 40px; }
+
   .top-bar__user-name {
-    font-size: 1rem;
+    font-size: 16px;
   }
-  
-  .top-bar__action span {
+
+  .top-bar__action span,
+  .top-bar__actions [data-tour="notifications"] button > span:not([aria-hidden]) {
     display: none;
   }
 }
+
 .top-bar__user-photo {
   width: 100%;
   height: 100%;
@@ -98,10 +137,10 @@
   top: calc(100% + 6px);
   right: 0;
   min-width: 190px;
-  background: #fff;
-  border: 1px solid #e9ecef;
-  border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  background: var(--ne-white);
+  border: 1px solid var(--ne-gray-medium);
+  border-radius: var(--ne-radius);
+  box-shadow: var(--ne-elevation-3);
   padding: 6px;
   display: flex;
   flex-direction: column;
@@ -112,15 +151,25 @@
   background: none;
   border: none;
   text-align: left;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: 6px;
   cursor: pointer;
-  color: #343a40;
+  color: var(--ne-black);
+  font-family: var(--ne-font);
   font-weight: 500;
 }
 
 .top-bar__menu-item:hover,
 .top-bar__menu-item:focus-visible {
-  background-color: #f8f9fa;
-  color: #c1121f;
+  background-color: var(--ne-primary-lighter);
+  color: var(--ne-primary-darker);
+}
+
+/* Badge de não lidas fica sobre o ícone (que está à direita do rótulo) */
+.top-bar__actions [data-tour="notifications"] button > span[aria-hidden="true"] {
+  left: auto;
+  right: -4px;
+  top: 4px;
+  background: var(--ne-primary);
+  text-transform: none;
 }

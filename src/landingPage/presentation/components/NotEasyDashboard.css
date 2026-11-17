@@ -60,9 +60,9 @@
 .card-active { border-color: rgba(255,255,255,0.6); box-shadow: 0 0 0 2px rgba(255,255,255,0.25) inset; }
 
 /* Accent per card */
-.card-exercicios { --accent-color: #10b981; }
+.card-exercicios { --accent-color: var(--ne-success); }
 .card-atividades { --accent-color: #0ea5e9; }
-.card-melhorias { --accent-color: #f59e0b; }
+.card-melhorias { --accent-color: var(--ne-warning); }
 .card-performance { --accent-color: #a78bfa; }
 
 .dashboard-card { border-top: 3px solid var(--accent-color, rgba(255,255,255,0.22)); }

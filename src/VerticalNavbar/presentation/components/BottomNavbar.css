@@ -5,7 +5,8 @@
   left: 0;
   right: 0;
   height: 64px;
-  background: #c1121f; /* vermelho similar à imagem */
+  background: var(--ne-primary); /* Color/primary/primary do Figma */
+  font-family: var(--ne-font);
   box-shadow: 0 -2px 8px rgba(0,0,0,0.12);
   z-index: 1001;
 }
@@ -35,12 +36,12 @@
   align-items: center;
   justify-content: center;
   gap: 4px;
-  color: #fff; /* branco sobre #c1121f = 6,2:1 */
+  color: var(--ne-white); /* branco sobre var(--ne-primary) ≈ 5,1:1 */
   text-decoration: none;
   font-size: 12px;
   height: 100%;
   padding: 4px 2px;
-  border-radius: 12px;
+  border-radius: var(--ne-radius);
   box-sizing: border-box;
 }
 
@@ -51,9 +52,9 @@
 
 /* Aba atual: pílula branca com texto vermelho (6,2:1) e traço mais grosso; não depende só de cor */
 .bottom-navbar__link--active {
-  background: #fff;
-  color: #c1121f;
-  font-weight: 700;
+  background: var(--ne-white);
+  color: var(--ne-primary);
+  font-weight: 600;
 }
 
 .bottom-navbar__link--active .bottom-navbar__icon {

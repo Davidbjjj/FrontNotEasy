@@ -226,7 +226,7 @@
 .student-textarea:focus {
   outline: none;
   border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(26, 57, 121, 0.1);
 }
 
 .student-textarea::placeholder {
@@ -275,7 +275,7 @@
 }
 
 .state-error .state-message {
-  color: #dc2626;
+  color: var(--ne-error-dark);
 }
 
 /* Responsivo */
